@@ -9,12 +9,10 @@ val commonSettings = Seq(
   scalaVersion              := Version.scala,
   parallelExecution in Test := false,
   resolvers ++= Seq(
-    ArcusysResolvers.mavenCentral,
+    DefaultMavenRepository,
     ArcusysResolvers.public,
-    ArcusysResolvers.releases,
     ArcusysResolvers.typesafeReleases,
-    ArcusysResolvers.typesafeSnapshots,
-    ArcusysResolvers.snapshots
+    ArcusysResolvers.typesafeSnapshots
   ),
   resolvers += Resolver.mavenLocal,
   libraryDependencies ++= Dependencies.common,
@@ -42,19 +40,9 @@ val sqlTablesGeneration: Def.Initialize[Task[Unit]] = (fullClasspath in Runtime)
   clss.getMethod("sqlTables").invoke(clss.newInstance())
 }
 
-val publishToNexusSettings = Seq(
-  publishTo := {
-    if (isSnapshot.value)
-      Some(ArcusysResolvers.snapshots)
-    else
-      Some(ArcusysResolvers.releases)
-  }
-)
-
 // === Project definitions
 lazy val `valamis-lrs-data-storage` = (project in file("valamis-lrs-data-storage"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     name := "valamis-lrs-data-storage",
     libraryDependencies ++= Dependencies.database,
@@ -70,7 +58,6 @@ lazy val `valamis-lrs-data-storage` = (project in file("valamis-lrs-data-storage
 
 lazy val `valamis-lrs-auth` = (project in file("valamis-lrs-auth"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     name := "valamis-lrs-auth",
     publishMavenStyle := true,
@@ -88,7 +75,6 @@ lazy val `valamis-lrs-auth` = (project in file("valamis-lrs-auth"))
 
 lazy val `valamis-lrs-liferay` = (project in file("valamis-lrs-liferay"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     name := "valamis-lrs-liferay",
     publishMavenStyle := true,
@@ -112,7 +98,6 @@ lazy val `valamis-lrs-liferay` = (project in file("valamis-lrs-liferay"))
 
 lazy val `valamis-lrs-api` = (project in file("valamis-lrs-api"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     mappings in(Compile, packageBin) ++= mappings.in(`valamis-lrs-tincan`, Compile, packageBin).value,
     name := "valamis-lrs-api",
