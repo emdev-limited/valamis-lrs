@@ -1,0 +1,32 @@
+{
+  "actor": {
+    "objectType": "Agent",
+    "mbox": "mailto:test@liferay.com",
+    "name": "Joe Bloggs"
+  },
+  "verb": {
+    "id": "http://adlnet.gov/expapi/verbs/failed",
+    "display": {"en-US": "failed"}
+  },
+  "result": {
+    "success": false,
+    "duration": "PT5S",
+    "score": {
+      "scaled": "0",
+      "raw": "0",
+      "min": "0",
+      "max": "40"
+    },
+    "completion": true
+  },
+  "context": {"registration": "35805306-3c2a-433a-8d7f-fff6da5798f9"},
+  "object": {
+    "id": "http://localhost:8080/learn-portlet/SCORMData/data/401/SCORM2004Cp6SWFSample.htm",
+    "objectType": "Activity",
+    "definition": {
+      "type": "http://adlnet.gov/expapi/activities/course",
+      "name": {"en-US": "Course Object title"},
+      "description": {"en-US": "Course Object title"}
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "objectType": "Group",
+  "mbox": "mailto:test@test.com",
+  "member": [
+    {
+      "mbox": "mailto:test1@test.com"
+    },
+    {
+      "objectType": "",
+      "account": {
+        "homePage": "http://www.example.com",
+        "name": "1625379"
+      }
+    },
+    {
+      "objectType": "Agent",
+      "account": {
+        "homePage": "http://www.example.com",
+        "name": "1625378"
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+@(model: com.arcusys.valamis.lrs.liferay.portlet.AppAddOrEditPortletView)
+@import com.arcusys.valamis.lrs.tincan.AuthorizationScope
+@import com.arcusys.valamis.lrs.liferay.portlet.Action
+@import com.arcusys.valamis.lrs.auth.AuthenticationType
+<form action="@model.actionUrl" method="post">
+    <input type="hidden" name="@model.getTagName(Action.Name)" value="@model.action"/>
+    <input type="hidden" name="@model.getTagName("appId")" value="@model.selectedApp.map(_.appId)"/>
+    <div class="form-group">
+        <label>Application Title</label>
+        <input type="text" class="form-control span12" name="@model.getTagName("appName")" value="@model.selectedApp.map(x => x.name)" placeholder="Enter your application title..." required>
+    </div>
+    <div class="form-group">
+        <label>Application Description</label>
+        <input type="text" class="form-control span12" name="@model.getTagName("appDesc")" value="@model.selectedApp.map(x => x.description)" placeholder="Enter your application description...">
+    </div>
+    <div class="form-group">
+        <label>Authorization Scope</label>
+        @for(value <- AuthorizationScope.values) {
+            <label class="checkbox" class="form-control span12">
+                <input type="checkbox"
+                    name="@model.getTagName("scope")"
+                    @model.isSelectedScope(value)
+                    value="@value"/> @value
+            </label>
+        }
+    </div>
+    <div class="form-group">
+        <label>Authentication Type</label>
+        <select class="form-control span12" name="@model.getTagName("authType")">
+        @for(value <- AuthenticationType.values) {
+            <option @model.isSelectedAuthType(value) value="@value">@value</option>
+        }
+        </select>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="button valamis medium green">Save</button>
+        <button class="button valamis medium grey" href="@model.response.createRenderURL()">Cancel</button>
+    </div>
+</form>

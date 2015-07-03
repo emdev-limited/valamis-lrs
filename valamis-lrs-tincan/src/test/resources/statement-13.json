@@ -1,0 +1,45 @@
+{
+  "id": "8d98bb1c-1301-4436-af23-cae7a1d89c42",
+  "timestamp": "2015-03-19T07:06:32.425Z",
+  "actor": {
+    "objectType": "Agent",
+    "mbox": "mailto:test@liferay.com",
+    "name": "Joe Bloggs"
+  },
+  "verb": {
+    "id": "http://adlnet.gov/expapi/verbs/answered",
+    "display": {"und": "answered"}
+  },
+  "result": {
+    "success": false,
+    "response": "",
+    "extensions": {"http://valamislearning.com/question/score": 0},
+    "score": {
+      "scaled": 0,
+      "raw": 0,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "context": {
+    "contextActivities": {
+      "grouping": [
+        {
+          "id": "http://valamislearning.com/quiz/1",
+          "objectType": "Activity"
+        }
+      ]
+    }
+  },
+  "object": {
+    "id": "http://valamislearning.com/quiz/1/task1",
+    "objectType": "Activity",
+    "definition": {
+      "type": "http://adlnet.gov/expapi/activities/cmi.interaction",
+      "name": {"en-US": "cho"},
+      "description": {"en-US": "qwe"},
+      "interactionType": "choice",
+      "correctResponsesPattern": ["111"]
+    }
+  }
+}

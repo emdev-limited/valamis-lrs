@@ -1,0 +1,78 @@
+@(model: com.arcusys.valamis.lrs.liferay.portlet.AppListPortletView)
+@import com.arcusys.valamis.lrs.liferay.portlet.View
+@import com.arcusys.valamis.lrs.liferay.portlet.Action
+<form action="@model.response.createActionURL()" method="post">
+    <button type="submit" class="button valamis medium green">
+        <i class="icon-plus"></i> Add new client
+    </button>
+    <input type="hidden" value="@View.Add" name="@model.getTagName(View.Name)">
+</form>
+
+<table class="valamis list-table medium-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Client Name</th>
+            <th>Client ID</th>
+            <th>Client Secret</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @for(app <- model.apps) {
+        <tr>
+            <td class="text-center">
+            @if(!app.isActive) {
+                <i class="icon-lock" title="Application blocked"></i>
+            }
+            </td>
+            <td>@app.name</td>
+            <td>@app.appId</td>
+            <td>@app.appSecret</td>
+            <td class="text-right">
+                <div class="row">
+                        @if(app.isActive) {
+                            <div class="span4">
+                                <form action="@model.response.createActionURL()" method="post">
+                                    <input type="hidden" value="@Action.Block" name="@model.getTagName(Action.Name)">
+                                    <input type="hidden" value="@app.appId" name="@model.getTagName("appId")">
+                                    <button type="submit" class="button valamis medium grey" title="Application unblocked">
+                                        <i class="icon-lock"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        } else {
+                            <div class="span4">
+                                <form action="@model.response.createActionURL()" method="post">
+                                    <input type="hidden" value="@Action.Unblock" name="@model.getTagName(Action.Name)">
+                                    <input type="hidden" value="@app.appId" name="@model.getTagName("appId")">
+                                    <button type="submit" class="button valamis medium grey" title="Application blocked">
+                                        <i class="icon-ok-sign"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        }
+                    <div  class="span4">
+                        <form action="@model.response.createActionURL()" method="post">
+                            <input type="hidden" value="@View.Edit" name="@model.getTagName(View.Name)">
+                            <input type="hidden" value="@app.appId" name="@model.getTagName("appId")">
+                            <button type="submit" class="button valamis medium grey" title="Edit application">
+                                <i class="icon-edit"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <div  class="span4">
+                        <form action="@model.response.createActionURL()" method="post">
+                            <input type="hidden" value="@Action.Delete" name="@model.getTagName(Action.Name)">
+                            <input type="hidden" value="@app.appId" name="@model.getTagName("appId")">
+                            <button type="submit" class="button valamis medium red" title="Remove application">
+                                <i class="icon-remove"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
