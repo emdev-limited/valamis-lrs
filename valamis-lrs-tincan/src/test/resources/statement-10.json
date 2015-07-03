@@ -1,0 +1,29 @@
+{
+  "actor": {
+    "objectType": "Agent",
+    "mbox": "mailto:test@example.com"
+  },
+  "verb": {
+    "id": "http://example.com/planned",
+    "display": {
+      "en-US": "planned"
+    }
+  },
+  "object": {
+    "objectType": "SubStatement",
+    "actor": {
+      "objectType": "Agent",
+      "mbox": "mailto:agent@example.com"
+    },
+    "verb": {
+      "id": "http://example.com/confirmed",
+      "display": {
+        "en": "confirmed"
+      }
+    },
+    "object": {
+      "objectType": "StatementRef",
+      "id": "parentStatementId"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "86dfbb5a-67d1-4b9e-a966-ae7606e0d6b4",
+  "timestamp": "2015-03-05T07:45:38.789Z",
+  "actor": {
+    "objectType": "Agent",
+    "mbox": "mailto:test@liferay.com",
+    "name": "Joe Bloggs"
+  },
+  "verb": {
+    "id": "http://adlnet.gov/expapi/verbs/answered",
+    "display": {"und": "answered"}
+  },
+  "result": {
+    "response": "",
+    "extensions": {"http://valamislearning.com/question/score": 0},
+    "score": {
+      "scaled": null,
+      "min": 0,
+      "max": 100
+    }
+  },
+  "context": {
+    "contextActivities": {
+      "grouping": [
+        {
+          "id": "http://valamislearning.com/quiz/1",
+          "objectType": "Activity"
+        }
+      ]
+    }
+  },
+  "object": {
+    "id": "http://valamislearning.com/quiz/1/task2",
+    "objectType": "Activity",
+    "definition": {
+      "type": "http://adlnet.gov/expapi/activities/cmi.interaction",
+      "name": {"en-US": "Essay"},
+      "description": {"en-US": "Write about your favourite movie."},
+      "interactionType": "long-fill-in",
+      "correctResponsesPattern": [""]
+    }
+  }
+}
