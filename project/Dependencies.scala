@@ -32,7 +32,7 @@ object Version {
   val oauth                = "20100527"
   val fileUpload           = "1.3.1"
   val valamis              = "2.6.1"
-  val slickMigrations      = "2.1.0.2"
+  val slickMigrations      = "2.1.0.3"
   val commonsIO            = "2.2"
 
   // Db
