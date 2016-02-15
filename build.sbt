@@ -20,7 +20,6 @@ lazy val `valamis-lrs-jdbc` = (project in file("datasources/valamis-lrs-jdbc"))
 
 lazy val `valamis-lrs-liferay` = (project in file("valamis-lrs-liferay"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     name := "valamis-lrs-liferay",
     publishMavenStyle :=  true,
@@ -45,7 +44,6 @@ lazy val `valamis-lrs-liferay` = (project in file("valamis-lrs-liferay"))
 
 lazy val `valamis-lrs-api` = (project in file("valamis-lrs-api"))
   .settings(commonSettings: _*)
-  .settings(publishToNexusSettings: _*)
   .settings(
     mappings in(Compile, packageBin) ++=
       mappings.in(`valamis-lrs-tincan`, Compile, packageBin).value ++

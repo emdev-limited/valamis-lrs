@@ -11,12 +11,10 @@ object Settings {
     crossScalaVersions := Seq(Version.scala, "2.10.5"),
     parallelExecution in Test := false,
     resolvers ++= Seq(
-      ArcusysResolvers.mavenCentral,
+      DefaultMavenRepository,
       ArcusysResolvers.public,
-      ArcusysResolvers.releases,
       ArcusysResolvers.typesafeReleases,
-      ArcusysResolvers.typesafeSnapshots,
-      ArcusysResolvers.snapshots
+      ArcusysResolvers.typesafeSnapshots
     ),
     resolvers += Resolver.mavenLocal,
     libraryDependencies ++= Dependencies.common,
@@ -25,15 +23,6 @@ object Settings {
     scalacOptions        += "-target:jvm-1.6",
     ivyScala := ivyScala.value map { _.copy(overrideScalaVersion = true) }
   ) ++ graphSettings
-
-  val publishToNexusSettings = Seq(
-    publishTo := {
-      if (isSnapshot.value)
-        Some(ArcusysResolvers.snapshots)
-      else
-        Some(ArcusysResolvers.releases)
-    }
-  )
 
   val disablePublishSettings = Seq(
     publish := {},
