@@ -1,9 +1,10 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from
 
+import java.beans.Introspector
+
 import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.ActivityRow
 
 import scala.slick.jdbc._
-import scala.tools.scalap.scalax.util.StringUtil
 import com.arcusys.valamis.lrs.liferay.history.BaseComponent
 
 /**
@@ -15,7 +16,7 @@ trait ActivityComponent { this: BaseComponent =>
       r.nextLong(),         //`id_` bigint(20) NOT NULL,
       r.nextStringOption(), //`tincanID` varchar(2000) DEFAULT NULL,
       r.nextLongOption(),
-      r.nextStringOption().map {StringUtil.decapitalize}, //`objectType` varchar(512) DEFAULT NULL,
+      r.nextStringOption().map {Introspector.decapitalize}, //`objectType` varchar(512) DEFAULT NULL,
       r.nextStringOption(),       //`name` longtext,
       r.nextStringOption(),       //`description` longtext,
       r.nextStringOption(),       //`theType` longtext,

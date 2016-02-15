@@ -5,6 +5,7 @@ import com.arcusys.valamis.lrs.tincan.Constants.Tincan
 import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs.validator._
+import org.joda.time.DateTime
 import org.json4s.JsonAST._
 import org.json4s.jackson.JsonMethods._
 import org.json4s.{CustomSerializer, Extraction}
@@ -28,16 +29,16 @@ class StatementSerializer(formatType: SerializeFormat) extends CustomSerializer[
       case v: JString => Some(v.extract [TincanVersion.Type])
       case _          => throw new IncorrectStatementVersionException
     }
-
+    val id = Some (jValue .\(Id) .getUuid)
     StatementValidator checkRequirements Statement(
-      jValue   \ id            getUuidOption,
+      id,
       jValue  .\(Tincan.Actor).extract    [Actor],
       jValue  .\(Tincan.Verb) .extract    [Verb],
       jValue  .\(`object`)    .extract    [StatementObject],
       r,
-      jValue  .\(context)     .extractOpt [Context],
-      jValue   \ timestamp     getDateTimeOption,
-      jValue   \ stored        getDateTimeOption,
+      jValue  .\(Tincan.Field.ContextField).extractOpt [Context],
+      jValue  .\(Timestamp)   .getDateTimeOption.getOrElse(DateTime.now),
+      jValue  .\(Stored)      .getDateTimeOption.getOrElse(DateTime.now),
       jValue  .\(authority)   .extractOpt [Actor],
       v,
       jValue  .\(Attachments) .extract    [Seq[Attachment]]

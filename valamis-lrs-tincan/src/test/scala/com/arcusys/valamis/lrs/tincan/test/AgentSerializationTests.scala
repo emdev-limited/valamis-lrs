@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.tincan.test
 import com.arcusys.valamis.lrs.serializer.{AgentSerializer, SerializeFormat}
 import com.arcusys.valamis.lrs.test.tincan.Agents
 import com.arcusys.valamis.lrs.tincan.{Agent, FormatType}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 /**
  * Created by Iliya Tryapitsin on 30/12/14.

@@ -1,5 +1,7 @@
 package com.arcusys.valamis.lrs.test.tincan
 
+import com.arcusys.valamis.lrs._
+
 /**
  * Created by Iliya Tryapitsin on 12/02/15.
  */
@@ -16,4 +18,8 @@ object AgentAccounts {
   val consumer = Some(Account(name = Some("oauth_consumer_x75db"), homePage = Some(homePage + "/OAuth/Token")))
   val allProperties = Some(Account(name = name, homePage = Some(homePage)))
   val forQuery = Some(Account(name = Some("forQuery"), homePage = Some(homePage)))
+
+  object Bad {
+    val incorrectHomePage = typical map { x => x.copy(homePage = "asadasdasd" ?) }
+  }
 }

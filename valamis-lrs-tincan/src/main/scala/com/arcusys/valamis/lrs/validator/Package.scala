@@ -22,6 +22,21 @@ package object validator {
       case _     => json
     }
 
+    def getUuid(implicit format: Formats) = json match {
+      case JNothing   => UUID.randomUUID
+      case v: JString => Try {
+        val raw = v.extract[String]
+        if (raw.length != 36) throw new IllegalArgumentException
+
+        UUID.fromString(raw)
+      } match {
+        case Success(u) => u
+        case Failure(_) => throw new IncorrectUuidException("Incorrect UUID format")
+      }
+      case _            => throw new IncorrectUuidException("Incorrect UUID format")
+    }
+
+
     def getUuidOption(implicit format: Formats) = json match {
       case JNothing   => None
       case v: JString => Try {

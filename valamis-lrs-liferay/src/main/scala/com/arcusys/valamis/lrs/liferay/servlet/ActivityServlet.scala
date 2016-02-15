@@ -29,4 +29,6 @@ class ActivityServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
         case None => throw new NotFoundException("Activity")
       }
   }, request, response)
+
+  override val ServletName: String = "Activity"
 }

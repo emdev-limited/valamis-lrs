@@ -8,9 +8,13 @@ trait BaseTincanPartialRequestComponent {
 
   def limit   = optionalInt(Limit)       getOrElse 100
   def offset  = optionalInt(Offset)      getOrElse 0
-  def ascSort = optionalBoolean(AscSort) getOrElse true
+  def nameSort = optionalBoolean(NameSort) getOrElse true
+  def timeSort = optionalBoolean(TimeSort) getOrElse false
+  def sortTimeFirst = optionalBoolean(SortTimeFirst) getOrElse false
 
-  val Limit   = "limit"
-  val Offset  = "offset"
-  val AscSort = "asc-sort"
+  val TimeSort        = "time-sort"
+  val SortTimeFirst   = "sortTimeFirst"
+  val Limit           = "limit"
+  val Offset          = "offset"
+  val NameSort        = "name-sort"
 }

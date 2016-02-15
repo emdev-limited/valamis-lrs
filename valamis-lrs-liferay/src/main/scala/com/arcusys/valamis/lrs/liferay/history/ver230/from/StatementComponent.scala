@@ -1,9 +1,10 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from
 
-  import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.StatementRow
+import java.beans.Introspector
+
+import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.StatementRow
 
 import scala.slick.jdbc.{GetResult, JdbcBackend, StaticQuery}
-import scala.tools.scalap.scalax.util.StringUtil
 import com.arcusys.valamis.lrs.liferay.history.BaseComponent
 import com.arcusys.valamis.lrs.liferay.history.Helper._
 
@@ -19,7 +20,7 @@ trait StatementComponent { this: BaseComponent =>
       r.nextLongOption(),       //`actorID` int(11) DEFAULT NULL
       r.nextStringOption(),     //`verbID` varchar(2000) DEFAULT NULL
       r.nextStringOption(),           //`verbDisplay` longtext
-      r.nextStringOption().map {StringUtil.decapitalize},     //`objType` varchar(2000) DEFAULT NULL
+      r.nextStringOption().map {Introspector.decapitalize},     //`objType` varchar(2000) DEFAULT NULL
       r.nextLongOption(),       //`objID` int(11) DEFAULT NULL
       r.nextLongOption(),       //`resultID` int(11) DEFAULT NULL
       r.nextLongOption(),       //`contextID` int(11) DEFAULT NULL

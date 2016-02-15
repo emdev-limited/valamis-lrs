@@ -1,5 +1,5 @@
 package com.arcusys.valamis.lrs.serializer
-
+import com.arcusys.valamis.lrs._
 import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs.validator.ActorValidator
 import org.json4s.JsonAST.{JField, JObject, JString}
@@ -15,34 +15,37 @@ class AgentSerializer(formatType: SerializeFormat) extends CustomSerializer[Agen
 
     ActorValidator checkNotNull jObject
 
+    val a = if (jObject.\(account).children.nonEmpty) {
+      jObject.\(account).extract[Account].?
+    } else None
+
     Agent(
       jObject.\(name)       .extractOpt[String].trimAll(),
       jObject.\(mBox)       .extractOpt[String].trimAll(),
       jObject.\(mBoxSha1Sum).extractOpt[String].trimAll(),
       jObject.\(openId)     .extractOpt[String].trimAll(),
-      jObject.\(account)    .extractOpt[Account]
+      a
     )
 }, {
   case agent: Agent => {
     implicit val formats: Formats = DefaultFormats + ShortTypeHints(List(classOf[Agent]))
-    
+
     val result = if (formatType.Type == FormatType.Ids) {
-        val field: JField = if (agent.mBox.isDefined)
-          JField(mBox, JString(agent.mBox.get))
-        else if (agent.mBoxSha1Sum.isDefined)
-          JField(mBoxSha1Sum, JString(agent.mBoxSha1Sum.get))
-        else if (agent.openId.isDefined)
-          JField(openId, JString(agent.openId.get))
-        else if (agent.account.isDefined)
-          JField(account, Extraction.decompose(agent.account.get))
-        else
-          JField(account, null)
+      val field: JField = if (agent.mBox.isDefined)
+        JField(mBox, JString(agent.mBox.get))
+      else if (agent.mBoxSha1Sum.isDefined)
+        JField(mBoxSha1Sum, JString(agent.mBoxSha1Sum.get))
+      else if (agent.openId.isDefined)
+        JField(openId, JString(agent.openId.get))
+      else if (agent.account.isDefined)
+        JField(account, Extraction.decompose(agent.account.get))
+      else
+        JField(account, null)
 
-        JObject(JField("jsonClass", JString(StatementObjectType.agent.toString.capitalize)), field)
-      } else render(Extraction.decompose(agent)
-        .removeField(isStoredId))
-
-    result.transformField(fieldTransformer[Agent])
+      JObject(JField("jsonClass", JString(StatementObjectType.Agent.toString.capitalize)), field)
+    } else render(Extraction.decompose(agent)
+      .removeField(isStoredId))
+    result.transformField(fieldTransformer)
   }
 })) {
   def this() = this(SerializeFormat())

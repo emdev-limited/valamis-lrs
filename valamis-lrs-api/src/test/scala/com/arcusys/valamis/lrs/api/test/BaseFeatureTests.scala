@@ -11,8 +11,8 @@ import org.apache.http.client.utils.URIBuilder
  */
 trait BaseFeatureTests {
   val apiVersion = TincanVersion.ver101
-  val login      = "e4f66d45-0ae9-4ca2-b85c-977836ae7c6a"
-  val pass       = "97c2cf20-57a5-4b94-b0d4-9d2511a57ec5"
+  val login      = "d77a64cc-ff5e-44d8-81f6-bfe289111ca1"
+  val pass       = "0fcd2b57-264f-41ff-9c78-d0ca8f2ae459"
   val authString = s"Basic ${DatatypeConverter.printBase64Binary(s"$login:$pass".getBytes)}"
 
   val uriBuilder = new URIBuilder()

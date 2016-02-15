@@ -14,14 +14,14 @@ class ActivitySerializer(formatType: SerializeFormat) extends CustomSerializer[A
   case jValue: JValue =>
     implicit val formats: Formats = activitySerializer(formatType)
 
-    jValue \ id notNull
+    jValue \ Id notNull
 
     val jDefinition = jValue \ definition
 
     ActivityValidator checkNotNull jDefinition
 
     Activity(
-      jValue      .\ (id)         .extract    [String],
+      jValue      .\ (Id)         .extract    [String],
       jDefinition .\ (name)       .extractOpt [LanguageMap],
       jDefinition .\ (description).extractOpt [LanguageMap],
       jDefinition .\ (`type`)     .extractOpt [String],
@@ -39,13 +39,13 @@ class ActivitySerializer(formatType: SerializeFormat) extends CustomSerializer[A
   case activity: Activity =>
     implicit val formats: Formats = activitySerializer(formatType)
 
-    val objectTypeField = JField(ObjectType, JString(StatementObjectType.activity.toString.capitalize))
+    val objectTypeField = JField(ObjectType, JString(StatementObjectType.Activity.toString.capitalize))
     var n = activity.name.getOrElse(Map())
     var desc = activity.description.getOrElse(Map())
 
     def getJObject = JObject(
       objectTypeField,
-      JField(id, JString(activity.id)),
+      JField(Id, JString(activity.id)),
       JField(definition, JObject(
         JField(name,        Extraction.decompose(activity.name)),
         JField(description, Extraction.decompose(activity.description)),
@@ -65,7 +65,7 @@ class ActivitySerializer(formatType: SerializeFormat) extends CustomSerializer[A
     formatType.Type match {
       case FormatType.Ids => JObject(
         objectTypeField,
-        JField(id, JString(activity.id))
+        JField(Id, JString(activity.id))
       )
 
       case FormatType.Exact => getJObject

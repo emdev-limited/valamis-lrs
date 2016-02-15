@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.liferay
 
 import com.arcusys.valamis.lrs.liferay.ConfigModule.ConfigProvider
 import com.google.inject.{AbstractModule, Provider}
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.{Config, ConfigFactory}
 import net.codingwell.scalaguice.ScalaModule
 
 object ConfigModule {

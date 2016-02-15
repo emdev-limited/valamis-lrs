@@ -23,6 +23,7 @@ object Agents {
 
   object Bad {
     val nameNull = Some(typical.get.copy(name = Some("null")))
+    val `incorrect Account uri` = typical map { x => x copy(account = AgentAccounts.Bad.incorrectHomePage) }
   }
 
   object Good {

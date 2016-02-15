@@ -1,9 +1,9 @@
 package com.arcusys.valamis.lrs.tincan.test.serializer
 
+import com.arcusys.json.{JsonDeserializeException, JsonHelper}
 import com.arcusys.valamis.lrs.serializer._
 import com.arcusys.valamis.lrs.test.tincan._
 import com.arcusys.valamis.lrs.tincan.Statement
-import com.arcusys.valamis.utils.serialization.{JSONDeserializerException, JsonHelper}
 import org.scalatest.FlatSpecLike
 
 /**
@@ -16,7 +16,7 @@ class StatementSerializationTests extends BaseSerializationTemplate(Statements.G
 
     val statement = badData.get(caseName)
     val json = JsonHelper.toJson(statement)
-    intercept[JSONDeserializerException] {
+    intercept[JsonDeserializeException] {
       JsonHelper.fromJson[Statement](json, new StatementSerializer)
     }
   }

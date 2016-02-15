@@ -10,8 +10,10 @@ import com.arcusys.valamis.lrs.validator.VerbValidator
  *                This does not have any impact on the meaning of the Statement,
  *                but serves to give a human-readable display of the meaning already determined by the chosen Verb.
  */
-case class Verb(id: String,
+case class Verb(id:      Verb#Id,
                 display: LanguageMap) {
+
+  type Id = String
 
   VerbValidator checkRequirements this
 

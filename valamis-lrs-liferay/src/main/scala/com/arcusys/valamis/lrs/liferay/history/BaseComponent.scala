@@ -5,7 +5,7 @@ import java.util.UUID
 
 import com.arcusys.valamis.lrs.serializer.ScoreSerializer
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import org.joda.time.DateTime
 
 import scala.util._

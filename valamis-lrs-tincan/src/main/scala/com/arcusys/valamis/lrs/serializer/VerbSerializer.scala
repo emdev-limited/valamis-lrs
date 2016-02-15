@@ -1,17 +1,11 @@
 package com.arcusys.valamis.lrs.serializer
 
-import java.net.{URL, URI}
-
-import com.arcusys.valamis.lrs.exception.VerbInvalidException
+import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.lrs.util.IRI
 import com.arcusys.valamis.lrs.validator.VerbValidator
-import org.apache.commons.lang.LocaleUtils
 import org.json4s.JsonAST.{JNothing, JValue}
 import org.json4s.jackson.JsonMethods._
-import org.json4s.{DefaultFormats, CustomSerializer, Extraction}
-import Constants.Tincan.Field._
-import scala.util.{Failure, Success, Try}
+import org.json4s.{CustomSerializer, DefaultFormats, Extraction}
 
 /**
  * Created by Iliya Tryapitsin on 29/12/14.
@@ -22,7 +16,7 @@ object VerbSerializer extends CustomSerializer[Verb](format => ( {
 
     VerbValidator checkNotNull jValue
 
-    val url = jValue.\(id).extract[String]
+    val url = jValue.\(Id).extract[String]
 
     val languages = jValue \ display match {
       case JNothing   => LanguageMap()

@@ -1,34 +1,23 @@
 package com.arcusys.valamis.lrs.liferay.portlet
 
-import com.arcusys.valamis.lrs.liferay.WaitPeriod._
-import com.arcusys.valamis.lrs.tincan.AuthorizationScope
-
-import scala.concurrent.ExecutionContext.Implicits.global
 import javax.portlet._
-import akka.util.Timeout
-import html.apps.html._
-import scala.util._
-import scala.concurrent._
-import scala.concurrent.duration._
-import akka.pattern.Patterns
-import akka.actor.ActorSystem
-import com.arcusys.valamis.lrs.GuiceAkkaExtension
-import com.arcusys.valamis.lrs.auth._
+
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.liferay.{LrsUtils, WebServletModule}
+import com.arcusys.valamis.lrs.jdbc.SecurityManager
+import com.arcusys.valamis.lrs.liferay.{LrsTypeLocator, LrsModule}
+import com.arcusys.valamis.lrs.security.AuthenticationType
+import com.arcusys.valamis.lrs.tincan.AuthorizationScope
 import com.google.inject._
+import com.google.inject.name.Names
+import html.apps.html._
 
 /**
  * Created by Iliya Tryapitsin on 21.04.15.
  */
-class LrsAppsView extends GenericPortlet {
+class LrsAppsView extends GenericPortlet with LrsTypeLocator {
 
-  val injector = Guice.createInjector(new WebServletModule)
-  val authentication = injector.getInstance(classOf[Authentication])
-//  val system = injector.getInstance(classOf[ActorSystem])
-//  val authenticationActor = system.actorOf(GuiceAkkaExtension(system).props(AuthenticationActor.name))
-//  val duration = 10 seconds
-//  implicit val timeout = Timeout(duration)
+  lazy val injector        = Guice.createInjector(new LrsModule)
+  lazy val securityManager = injector.getInstance(Key.get(classOf[SecurityManager], Names.named(LrsType.Simple.toString)))
 
   private def getOffset(r: PortletRequest) = {
     val o = r.getParameter("offset")
@@ -57,7 +46,7 @@ class LrsAppsView extends GenericPortlet {
   private def getSelectedApp(r: PortletRequest) = {
     val a = Some(r.getParameter("appId"))
     a match {
-      case Some(id) => authentication.GetApplication(id)
+      case Some(id) => securityManager.getApplication(id)
 
       case _ => None
     }
@@ -86,7 +75,7 @@ class LrsAppsView extends GenericPortlet {
         val appDesc = request.getParameter("appDesc")
         val authType = getAuthenticationType(request)
         val scope    = getAuthorizationScopes(request)
-        authentication.RegistrationApp(appName, appDesc.toOption, scope, authType)
+        securityManager.registrationApp(appName, appDesc.toOption, scope, authType)
 
       case Some(Action.Edit) =>
         val appId   = request.getParameter("appId")
@@ -94,19 +83,23 @@ class LrsAppsView extends GenericPortlet {
         val appDesc = request.getParameter("appDesc")
         val authType = getAuthenticationType(request)
         val scope    = getAuthorizationScopes(request)
-        authentication.UpdateApplication(appId, appName, Some(appDesc), scope, authType)
+        securityManager.updateApplication(appId, appName, Some(appDesc), scope, authType)
 
       case Some(Action.Delete) =>
         val appId = request.getParameter("appId")
-        authentication.DeleteApplication(appId)
+        securityManager.deleteApplication(appId)
 
       case Some(Action.Block) =>
         val appId     = request.getParameter("appId")
-        authentication.BlockApplication(appId)
+        securityManager.blockApplication(appId)
 
       case Some(Action.Unblock) =>
         val appId     = request.getParameter("appId")
-        authentication.UnblockApplication(appId)
+        securityManager.unblockApplication(appId)
+
+      case Some(Action.LrsTypeChanged) =>
+        val tpe           = request.getParameter("lrsType")
+        val msgBusAddress = request.getParameter("msgBus" )
 
       case _ =>
     }
@@ -134,22 +127,20 @@ class LrsAppsView extends GenericPortlet {
     showView match {
 
       case View.Add =>
-        val html = edit(new AppAddOrEditPortletView()(request, response))
+        val html = edit(new AppAddOrEditPortletViewModel()(request, response))
         response.getWriter.write(index(html) toString)
 
       case View.Edit =>
         val result = getSelectedApp(request)
-        val html = edit(new AppAddOrEditPortletView(result)(request, response))
+        val html = edit(new AppAddOrEditPortletViewModel(result)(request, response))
         response.getWriter.write(index(html) toString)
 
       case _ =>
-
-        val result = authentication.GetApplications(appsCount, offset)
-        val html = list(new AppListPortletView(result)(request, response))
-        response.getWriter.write(index(html) toString)
+        val result = securityManager.getApplications(appsCount, offset)
+        val clientApiListView   = clientApiList(
+          new AppListPortletViewModel(result, LrsType.Simple)(request, response)
+        )
+        response.getWriter.write(index(clientApiListView) toString)
     }
   }
 }
-
-
-

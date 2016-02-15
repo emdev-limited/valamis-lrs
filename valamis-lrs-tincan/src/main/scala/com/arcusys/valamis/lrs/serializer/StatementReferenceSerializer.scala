@@ -20,6 +20,6 @@ object StatementReferenceSerializer extends CustomSerializer[StatementReference]
     render(
       Extraction.decompose(statementRef)
         .removeField(isStoredId)
-        .transformField(fieldTransformer[StatementReference])
+        .transformField(fieldTransformer)
     )
 }))

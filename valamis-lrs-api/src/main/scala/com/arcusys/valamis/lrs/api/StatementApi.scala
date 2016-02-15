@@ -2,11 +2,8 @@ package com.arcusys.valamis.lrs.api
 
 import java.net.URI
 import java.util.UUID
-
 import com.arcusys.valamis.lrs.serializer.{GroupSerializer, AgentSerializer, StatementSerializer}
-import com.arcusys.valamis.lrs.tincan.{Actor, Constants, Statement, StatementResult}
-import com.arcusys.valamis.utils.serialization.JsonHelper
-
+import com.arcusys.valamis.lrs.tincan._
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{HttpGet, HttpPost, HttpPut}
@@ -20,7 +17,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
   import Constants.Tincan._
   import Constants._
 
-  override def addressPathSuffix = "statements"
+  val addressPathSuffix = "statements"
 
   def post(statementJsonString: String): Try[Int] = {
     val uri = uriBuilder
@@ -79,7 +76,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
   }
 
   def addStatement(statement: Statement): Try[Int] = {
-    val statementJsonString = JsonHelper.toJson[Statement](statement, new StatementSerializer)
+    val statementJsonString = toJson[Statement](statement, new StatementSerializer)
 
     if (statement.id.isEmpty)
       post(statementJsonString)
@@ -88,7 +85,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
   }
 
   def addStatements(statements: Seq[Statement]): Try[Int] = {
-    val statementJsonString = JsonHelper.toJson[Seq[Statement]](statements, new StatementSerializer)
+    val statementJsonString = toJson[Seq[Statement]](statements, new StatementSerializer)
     post(statementJsonString)
   }
 
@@ -107,7 +104,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
   }
 
   def getStatementById(statementId: UUID): Try[Statement] = {
-    getById(statementId).map(JsonHelper.fromJson[Statement](_, new StatementSerializer))
+    getById(statementId).map(fromJson[Statement](_, new StatementSerializer))
   }
 
   def getByVoidedStatementId(statementId: UUID): Try[Statement] = {
@@ -121,28 +118,28 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
     initRequestAsJson(httpGet)
 
     val response = httpClient.execute(httpGet)
-    getContent(response).map(JsonHelper.fromJson[Statement](_, new StatementSerializer))
+    getContent(response).map(fromJson[Statement](_, new StatementSerializer))
   }
 
-  def getByParams(agent:        Option[Actor]    = None,
-                  verb:         Option[URI]      = None,
-                  activity:     Option[URI]      = None,
-                  registration: Option[UUID]     = None,
-                  since:        Option[DateTime] = None,
-                  until:        Option[DateTime] = None,
+  def getByParams(agent:             Option[Actor]    = None,
+                  verb:              Option[URI]      = None,
+                  activity:          Option[URI]      = None,
+                  registration:      Option[UUID]     = None,
+                  since:             Option[DateTime] = None,
+                  until:             Option[DateTime] = None,
                   relatedActivities: Boolean     = false,
-                  relatedAgents: Boolean         = false,
-                  limit:        Option[Int]      = None,
-                  format:       Option[String]   = None,
-                  attachments:  Boolean          = false,
-                  ascending:    Boolean          = false,
-                  offset:       Option[Int]      = None): Try[StatementResult] = {
+                  relatedAgents:     Boolean     = false,
+                  limit:             Option[Int]      = None,
+                  format:            Option[String]   = None,
+                  attachments:       Boolean     = false,
+                  ascending:         Boolean     = false,
+                  offset:            Option[Int]      = None): Try[StatementResult] = {
 
     val builder = uriBuilder
       .clearParameters()
       .setPath(s"/$path/$addressPathSuffix")
 
-    val agentJson = JsonHelper.toJson(agent, new AgentSerializer, new GroupSerializer)
+    val agentJson = toJson(agent, new AgentSerializer, new GroupSerializer)
 
     val uri = builder
       .addParameter(Agent,             agentJson                 )
@@ -166,7 +163,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
 
     val response = httpClient.execute(httpGet)
     getContent(response) map { json =>
-      JsonHelper.fromJson[StatementResult](json, new StatementSerializer)
+      fromJson[StatementResult](json, new StatementSerializer)
     }
   }
 

@@ -1,5 +1,6 @@
 package com.arcusys.valamis.lrs.serializer
 
+import com.arcusys.valamis.lrs._
 import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan.{FormatType, _}
 import com.arcusys.valamis.lrs.validator.GroupValidator
@@ -16,13 +17,18 @@ class GroupSerializer(formatType: SerializeFormat) extends CustomSerializer[Grou
 
     GroupValidator checkNotNull jObject
 
+    val a = if (jObject.\(account).children.nonEmpty) {
+      jObject.\(account).extract[Account].?
+    } else None
+
     Group(
       jObject .\(name)       .extractOpt[String],
-      jObject .\(member)     .extractOpt[Seq[Actor]],
+      jObject .\(member)     .extractOpt[Seq[Actor]].map { x => x.map { _.asInstanceOf[Agent] } },
       jObject .\(mBox)       .extractOpt[String].trimAll(),
       jObject .\(mBoxSha1Sum).extractOpt[String].trimAll(),
       jObject .\(openId)     .extractOpt[String].trimAll(),
-      jObject .\(account)    .extractOpt[Account])
+      a
+    )
 
 }, {
   case group: Group =>
@@ -43,7 +49,7 @@ class GroupSerializer(formatType: SerializeFormat) extends CustomSerializer[Grou
       if (group.member.isDefined)
         JObject(JField(member, Extraction.decompose(group.member.get)), field)
 
-      JObject(JField("jsonClass", JString(StatementObjectType.group.toString.capitalize)), field)
+      JObject(JField("jsonClass", JString(StatementObjectType.Group.toString.capitalize)), field)
     } else
       render(Extraction.decompose(group).removeField(field => field._1.equalsIgnoreCase("storedId")))
     result.transformField({

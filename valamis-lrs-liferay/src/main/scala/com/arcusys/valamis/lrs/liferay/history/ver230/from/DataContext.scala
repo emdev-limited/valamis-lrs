@@ -1,6 +1,7 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from
 
 import com.arcusys.valamis.lrs.tincan._
+import org.joda.time.DateTime
 
 import scala.slick.jdbc.JdbcBackend
 import com.arcusys.valamis.lrs.liferay.history.BaseComponent
@@ -26,10 +27,10 @@ with SubStatementComponent {
 
 
   def getStatements(implicit session: JdbcBackend#Session): Seq[Statement] = statements.map { row =>
-    require(row.actorKey.isDefined,     s"ActorKey  should be defined in Statement with Key = ${row.key}")
-    require(row.objType.isDefined,      s"ObjType   should be defined in Statement with Key = ${row.key}")
-    require(row.objKey.isDefined,       s"ObjKey    should be defined in Statement with Key = ${row.key}")
-    require(row.verbId.isDefined,       s"VerbId    should be defined in Statement with Key = ${row.key}")
+    require(row.actorKey.isDefined,s"ActorKey should be defined in Statement with Key = ${row.key}")
+    require(row.objType.isDefined, s"ObjType  should be defined in Statement with Key = ${row.key}")
+    require(row.objKey.isDefined,  s"ObjKey   should be defined in Statement with Key = ${row.key}")
+    require(row.verbId.isDefined,  s"VerbId   should be defined in Statement with Key = ${row.key}")
 
     Statement(
       id = getUUIDOption(row.id),
@@ -38,8 +39,8 @@ with SubStatementComponent {
       obj = getStatementObject(row.objKey.get, row.objType.get),
       result = getResult(row.resultKey),
       context = getContext(row.contextKey),
-      timestamp = row.timestamp,
-      stored = row.stored,
+      timestamp = row.timestamp getOrElse DateTime.now,
+      stored = row.stored getOrElse DateTime.now,
       authority = getActor(row.authorityKey),
       version = row.version.map { x => TincanVersion.withName(x)}.orElse(Some(TincanVersion.ver101)),
       attachments = getAttachments(row.key)
@@ -53,8 +54,4 @@ with SubStatementComponent {
   def getAgentProfiles(implicit session: JdbcBackend#Session): Seq[AgentProfile] = agentProfiles.map { row =>
     AgentProfile(row.profileId.get, getAgent(row.agentId.get), getDocument(row.documentId.get))
   }
-
-//  def getActivityState: Seq[(Agent, String, String, Option[UUID], Document)] = activityStates.map { s =>
-//    (getAgent(s.agentId.get), getDocument(s.documentId.get))
-//  }
 }

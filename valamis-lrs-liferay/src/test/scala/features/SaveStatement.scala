@@ -3,7 +3,7 @@ package features
 import java.util.UUID
 
 import com.arcusys.valamis.lrs.test.tincan.Statements
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import com.arcusys.valamis.lrs.api._
 import org.scalatest._
 

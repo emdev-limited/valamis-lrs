@@ -28,6 +28,7 @@ object Contexts {
     val `should pass context with typical extensions`              = Context(extensions = Extensions.typical)
     val `should pass context with empty extensions`                = Context(extensions = Extensions.empty)
     val `should pass context with empty context activities`        = Context(contextActivities = ContextActivities.empty)
+    val `should pass context with all context activities`          = Context(contextActivities = ContextActivities.allProperties)
   }
 
   val empty = Some(Context())

@@ -1,7 +1,8 @@
-@(model: com.arcusys.valamis.lrs.liferay.portlet.AppAddOrEditPortletView)
+@(model: com.arcusys.valamis.lrs.liferay.portlet.AppAddOrEditPortletViewModel)
+@import com.arcusys.valamis.lrs.security.AuthenticationType
 @import com.arcusys.valamis.lrs.tincan.AuthorizationScope
 @import com.arcusys.valamis.lrs.liferay.portlet.Action
-@import com.arcusys.valamis.lrs.auth.AuthenticationType
+
 <form action="@model.actionUrl" method="post">
     <input type="hidden" name="@model.getTagName(Action.Name)" value="@model.action"/>
     <input type="hidden" name="@model.getTagName("appId")" value="@model.selectedApp.map(_.appId)"/>

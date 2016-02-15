@@ -2,21 +2,19 @@ package com.arcusys.valamis.lrs.liferay.servlet.request
 
 import com.arcusys.valamis.lrs.serializer.AgentSerializer
 import com.arcusys.valamis.lrs.tincan.Agent
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
+import BaseTincanAgentRequestComponent.{ Agent => a }
 
 /**
- * Created by Iliya Tryapitsin on 29/12/14.
+  * Created by Iliya Tryapitsin on 29/12/14.
  */
 
 trait BaseTincanAgentRequestComponent {
   r: BaseLrsRequest =>
 
-  import com.arcusys.valamis.lrs.liferay.servlet.request.BaseTincanAgentRequestComponent._
-
-  def agent(implicit m: Manifest[Agent]) = JsonHelper.fromJson[Agent](require(AGENT), new AgentSerializer)
-
+  def agent(implicit m: Manifest[Agent]) = JsonHelper.fromJson[Agent](require(a), new AgentSerializer)
 }
 
 object BaseTincanAgentRequestComponent {
-  val AGENT = "agent"
+  val Agent = "agent"
 }
