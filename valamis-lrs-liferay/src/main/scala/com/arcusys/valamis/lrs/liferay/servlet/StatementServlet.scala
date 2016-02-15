@@ -1,17 +1,18 @@
 package com.arcusys.valamis.lrs.liferay.servlet
 
+import java.util.UUID
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
+import com.arcusys.valamis.lrs._
 import com.arcusys.valamis.lrs.liferay.exception.NotFoundException
 import com.arcusys.valamis.lrs.liferay.servlet.request.TincanStatementRequest
-import com.arcusys.valamis.lrs.services.StatementQuery
 import com.arcusys.valamis.lrs.tincan.StatementResult
 import com.google.inject.{Inject, Injector, Singleton}
 
 @Singleton
 @MultipartConfig
-class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
+class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj){
 
   override def doGet(request: HttpServletRequest,
                      response: HttpServletResponse): Unit = jsonAction[TincanStatementRequest](model => {
@@ -52,7 +53,7 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
   override def doPost(request: HttpServletRequest,
                       response: HttpServletResponse): Unit = jsonAction[TincanStatementRequest](model => {
 
-    val result = model.statements map { x => lrs.addStatement(x.copy(id = None)) }
+    val result = model.statements map { x => lrs.addStatement(x.copy(id = UUID.randomUUID.toOption)) }
     result
 
   }, request, response)
@@ -68,6 +69,8 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
   }, request, response)
 
   private def getMore(isNotNeed: Boolean, model: TincanStatementRequest): String =
-    if(isNotNeed) ""
+    if(isNotNeed) EmptyString
     else model.toMoreIRL
+
+  override val ServletName: String = "Statements"
 }

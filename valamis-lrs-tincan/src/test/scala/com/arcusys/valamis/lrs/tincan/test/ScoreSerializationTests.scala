@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.tincan.test
 import com.arcusys.valamis.lrs.serializer.ScoreSerializer
 import com.arcusys.valamis.lrs.test.tincan.Scores
 import com.arcusys.valamis.lrs.tincan.Score
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import org.json4s._
 import org.json4s.jackson.JsonMethods
 import org.json4s.jackson.JsonMethods._

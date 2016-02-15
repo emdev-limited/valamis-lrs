@@ -2,36 +2,36 @@ package com.arcusys.valamis.lrs.liferay.servlet.oauth
 
 import java.util.UUID
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-
-import akka.actor.ActorSystem
-import akka.pattern.Patterns
-import com.arcusys.valamis.lrs.GuiceAkkaExtension
-import com.arcusys.valamis.lrs.auth._
-import com.arcusys.valamis.lrs.liferay.Loggable
-import com.arcusys.valamis.lrs.liferay.WaitPeriod._
+import com.arcusys.valamis.lrs.LrsType
+import com.arcusys.valamis.lrs.jdbc.SecurityManager
+import com.arcusys.valamis.lrs.liferay.{LrsTypeLocator, Loggable}
 import com.arcusys.valamis.lrs.liferay.servlet.BaseServlet
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
-import com.google.inject.Injector
+import com.google.inject.name.Names
+import com.google.inject.{Key, Injector}
+import com.liferay.portal.util.PortalUtil
 import net.oauth._
 import net.oauth.server.OAuthServlet
 
-import scala.concurrent.Await
-import scala.util.Try
+abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with LrsTypeLocator {
 
-abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable {
+  lazy val lrsType         = LrsType.Simple
+  lazy val securityManager = inj.getInstance(Key.get(classOf[SecurityManager], Names.named(lrsType.toString)))
+  val validator       = new SimpleOAuthValidator
+  val Name            = "name"
 
-  val authentication = inj.getInstance(classOf[Authentication])
-//  val system              = inj.getInstance(classOf[ActorSystem])
-//  val authenticationActor = system.actorOf(GuiceAkkaExtension(system).props(AuthenticationActor.name))
-  val validator = new SimpleOAuthValidator
-  val Name = "name"
+
+  protected def getMessage(request: HttpServletRequest) = {
+    val url = PortalUtil.getCurrentCompleteURL(request)
+    OAuthServlet.getMessage(request, url)
+  }
 
   // OAuth Provider's methods
   def getConsumer(requestMessage: OAuthMessage, checkScope: Boolean = false): OAuthConsumer = {
     val consumerKey = requestMessage.getConsumerKey
     val callback    = requestMessage.getParameter(OAuth.OAUTH_CALLBACK)
     val scope = AuthorizationScope.fromString(requestMessage.getParameter(ScopeParameter))
-    authentication.GetApplication(consumerKey)
+    securityManager.getApplication(consumerKey)
       .map(a => {
       if(a.scope <=\= scope)
         throw new OAuthProblemException(ScopeFailed)
@@ -45,7 +45,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
 
   // OAuth Provider's methods
   def getConsumerById(appId: String): OAuthConsumer =
-    authentication.GetApplication(appId)
+    securityManager.getApplication(appId)
       .map(a => {
         new OAuthConsumer(null, a.appId, a.appSecret, null)
       })
@@ -58,7 +58,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
     val consumerKey  = requestMessage.getConsumerKey
     val requestToken = requestMessage.getToken
     val verifier     = requestMessage.getParameter(OAuth.OAUTH_VERIFIER)
-    authentication.GetRequestToken(consumerKey, requestToken)
+    securityManager.getRequestToken(consumerKey, requestToken)
       .map(t => {
         if(t.verifier.isEmpty || !t.verifier.get.equals(verifier))
           throw new OAuthProblemException(PermissionDenied)
@@ -76,7 +76,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
    */
   def getAuthorizeAccessor(requestMessage: OAuthMessage): OAuthAccessor = {
     val requestToken = requestMessage.getToken
-    authentication.GetRequestToken(null, requestToken)
+    securityManager.getRequestToken(null, requestToken)
       .map(t => {
         val accessor = new OAuthAccessor(getConsumerById(t.applicationKey))
         accessor.requestToken = t.code
@@ -102,7 +102,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
     val token       = UUID.randomUUID.toString
     val secret      = UUID.randomUUID.toString
 
-    authentication.SetRequestToken(consumerKey, token, secret, callback)
+    securityManager.setRequestToken(consumerKey, token, secret, callback)
 
     accessor.requestToken = token
     accessor.tokenSecret = secret
@@ -119,7 +119,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
     val token       = UUID.randomUUID.toString
     val tokenSecret = UUID.randomUUID.toString
 
-    authentication.SetAccessToken(consumerKey, requestCode, token, tokenSecret)
+    securityManager.setAccessToken(consumerKey, requestCode, token, tokenSecret)
 
     accessor.requestToken = null
     accessor.accessToken  = token
@@ -144,7 +144,7 @@ abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable 
     val verifier    = UUID.randomUUID.hashCode.toString
     accessor.setProperty(OAuthVerifier, verifier)
 
-    authentication.SetAuthorized(consumerKey, requestCode, verifier)
+    securityManager.setAuthorized(consumerKey, requestCode, verifier)
   }
 
   def checkCallback(callback: String) = callback != null && !callback.isEmpty

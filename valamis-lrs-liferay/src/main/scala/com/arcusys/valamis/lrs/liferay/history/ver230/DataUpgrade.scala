@@ -1,7 +1,7 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230
 
 import com.arcusys.valamis.lrs.liferay.history.ver230.from.DataContext
-import com.arcusys.valamis.lrs.services.LRS
+import com.arcusys.valamis.lrs.jdbc.JdbcLrs
 
 import scala.slick.jdbc.JdbcBackend
 import scala.util._
@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.liferay.history.BaseUpgrade
 /**
  * Created by iliyatryapitsin on 16.04.15.
  */
-class DataUpgrade(val lrs: LRS) extends BaseUpgrade{
+class DataUpgrade(val lrs: JdbcLrs) extends BaseUpgrade{
   val dataContext = new DataContext
 
   def upgrade = lrs.db.withSession { implicit session =>

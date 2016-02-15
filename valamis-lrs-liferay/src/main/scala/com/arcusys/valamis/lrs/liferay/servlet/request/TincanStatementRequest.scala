@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest
 
 import com.arcusys.valamis.lrs.serializer.{AgentSerializer, StatementSerializer}
 import com.arcusys.valamis.lrs.tincan.{Agent => ag, FormatType, Statement}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import org.joda.time.DateTime
 
 import scala.util.{Failure, Success, Try}

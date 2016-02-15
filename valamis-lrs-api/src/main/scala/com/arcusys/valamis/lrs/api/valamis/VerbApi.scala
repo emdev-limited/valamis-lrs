@@ -1,11 +1,10 @@
 package com.arcusys.valamis.lrs.api.valamis
 
-import com.arcusys.valamis.lrs.SeqWithCount
+import com.arcusys.valamis.lrs.{SeqWithCount}
 import com.arcusys.valamis.lrs.api.{BaseApi, LrsSettings}
 import com.arcusys.valamis.lrs.serializer.DateTimeSerializer
 import com.arcusys.valamis.lrs.tincan.{LanguageMap, Verb}
-import com.arcusys.valamis.lrs.tincan.valamis.VerbStatistics
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.valamis.lrs.tincan.valamis.{ActivityIdLanguageMap,VerbStatistics}
 import org.apache.http.client.methods.HttpGet
 import org.joda.time.DateTime
 
@@ -16,16 +15,21 @@ import scala.util.Try
  */
 class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
 
-  override def addressPathSuffix = "verb"
+  val addressPathSuffix = "valamis/verb"
 
   private val Since   = "since"
+  private val Verb    = "verb"
   private val Filter  = "filter"
   private val Limit   = "limit"
   private val Offset  = "offset"
   private val Action  = "action"
-  private val AscSort = "asc-sort"
+  private val NameSort = "name-sort"
+  private val TimeSort = "time-sort"
+  private val SortTimeFirst = "sortTimeFirst"
   private val VerbStatistics      = "verb-statistics"
   private val VerbsWithActivities = "verb-with-activities"
+  private val VerbsAmount = "verb-amount"
+
   /**
    * Return verbs from Valamis LRS
    * @param since Return since
@@ -44,22 +48,26 @@ class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
 
     val response = httpClient.execute(httpGet)
     getContent(response) map { json =>
-      JsonHelper.fromJson[VerbStatistics](json, DateTimeSerializer)
+      fromJson[VerbStatistics](json, DateTimeSerializer)
     }
   }
 
   def getWithActivities(filter: Option[String] = None,
-                        limit:  Int            = 100,
-                        offset: Int            = 0,
-                        ascSort:Boolean        = true  ): Try[SeqWithCount[(Verb, (String, LanguageMap))]] = {
+                        limit:  Int             = 100,
+                        offset: Int             = 0,
+                        nameSortDesc: Boolean   = true,
+                        timeSortDesc: Boolean   = false,
+                        sortTimeFirst: Boolean  = false): Try[SeqWithCount[(Verb, ActivityIdLanguageMap, Option[DateTime])]] = {
 
     val uri = uriBuilder
       .clearParameters()
       .setPath(s"/$path/$addressPathSuffix")
-      .addOptionParameter(Filter, filter)
-      .addParameter(Limit,   limit   toString)
-      .addParameter(Offset,  offset  toString)
-      .addParameter(AscSort, ascSort toString)
+      .addOptionParameter(Filter,  filter)
+      .addParameter(Limit,         limit         toString)
+      .addParameter(Offset,        offset        toString)
+      .addParameter(NameSort,      nameSortDesc  toString)
+      .addParameter(TimeSort,      timeSortDesc  toString)
+      .addParameter(SortTimeFirst, sortTimeFirst toString)
       .addParameter(Action,  VerbsWithActivities)
       .build()
 
@@ -68,7 +76,23 @@ class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
 
     val response = httpClient.execute(httpGet)
     getContent(response) map { json =>
-      JsonHelper.fromJson[SeqWithCount[(Verb, (String, LanguageMap))]](json, DateTimeSerializer)
+      fromJson[SeqWithCount[(Verb, ActivityIdLanguageMap, Option[DateTime])]](json, DateTimeSerializer)
     }
+  }
+
+  def getAmount(since: Option[DateTime] = None, verb: Option[String] = None): Try[String] = {
+    val uri = uriBuilder
+      .clearParameters()
+      .setPath(s"/$path/$addressPathSuffix")
+      .addOptionParameter(Since, since)
+      .addOptionParameter(Verb, verb)
+      .addParameter(Action, VerbsAmount)
+      .build()
+
+    val httpGet = new HttpGet(uri)
+    initRequestAsJson(httpGet)
+
+    val response = httpClient.execute(httpGet)
+    getContent(response)
   }
 }

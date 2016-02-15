@@ -45,4 +45,6 @@ class AgentProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
     lrs.deleteProfile(model.agent, model.profileId.get)
     Unit
   }, request, response)
+
+  override val ServletName: String = "AgentProfile"
 }

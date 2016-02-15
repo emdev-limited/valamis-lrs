@@ -2,7 +2,7 @@ package features.statementStructure
 
 import com.arcusys.valamis.lrs.api.StatementApi
 import com.arcusys.valamis.lrs.test.tincan.{Statements, Helper}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import features.BaseFeatureTests
 import org.scalatest._
 

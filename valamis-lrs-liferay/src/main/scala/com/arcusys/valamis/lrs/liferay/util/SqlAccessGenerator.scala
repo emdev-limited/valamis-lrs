@@ -16,14 +16,15 @@ class SqlAccessGenerator {
     MySQLDriver,
     PostgresDriver,
     DerbyDriver,
-    DB2Driver
+    DB2Driver,
+    SybaseDriver
   )
 
   val identifierQuotes = Seq("", """"""", "`", "[]")
 
   def sqlStatements: Unit = {
     val rawSql = dialects.flatMap { dialect =>
-      val upgradeSql = new DbUpgradeSql(dialect, null)
+      val upgradeSql = new DbUpgradeSql(dialect, null, null)
       upgradeSql.sql
     }
       .distinct
@@ -34,7 +35,7 @@ class SqlAccessGenerator {
 
   def sqlTables: Unit = {
     val rawSql = identifierQuotes.flatMap { identifierQuote =>
-      val upgradeSql = new DbUpgradeSql(H2Driver, null)
+      val upgradeSql = new DbUpgradeSql(H2Driver, null, null)
       identifierQuote.length match {
         case 0 => upgradeSql.tables
         case 1 => upgradeSql.tables.map { t => s"$identifierQuote$t$identifierQuote" }

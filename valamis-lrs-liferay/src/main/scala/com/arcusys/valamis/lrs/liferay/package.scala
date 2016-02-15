@@ -1,15 +1,18 @@
 package com.arcusys.valamis.lrs
 
 import javax.servlet.http.{HttpServletResponse => r}
-
 import com.liferay.portal.kernel.servlet.{HttpHeaders => h}
 
 /**
  * Created by Iliya Tryapitsin on 21.04.15.
  */
 package object liferay {
+
   type UpgradeProcess = com.liferay.portal.kernel.upgrade.UpgradeProcess
   type LogFactoryUtil = com.liferay.portal.kernel.log.LogFactoryUtil
+
+  val lrsUrlPrefix                    = "/xapi"
+  val liferayUrlPrefix                = "/valamis-lrs-portlet" + lrsUrlPrefix
 
   val XExperienceAPIConsistentThrough = "X-Experience-API-Consistent-Through"
   val AccessControlExposeHeaders      = "Access-Control-Expose-Headers"

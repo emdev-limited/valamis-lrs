@@ -61,7 +61,7 @@ case class Agent(name:        Option[String] = None,
  * @param account An openID that uniquely identifies the Agent.
  */
 case class Group(name:        Option[String] = None,
-                 member:      Option[Seq[Actor]] = None,
+                 member:      Option[Seq[Agent]] = None,
                  mBox:        Option[String] = None,
                  mBoxSha1Sum: Option[String] = None,
                  openId:      Option[String] = None, // URI, IRI, IRL figure it out later!!!
@@ -116,20 +116,17 @@ case class Person(var names:    Seq[String],
  * @param homePage The canonical home page for the system the account is on. This is based on FOAF's accountServiceHomePage.
  * @param name The unique id or name used to log in to this account. This is based on FOAF's accountName.
  */
-class Account(val homePage: String,
-              val name:     String) {
+case class Account(homePage: String,
+                   name:     String) {
+
+  AccountValidator check this
+
   override def toString =
     s"""
        |Account instance
        |homePage   = $homePage
        |name       = $name
      """.stripMargin
-}
-
-object Account {
-  def apply(homePage: String,
-            name:     String) = AccountValidator check new Account(homePage, name)
-
 }
 
 case class AgentProfile(profileId: String,

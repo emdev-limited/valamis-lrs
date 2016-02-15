@@ -21,15 +21,23 @@ class VerbServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
     model.action match {
       case model.VerbStatistics =>
         VerbStatistics(
-          amount       = lrs.verbAmount       (model.since),
-          byGroup      = lrs.verbAmountByGroup(model.since),
-          withDatetime = lrs.verbIdsWithDate  (model.since)
+          amount = reporter verbAmount model.since,
+          byGroup = reporter verbAmountByGroup model.since,
+          withDatetime = reporter verbIdsWithDate model.since
         )
 
       case model.VerbsWithActivities =>
-        lrs.verbWithActivities(model.filter, model.limit, model.offset, model.ascSort)
+        reporter.verbWithActivities(model.filter,
+          model.limit,
+          model.offset,
+          model.nameSort,
+          model.timeSort,
+          model.sortTimeFirst)
 
+      case model.VerbsAmount =>
+        reporter.verbAmount(model.since, model.verb)
     }
   }, request, response)
 
+  override val ServletName: String = "Verb"
 }

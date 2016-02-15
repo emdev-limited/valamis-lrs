@@ -20,7 +20,7 @@ package com.arcusys.valamis.lrs.tincan
  * @param steps Specific to the given interactionType
  * @param extensions A map of other properties as needed
  */
-case class Activity(id: String,
+case class Activity(id: Activity#Id,
                     name: Option[LanguageMap] = None,
                     description: Option[LanguageMap] = None,
                     theType: Option[String] = None,
@@ -33,6 +33,8 @@ case class Activity(id: String,
                     target: Seq[InteractionComponent] = Seq(),
                     steps: Seq[InteractionComponent] = Seq(),
                     extensions: Option[Map[String, String]] = None) extends StatementObject {
+  type Id = String
+
   override def toString =
     s"""
        |Activity instance

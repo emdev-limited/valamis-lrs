@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.tincan.test
 
 import com.arcusys.valamis.lrs.serializer._
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 class ActorSerializationTests extends BaseSerializationTests {
   behavior of "Actor serializer/deserializer testing"

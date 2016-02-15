@@ -68,7 +68,7 @@ object Statements {
   }
 
   object Good {
-    def minimal = Statement(actor = Agents.typical, verb = Verbs.typical, `object` = Activities.typical)
+    def minimal = Statement(actor = Agents.typical, verb = Verbs.minimal, `object` = Activities.typical)
     def minimalSubStmnt = minimal.copy(`object` = SubStatements.typical)
     def voiding(ref: StatementRef) = minimal.copy(verb = Verbs.voiding, id = UUIDs.unique, `object` = Some(ref))
     def voiding(ref: Option[StatementRef]) = minimal.copy(verb = Verbs.voiding, id = UUIDs.unique, `object` = ref)
@@ -79,10 +79,10 @@ object Statements {
     val `should pass statement attachments`       = minimal.copy(attachments = Attachments.oneTextMetadata)
     val `should pass sub-statement verb typical`  = minimalSubStmnt
 
-    val `statement activity extensions can be empty` = minimal.copy(`object` = Activities.noExtensions)
+    val `statement activity extensions can be empty`     = minimal.copy(`object` = Activities.noExtensions)
     val `statement activity extensions can be non empty` = minimal.copy(`object` = Activities.allProperties)
-    val `statement result   extensions can be empty` = minimal.copy(result   = Results.noExtensions)
-    val `statement context  extensions can be empty` = minimal.copy(context  = Contexts.noExtensions)
+    val `statement result   extensions can be empty`     = minimal.copy(result   = Results.noExtensions)
+    val `statement context  extensions can be empty`     = minimal.copy(context  = Contexts.noExtensions)
     val `statement context  extensions can be non empty` = minimal.copy(context  = Contexts.allProperties)
 
     val `statement sub-statement activity extensions can be empty` = minimalSubStmnt.copy(`object` = SubStatements.activityWithNoExtensions)

@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.tincan.test
 
 import com.arcusys.valamis.lrs.serializer.EnumNameIgnoreCaseSerializer
 import com.arcusys.valamis.lrs.tincan.{ContextActivities, StatementObjectType}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import org.json4s.{DefaultFormats, Formats}
 /**
  * Created by Iliya Tryapitsin on 30/12/14.
@@ -16,7 +16,7 @@ class ContextActivitySerializationTests extends BaseSerializationTests {
     val result = JsonHelper.fromJson[ContextActivities](raw, new EnumNameIgnoreCaseSerializer(StatementObjectType))
 
     assert(!result.grouping.isEmpty)
-    assert(Some(StatementObjectType.activity) == result.grouping.head.objectType)
+    assert(Some(StatementObjectType.Activity) == result.grouping.head.objectType)
     assert("http://tincanapi.com/GolfExample_TCAPI" == result.grouping.head.id)
 
     val json = JsonHelper.toJson(result, new EnumNameIgnoreCaseSerializer(StatementObjectType))

@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.tincan.test
 
 import com.arcusys.valamis.lrs.serializer._
 import com.arcusys.valamis.lrs.test.tincan._
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.{JsonDeserializeException, JsonHelper}
 import org.json4s.CustomSerializer
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
@@ -23,21 +23,32 @@ class SerializerTests extends FeatureSpec with GivenWhenThen {
     val contexts   = Contexts       .Good.fieldValues
     val statements = Statements     .Good.fieldValues
 
-    def scenarioTemplate[T](testCase: (String, Any), serializer: CustomSerializer[T])
+    def scenarioTemplate[T <: AnyRef](testCase: (String, AnyRef), serializer: CustomSerializer[T])
                            (implicit man: Manifest[T]) = scenario(s"${testCase._1}") {
-      val rawData = testCase._2
+      val rawData = testCase._2.asInstanceOf[AnyRef]
       val rawDataJson = JsonHelper.toJson(rawData)
       val deserializedRawData = JsonHelper.fromJson[T](rawDataJson, serializer)
       val serializedRawData = JsonHelper.toJson(deserializedRawData, serializer)
     }
 
-    statements  foreach { x => scenarioTemplate(x, new StatementSerializer) }
-    activities  foreach { x => scenarioTemplate(x, new ActivitySerializer ) }
-    agents      foreach { x => scenarioTemplate(x, new AgentSerializer    ) }
-    verbs       foreach { x => scenarioTemplate(x, VerbSerializer         ) }
-    subStmnts   foreach { x => scenarioTemplate(x, new SubStatementSerializer) }
-    scores      foreach { x => scenarioTemplate(x, ScoreSerializer        ) }
-    results     foreach { x => scenarioTemplate(x, ResultSerializer       ) }
-    contexts    foreach { x => scenarioTemplate(x, new ContextSerializer  ) }
+    statements  foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], new StatementSerializer) }
+    activities  foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], new ActivitySerializer ) }
+    agents      foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], new AgentSerializer    ) }
+    verbs       foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], VerbSerializer         ) }
+    subStmnts   foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], new SubStatementSerializer) }
+    scores      foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], ScoreSerializer        ) }
+    results     foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], ResultSerializer       ) }
+    contexts    foreach { x => scenarioTemplate(x.asInstanceOf[(String, AnyRef)], new ContextSerializer  ) }
+
+  }
+
+  feature("Bad serialize/de-serialize tests") {
+    scenario("Throw exception for incorrect URI in account") {
+      intercept[JsonDeserializeException] {
+        val stmnt = Statements.Good.minimal.copy(actor = Agents.Bad.`incorrect Account uri`)
+        val rawDataJson = JsonHelper.toJson(stmnt)
+        val deserializedRawData = JsonHelper.fromJson[com.arcusys.valamis.lrs.tincan.Statement](rawDataJson, new StatementSerializer())
+      }
+    }
   }
 }

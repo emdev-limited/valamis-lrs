@@ -24,7 +24,7 @@ class RequestTokenServlet @Inject()(inj: Injector) extends BaseAuthServlet(inj) 
 
   def processRequest(request: HttpServletRequest, response: HttpServletResponse) {
     try {
-      val requestMessage = OAuthServlet.getMessage(request, null)
+      val requestMessage = getMessage(request)
       val consumer = getConsumer(requestMessage, checkScope = true)
       val accessor = new OAuthAccessor(consumer)
       validator.validateMessage(requestMessage, accessor)

@@ -13,7 +13,7 @@ import scala.util.{Success, Failure, Try}
  */
 object VerbValidator {
   def checkNotNull(jValue: JValue) = {
-    jValue \ id notNull
+    jValue \ Id notNull
 
     jValue \ display notNull
   }

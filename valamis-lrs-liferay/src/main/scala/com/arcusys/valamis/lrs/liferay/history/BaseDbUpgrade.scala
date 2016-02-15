@@ -11,27 +11,27 @@ import scala.slick.jdbc.meta.MTable
  * Created by iliyatryapitsin on 16.04.15.
  */
 trait BaseDbUpgrade {
-  val db: JdbcBackend#Database
-  val driver: JdbcDriver
+  val database: JdbcBackend#Database
+  val jdbcDriver: JdbcDriver
 
-  implicit val dialect = Dialect(driver) match {
+  implicit val dialect = Dialect(jdbcDriver) match {
     case Some(d) => d
-    case None   => throw new NotImplementedError(s"Migration dialect for $driver not implement")
+    case None   => throw new NotImplementedError(s"Migration dialect for $jdbcDriver not implement")
   }
 
   def upgradeMigrations: MigrationSeq
 
   def downgradeMigrations: MigrationSeq
 
-  def upgrade = db.withSession { implicit session =>
+  def upgrade = database.withSession { implicit session =>
     upgradeMigrations.apply()
   }
 
-  def downgrade = db.withSession { implicit session =>
+  def downgrade = database.withSession { implicit session =>
     downgradeMigrations.apply()
   }
 
-  def tables = db.withSession { implicit session =>
-    driver.defaultTables
+  def tables = database.withSession { implicit session =>
+    jdbcDriver.defaultTables
   }
 }

@@ -17,7 +17,21 @@ object Scores {
   val max    = Some(100.toString)
 
   object Good {
-
+    val typical         = Score(scaled = scaled)
+    val scaledOnly      = Score(scaled = scaled)
+    val rawOnly         = Score(raw = raw)
+    val minOnly         = Score(min = min)
+    val maxOnly         = Score(max = max)
+    val scaledAndRaw    = Score(scaled = scaled, raw = raw)
+    val scaledAndMin    = Score(scaled = scaled, min = min)
+    val scaledAndMax    = Score(scaled = scaled, max = max)
+    val rawAndMin       = Score(raw = raw, min = min)
+    val rawAndMax       = Score(raw = raw, max = max)
+    val minAndMax       = Score(min = min, max = max)
+    val scaledRawAndMin = Score(scaled = scaled, raw = raw, min = min)
+    val scaledRawAndMax = Score(scaled = scaled, raw = raw, max = max)
+    val rawMinAndMax    = Score(raw = raw, min = min, max = max)
+    val allProperties   = Some(Score(scaled = scaled, raw = raw, min = min, max = max))
   }
 
   val empty           = Score()

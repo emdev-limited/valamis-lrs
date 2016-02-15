@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.tincan.test
 import com.arcusys.valamis.lrs.serializer.{ActorSerializer, GroupSerializer}
 import com.arcusys.valamis.lrs.test.tincan.Groups
 import com.arcusys.valamis.lrs.tincan.{Actor, Group}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 /**
  * Created by Iliya Tryapitsin on 30/12/14.

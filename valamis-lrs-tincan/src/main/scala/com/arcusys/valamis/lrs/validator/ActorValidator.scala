@@ -1,5 +1,6 @@
 package com.arcusys.valamis.lrs.validator
 
+import com.arcusys.valamis.lrs._
 import com.arcusys.valamis.lrs.tincan.{Actor, Constants}
 import org.apache.commons.validator.routines.{EmailValidator, UrlValidator}
 import org.json4s.JsonAST.JValue
@@ -9,8 +10,9 @@ import Constants.Tincan.Field._
  */
 object ActorValidator {
 
-  val urlValidator = UrlValidator.getInstance()
+  val urlValidator   = UrlValidator.getInstance()
   val emailValidator = EmailValidator.getInstance()
+  val mailTo         = "mailto:"
 
   def checkNotNull(jValue: JValue) = {
     jValue \ ObjectType   notNull
@@ -28,27 +30,24 @@ object ActorValidator {
 
   def check(actor: Actor) = {
     checkIfEmpty(actor)
-    checkMBox(actor.mBox)
-    checkOpenId(actor.openId)
+    actor.mBox   whenDefined checkMBox
+    actor.openId whenDefined checkUrl
   }
 
-  private def checkMBox(mBox: Option[String]) = mBox match {
-    case Some(value) => {
-      if (!value.contains("mailto:"))
-        throw new IllegalArgumentException("Actor mbox: should contains 'mailto:' prefix")
-
-      val email = value.replaceAll("mailto:", "")
-      if (!emailValidator.isValid(email))
-        throw new IllegalArgumentException("Actor mbox: incorrect email address")
+  private def checkMBox(email: String) = {
+    email contains mailTo whenFalse { r =>
+      throw new IllegalArgumentException("Actor mbox: should contains 'mailto:' prefix")
     }
-    case None =>
+
+    email removeAll mailTo then checkEmail
   }
 
-  private def checkOpenId(openId: Option[String]) = openId match {
-    case Some(value) => if (!urlValidator.isValid(value))
-      throw new IllegalArgumentException("Actor openid: incorrect URI")
+  private def checkEmail (email: String) = emailValidator isValid email whenFalse { r =>
+    throw new IllegalArgumentException("Actor mbox: incorrect email address")
+  }
 
-    case None =>
+  private def checkUrl (url: String) = urlValidator isValid url whenFalse { r =>
+    throw new IllegalArgumentException("Actor openid: incorrect URI")
   }
 
   private def checkIfEmpty(actor: Actor) = if (
