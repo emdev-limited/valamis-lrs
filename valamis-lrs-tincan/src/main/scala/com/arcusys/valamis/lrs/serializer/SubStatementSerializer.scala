@@ -19,7 +19,7 @@ class SubStatementSerializer(formatType: SerializeFormat) extends CustomSerializ
     implicit val f = subStatementSerializers(formatType)
 
     JObject(
-      JField(Constants.Tincan.Field.ObjectType, JString(StatementObjectType.subStatement.toString.capitalize)),
+      JField(Constants.Tincan.Field.ObjectType, JString(StatementObjectType.SubStatement.toString.capitalize)),
       JField(Constants.Tincan.Actor, Extraction.decompose(subStatement.actor)),
       JField(Constants.Tincan.Verb, Extraction.decompose(subStatement.verb)),
       JField(Constants.Tincan.Field.obj, Extraction.decompose(subStatement.obj))

@@ -15,7 +15,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
 
     model.stateId match {
       case Some(stateId) =>
-        lrs.getProfile(
+        lrs.getDocument(
           model.agent,
           model.activityId,
           stateId,
@@ -25,7 +25,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
           case None => throw new NotFoundException("State profile")
         }
       case None =>
-        lrs.getProfiles(
+        lrs.getDocuments(
           model.agent,
           model.activityId,
           model.registration,
@@ -81,4 +81,5 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
     Unit
   }, request, response)
 
+  override val ServletName: String = "StateProfile"
 }

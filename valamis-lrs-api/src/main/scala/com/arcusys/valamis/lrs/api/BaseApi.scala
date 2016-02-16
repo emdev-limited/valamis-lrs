@@ -1,14 +1,14 @@
 package com.arcusys.valamis.lrs.api
 
 import java.io.InputStream
-
 import com.arcusys.valamis.lrs.tincan.Constants
 import org.apache.http.{HttpStatus, HttpHeaders}
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpRequestBase}
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.entity.ContentType
 import org.apache.http.impl.client.HttpClients
-
+import org.json4s._
+import org.json4s.jackson.JsonMethods._
 import scala.io.Source
 import scala.util.{Try, Failure, Success}
 
@@ -17,16 +17,16 @@ import scala.util.{Try, Failure, Success}
  */
 abstract class BaseApi(implicit lrs: LrsSettings) {
 
-  def addressPathSuffix: String
+  val addressPathSuffix: String
 
   protected val httpClient = HttpClients.createDefault()
-  protected val uriBuilder = new URIBuilder(lrs.address)
+  protected val uriBuilder = new URIBuilder(lrs.address.stripSuffix("/"))
   protected val path = uriBuilder.getPath
 
   protected def initRequestAsJson(request: HttpRequestBase) = {
-    request.addHeader(Constants.Headers.Version, lrs.version)
-    request.addHeader(HttpHeaders.AUTHORIZATION, lrs.auth.getAuthString)
-    request.addHeader(HttpHeaders.CONTENT_TYPE, ContentType.APPLICATION_JSON.toString)
+    request.addHeader(Constants.Headers.Version, lrs.version                          )
+    request.addHeader(HttpHeaders.AUTHORIZATION, lrs.auth.getAuthString               )
+    request.addHeader(HttpHeaders.CONTENT_TYPE,  ContentType.APPLICATION_JSON.toString)
   }
 
   protected def getContent(response: CloseableHttpResponse) : Try[String] = {
@@ -46,13 +46,21 @@ abstract class BaseApi(implicit lrs: LrsSettings) {
   }
 
   implicit class BuilderExtension(builder: URIBuilder) {
-    def addOptionParameter[T](name: String, v: Option[T]) = v match {
-      case Some(value) => builder.addParameter(name, value toString)
-      case None        => builder
-    }
+    def addOptionParameter[T](name: String, v: Option[T]) =
+      v map { x =>
+        builder.addParameter(name, x toString)
+      } getOrElse builder
   }
 
-  def close(): Unit = {
-    httpClient.close()
+  def close(): Unit = httpClient.close()
+
+  protected def fromJson[T](text: String, serializers: Serializer[_]*)(implicit man: Manifest[T]) = {
+    implicit val formats = DefaultFormats ++ serializers
+    parse(text, useBigDecimalForDouble = true).extract[T]
+  }
+
+  protected def toJson[T](obj: T, serializers: Serializer[_]*): String = {
+    implicit val formats = DefaultFormats ++ serializers
+    compact(render(Extraction.decompose(obj)))
   }
 }

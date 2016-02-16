@@ -15,4 +15,5 @@ class AboutServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
   override def doGet(request : HttpServletRequest,
                      response: HttpServletResponse): Unit = jsonAction(() => GetAboutResponse(), request, response)
 
+  override val ServletName: String = "About"
 }

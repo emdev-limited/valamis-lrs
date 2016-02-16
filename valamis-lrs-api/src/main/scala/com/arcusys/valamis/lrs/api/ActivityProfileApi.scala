@@ -5,7 +5,6 @@ import java.util.UUID
 
 import com.arcusys.valamis.lrs.serializer.ActivitySerializer
 import com.arcusys.valamis.lrs.tincan.{Activity, Constants}
-import com.arcusys.valamis.utils.serialization.JsonHelper
 import org.apache.http.client.entity.EntityBuilder
 import org.apache.http.client.methods.{HttpDelete, HttpGet, HttpPut}
 import org.apache.http.entity.ContentType
@@ -94,7 +93,7 @@ class ActivityProfileApi(implicit lrs: LrsSettings) extends BaseApi() {
     val response = httpClient.execute(httpGet)
     if (response.getStatusLine.getStatusCode == HttpStatus.SC_OK) {
       val content = EntityUtils.toString(response.getEntity)
-      val result = JsonHelper.fromJson[Seq[String]](content)
+      val result = fromJson[Seq[String]](content)
       Success(result)
     } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
   }
@@ -119,43 +118,7 @@ class ActivityProfileApi(implicit lrs: LrsSettings) extends BaseApi() {
     } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
   }
 
-  def getActivities(activity: String): Try[String] = {
-    val uri = uriBuilder
-      .clearParameters()
-      .setPath(s"/$path/$activityAddressPathSuffix")
-      .setParameter("activity", activity)
-      .build()
-
-    val httpGet = new HttpGet(uri)
-    httpGet.addHeader(Constants.Headers.Version, lrs.version)
-    httpGet.addHeader(HttpHeaders.AUTHORIZATION, lrs.auth.getAuthString)
-
-    val response = httpClient.execute(httpGet)
-    if (response.getStatusLine.getStatusCode == HttpStatus.SC_OK) {
-      val content = EntityUtils.toString(response.getEntity)
-      Success(content)
-    } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
-  }
-
-  def getActivity(activityId: String): Try[Activity] = {
-    val uri = uriBuilder
-      .clearParameters()
-      .setPath(s"/$path/$activityAddressPathSuffix")
-      .setParameter("activityId", activityId)
-      .build()
-
-    val httpGet = new HttpGet(uri)
-    httpGet.addHeader(Constants.Headers.Version, lrs.version)
-    httpGet.addHeader(HttpHeaders.AUTHORIZATION, lrs.auth.getAuthString)
-
-    val response = httpClient.execute(httpGet)
-
-    if (response.getStatusLine.getStatusCode == HttpStatus.SC_OK) {
-      val content = EntityUtils.toString(response.getEntity)
-      Success(JsonHelper.fromJson[Activity](content, new ActivitySerializer))
-    } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
-  }
-
+  
   def delete(activityId: UUID,
              profileId: String): Try[Int] = {
     val uri = uriBuilder
@@ -177,6 +140,5 @@ class ActivityProfileApi(implicit lrs: LrsSettings) extends BaseApi() {
       Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
   }
 
-  override def addressPathSuffix: String = "activities/profile"
-  def activityAddressPathSuffix: String = "activities"
+  val addressPathSuffix: String = "activities/profile"
 }

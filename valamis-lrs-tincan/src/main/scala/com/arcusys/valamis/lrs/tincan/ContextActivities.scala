@@ -9,11 +9,23 @@ package com.arcusys.valamis.lrs.tincan
  * @param category
  * @param other
  */
-// TODO Change to Seq
-case class ContextActivities(parent:   Set[ActivityReference],
-                             grouping: Set[ActivityReference],
-                             category: Set[ActivityReference],
-                             other:    Set[ActivityReference]) {
+case class ContextActivities(parent:   Seq[ActivityReference],
+                             grouping: Seq[ActivityReference],
+                             category: Seq[ActivityReference],
+                             other:    Seq[ActivityReference]) {
+
+  lazy val allIds =
+    categoryIds ++
+    groupingIds ++
+    otherIds    ++
+    parentIds
+
+  lazy val categoryIds = category.map { x => x.id }
+  lazy val groupingIds = grouping.map { x => x.id }
+  lazy val otherIds    = other.map    { x => x.id }
+  lazy val parentIds   = parent.map   { x => x.id }
+
+
 
   override def toString =
     s"""

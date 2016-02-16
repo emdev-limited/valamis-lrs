@@ -1,11 +1,12 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from
 
-  import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.ActorRow
+import java.beans.Introspector
+
+import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.ActorRow
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 import scala.slick.jdbc._
-import scala.tools.scalap.scalax.util.StringUtil
 import com.arcusys.valamis.lrs.liferay.history.BaseComponent
 
 /**
@@ -17,7 +18,7 @@ trait ActorComponent {
     ActorRow(
       r.nextLong(), //`id_` bigint(20) NOT NULL,
       r.nextStringOption(), //`tincanID` varchar(512) DEFAULT NULL,
-      r.nextStringOption().map { StringUtil.decapitalize }, //`objectType` varchar(512) DEFAULT NULL,
+      r.nextStringOption().map { Introspector.decapitalize }, //`objectType` varchar(512) DEFAULT NULL,
       r.nextStringOption(), //`name` varchar(3000) DEFAULT NULL,
       r.nextStringOption(), //`mbox` varchar(3000) DEFAULT NULL,
       r.nextStringOption(), //`mbox_sha1sum` varchar(3000) DEFAULT NULL,

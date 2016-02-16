@@ -7,7 +7,7 @@ import com.arcusys.valamis.lrs.liferay.exception
 import com.arcusys.valamis.lrs.serializer.StatementSerializer
 import com.arcusys.valamis.lrs.liferay.exception.InvalidOrMissingArgumentException
 import com.arcusys.valamis.lrs.tincan.Statement
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 import scala.collection.JavaConverters._
 import scala.util.{Failure, Success, Try}

@@ -59,9 +59,11 @@ class ActivityProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj
                         response: HttpServletResponse): Unit = jsonAction[TincanActivityProfileRequest](model => {
 
     model.profileId match {
-      case Some(profileId) => lrs.deleteProfileActivityWithDocument(model.activityId, profileId)
+      case Some(profileId) => lrs.deleteActivityProfile(model.activityId, profileId)
       case None => throw new InvalidOrMissingArgumentException("profileId")
     }
     Unit
   }, request, response)
+
+  override val ServletName: String = "ActivityProfile"
 }

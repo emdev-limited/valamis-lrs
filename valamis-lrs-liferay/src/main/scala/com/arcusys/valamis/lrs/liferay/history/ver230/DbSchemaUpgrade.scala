@@ -1,8 +1,11 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230
 
 import com.arcusys.slick.migration._
-import com.arcusys.valamis.lrs.datasource.DataContext
-import com.arcusys.valamis.lrs.datasource.DbNameUtils._
+import com.arcusys.valamis.lrs.jdbc.{JdbcLrs, SimpleExecutionContext}
+import com.arcusys.valamis.lrs.jdbc.database._
+import com.arcusys.valamis.lrs.jdbc.database.typemap.joda.SimpleJodaSupport
+import com.arcusys.valamis.lrs.jdbc.database.utils.DbNameUtils
+import DbNameUtils._
 import com.arcusys.valamis.lrs.liferay.history.BaseDbUpgrade
 
 import scala.slick.driver.JdbcDriver
@@ -11,10 +14,12 @@ import scala.slick.jdbc.JdbcBackend
 /**
  * Created by Iliya Tryapitsin on 20/01/15.
  */
-class DbSchemaUpgrade (val driver: JdbcDriver,
-                       val db    : JdbcBackend#Database) extends BaseDbUpgrade {
+class DbSchemaUpgrade (val jdbcDriver: JdbcDriver,
+                       val database  : JdbcBackend#Database,
+                       val dataContext : JdbcLrs) extends BaseDbUpgrade {
 
-  val dataContext = new DataContext(driver, db)
+  val jodaSupport = new SimpleJodaSupport(jdbcDriver)
+  val executionContext = new SimpleExecutionContext(jdbcDriver, database)
 
   val actors              = dataContext.actors              baseTableRow
   val scores              = dataContext.scores              baseTableRow

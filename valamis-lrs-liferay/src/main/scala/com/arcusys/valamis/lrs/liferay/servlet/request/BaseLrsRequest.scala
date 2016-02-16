@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.liferay.servlet.request
 import javax.servlet.http.HttpServletRequest
 
 import com.arcusys.valamis.lrs.liferay.exception.InvalidOrMissingArgumentException
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import com.liferay.portal.util.PortalUtil
 import org.apache.commons.lang.CharEncoding
 import org.json4s.DefaultFormats
@@ -81,12 +81,8 @@ class BaseLrsRequest(var request: HttpServletRequest) {
   def body: String = {
     val uploadRequest = PortalUtil.getUploadServletRequest(request)
     val encoding = uploadRequest.getCharacterEncoding
-    val enc = if (encoding == null || encoding.trim.length == 0) {
-      if (contentType.exists(_ equalsIgnoreCase "application/json"))
-        CharEncoding.UTF_8
-      else
-        CharEncoding.ISO_8859_1
-    } else encoding
+    val enc = if (encoding == null || encoding.trim.length == 0) CharEncoding.UTF_8
+    else encoding
 
     val stream = uploadRequest.getInputStream
     val body = Source.fromInputStream(stream, enc).mkString

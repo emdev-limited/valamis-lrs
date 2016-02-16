@@ -3,5 +3,6 @@
 <display>
     <category name="Valamis Administration">
         <portlet id="LrsClients"/>
+        <portlet id="LrsMode"/>
     </category>
 </display>

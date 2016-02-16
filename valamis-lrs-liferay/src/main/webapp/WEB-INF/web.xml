@@ -8,13 +8,29 @@
     <listener>
         <listener-class>com.arcusys.valamis.lrs.liferay.GuiceConfig</listener-class>
     </listener>
+    <listener>
+        <listener-class>com.arcusys.valamis.lrs.liferay.servlet.LrsHealthCheckServletContextListener</listener-class>
+    </listener>
+    <listener>
+        <listener-class>com.arcusys.valamis.lrs.liferay.servlet.LrsServletContextListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>guiceFilter</filter-name>
         <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
     </filter>
+
     <filter-mapping>
         <filter-name>guiceFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <servlet>
+        <servlet-name>metrics</servlet-name>
+        <servlet-class>com.codahale.metrics.servlets.AdminServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>metrics</servlet-name>
+        <url-pattern>/metrics/*</url-pattern>
+    </servlet-mapping>
 </web-app>

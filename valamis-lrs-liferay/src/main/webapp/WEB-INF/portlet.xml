@@ -14,4 +14,16 @@
             <title>Valamis TinCan API Client Manager</title>
         </portlet-info>
     </portlet>
+
+    <portlet>
+        <portlet-name>LrsMode</portlet-name>
+        <portlet-class>com.arcusys.valamis.lrs.liferay.portlet.LrsModeView</portlet-class>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>view</portlet-mode>
+        </supports>
+        <portlet-info>
+            <title>Valamis LRS Mode</title>
+        </portlet-info>
+    </portlet>
 </portlet-app>

@@ -1,7 +1,7 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from.row
 
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import com.arcusys.valamis.lrs.liferay.history.Helper._
 
 /**

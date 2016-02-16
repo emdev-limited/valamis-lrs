@@ -1,9 +1,9 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230.from
 
-  import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.ContextActivityRow
+import com.arcusys.valamis.lrs.liferay.history.ver230.from.row.ContextActivityRow
 import com.arcusys.valamis.lrs.serializer.EnumNameIgnoreCaseSerializer
 import com.arcusys.valamis.lrs.tincan.{StatementObjectType, ActivityReference, ContextActivities}
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 
 import scala.slick.jdbc._
 import com.arcusys.valamis.lrs.liferay.history.BaseComponent
@@ -48,8 +48,8 @@ trait ContextActivityComponent {
   }
 
   protected def getActivityReferences(str: Option[String])(implicit session: JdbcBackend#Session) = str match {
-    case Some(v) if v.isEmpty => Set[ActivityReference]()
-    case Some(v) if !v.isEmpty => JsonHelper.fromJson[Set[ActivityReference]](v, new EnumNameIgnoreCaseSerializer(StatementObjectType))
-    case None => Set[ActivityReference]()
+    case Some(v) if v.isEmpty => Seq[ActivityReference]()
+    case Some(v) if !v.isEmpty => JsonHelper.fromJson[Seq[ActivityReference]](v, new EnumNameIgnoreCaseSerializer(StatementObjectType))
+    case None => Seq[ActivityReference]()
   }
 }

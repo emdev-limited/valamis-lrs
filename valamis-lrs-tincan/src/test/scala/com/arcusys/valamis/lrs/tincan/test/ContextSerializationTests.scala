@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.tincan.test
 import com.arcusys.valamis.lrs.serializer.ContextSerializer
 import com.arcusys.valamis.lrs.test.tincan.Contexts
 import com.arcusys.valamis.lrs.tincan.Context
-import com.arcusys.valamis.utils.serialization.JsonHelper
+import com.arcusys.json.JsonHelper
 import org.slf4j.LoggerFactory
 
 /**

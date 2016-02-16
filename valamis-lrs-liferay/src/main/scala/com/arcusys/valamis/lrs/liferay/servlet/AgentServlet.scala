@@ -17,4 +17,6 @@ class AgentServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
                      response: HttpServletResponse): Unit = jsonAction[TincanAgentProfileRequest](
 
     model => lrs.getPerson(model.agent), request, response)
+
+  override val ServletName: String = "Agent"
 }
