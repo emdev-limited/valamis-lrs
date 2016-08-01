@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ScoreRow
 trait ScoreQueries  extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type KeyCol = ConstColumn[ScoreRow#Type]
 

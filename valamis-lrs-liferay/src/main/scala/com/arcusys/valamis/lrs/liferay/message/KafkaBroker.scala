@@ -3,13 +3,12 @@ package com.arcusys.valamis.lrs.liferay.message
 import java.util.Properties
 
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.liferay.LrsTypeLocator
 import org.apache.kafka.clients.producer._
 
 /**
  * Created by Iliya Tryapitsin on 07.08.15.
  */
-class KafkaBroker extends Broker with LrsTypeLocator {
+class KafkaBroker extends Broker {
   private val serializerClassName = "org.apache.kafka.common.serialization.StringSerializer"
 
   override def !(msg: (String, String)): Unit = {

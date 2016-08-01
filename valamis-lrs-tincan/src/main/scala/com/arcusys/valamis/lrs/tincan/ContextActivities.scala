@@ -9,10 +9,10 @@ package com.arcusys.valamis.lrs.tincan
  * @param category
  * @param other
  */
-case class ContextActivities(parent:   Seq[ActivityReference],
-                             grouping: Seq[ActivityReference],
-                             category: Seq[ActivityReference],
-                             other:    Seq[ActivityReference]) {
+case class ContextActivities(parent:   Seq[ActivityReference] = Seq(),
+                             grouping: Seq[ActivityReference] = Seq(),
+                             category: Seq[ActivityReference] = Seq(),
+                             other:    Seq[ActivityReference] = Seq()) {
 
   lazy val allIds =
     categoryIds ++

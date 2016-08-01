@@ -7,22 +7,17 @@ package com.arcusys.valamis.lrs.jdbc.database.row
 /**
  * Base class for all entities that contains an id.
  */
-trait WithOptionKey[T] {
-
-  type KeyType = Option[T]
-
+trait WithKey[T] extends Product{
+  type KeyType
   type Type = T
-
   val key: KeyType
-
-  def withId[M <: KeyType](e: M): WithOptionKey[T]
+  def withId[M <: T](e: M): WithKey[T]
 }
 
-trait WithRequireKey[T] {
+trait WithOptionKey[T] extends WithKey[T] {
+  type KeyType = Option[T]
+}
 
-  type Type = T
-
-  val key: T
-
-  def withId[M <: Type](e: M): WithRequireKey[Type]
+trait WithRequireKey[T] extends WithKey[T] {
+  type KeyType = T
 }

@@ -9,8 +9,8 @@ import com.arcusys.valamis.lrs.jdbc.database.typemap.tincan.{StatementObjectType
 trait CustomTypeExtension {
   this: BaseDataContext =>
 
-  protected implicit val languageMapSupport = new LanguageMapSupport(executionContext.driver)
-  protected implicit val objTypeSupport     = new StatementObjectTypeSupport(executionContext.driver)
+  protected implicit val languageMapSupport = new LanguageMapSupport(driver)
+  protected implicit val objTypeSupport     = new StatementObjectTypeSupport(driver)
 
   implicit val languageMapTypeMapper         = languageMapSupport.typeMapper
   implicit val getLanguageMapResult          = languageMapSupport.getResult.getResult

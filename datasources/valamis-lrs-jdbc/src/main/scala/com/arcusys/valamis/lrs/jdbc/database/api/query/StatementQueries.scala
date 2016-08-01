@@ -11,7 +11,7 @@ trait StatementQueries extends TypeAliases {
   this: LrsDataContext =>
 
   import jodaSupport._
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type KeyType = StatementRow#Type
   private type IdCol   = ConstColumn[StatementRow#Type]
@@ -74,7 +74,7 @@ trait StatementQueries extends TypeAliases {
    * @param date Start date
    * @return Statement storage query
    */
-  private def findSince (date: DateCol) =
+  def findSinceQ (date: DateCol) =
     statements filter {
       x => x.timestamp >= date
     } sortBy {
@@ -106,7 +106,7 @@ trait StatementQueries extends TypeAliases {
    * @param count Take count
    * @return Statement storage query
    */
-  private def takeTop (count: NumCol) = statements sortBy { x => x.timestamp.desc } take count
+  def takeTopQ (count: Int) = statements sortBy { x => x.timestamp.desc } take count
 
   /**
    * Compiled query find statement by Id
@@ -146,12 +146,12 @@ trait StatementQueries extends TypeAliases {
   /**
    * Compiled query find statements since date. Sorted by timestamp
    */
-  val findStatementsSinceDateQC = Compiled((date: DateCol) => findSince (date))
+  val findStatementsSinceDateQC = Compiled((date: DateCol) => findSinceQ (date))
 
   /**
    * Compiled query take top statements
    */
-  val takeTopStatementsQC = Compiled((count: NumCol) => takeTop (count))
+//  val takeTopStatementsQC = Compiled((count: Int) => takeTopQ (count))
 
   val findStatementsQC = Compiled(findStatementsQ)
 }

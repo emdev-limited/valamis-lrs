@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ActivityRow
 trait ActivityQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type KeyCol = ConstColumn[ActivityRow#Type]
   private type UriCol = ConstColumn[String]

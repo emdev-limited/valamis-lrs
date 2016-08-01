@@ -21,7 +21,7 @@ trait StatementObjectApi
     with StatementRefApi
     with ActorApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   implicit def executor: ExecutionContextExecutor
 
   /**
@@ -58,7 +58,7 @@ trait StatementObjectApi
       } map {
         it => it.key get
 
-      } then findActorsByKeys
+      } afterThat findActorsByKeys
     }
 
     val activitiesTask = async {
@@ -68,7 +68,7 @@ trait StatementObjectApi
       } map {
         it => it.key get
 
-      } then findActivitiesByKeys
+      } afterThat findActivitiesByKeys
     }
 
     val subStatementsTask = async {
@@ -78,7 +78,7 @@ trait StatementObjectApi
       } map {
         it => it.key get
 
-      } then findSubStatementsByKeys
+      } afterThat findSubStatementsByKeys
     }
 
     val statementRefsTask = async {
@@ -87,7 +87,7 @@ trait StatementObjectApi
       } map {
         it => it.key get
 
-      } then findStatementRefsByKeys
+      } afterThat findStatementRefsByKeys
     }
 
     val tasks = subStatementsTask ::
@@ -99,6 +99,55 @@ trait StatementObjectApi
     Future sequence tasks map {
       x => x flatMap identity toMap
     }
+  }
+
+  def findStatementObjectsByKeys (keys: Seq[StatementObjectRow#Type])
+                                      (implicit session: Session): Map[StatementObjectRow#Type, StatementObject] = {
+    val objects = findStatementObjectTypesQ (keys).run
+
+    val actorsTask =
+      objects filter { it =>
+        it.objectType == StatementObjectType.Agent ||
+        it.objectType == StatementObjectType.Group
+
+      } map {
+        it => it.key get
+
+      } afterThat findActorsByKeys
+
+    val activitiesTask =
+      objects filter {
+        it => it.objectType == StatementObjectType.Activity
+
+      } map {
+        it => it.key get
+
+      } afterThat findActivitiesByKeys
+
+    val subStatementsTask =
+      objects filter {
+        it => it.objectType == StatementObjectType.SubStatement
+
+      } map {
+        it => it.key get
+
+      } afterThat findSubStatementsByKeys
+
+    val statementRefsTask =
+      objects filter {
+        it => it.objectType == StatementObjectType.StatementReference
+      } map {
+        it => it.key get
+
+      } afterThat findStatementRefsByKeys
+
+    val tasks = subStatementsTask ::
+      statementRefsTask           ::
+      activitiesTask              ::
+      actorsTask                  ::
+      Nil
+
+    tasks flatMap identity toMap
   }
 
 
@@ -139,7 +188,7 @@ trait StatementObjectApi
     def addExt (s: StatementObject)
                (implicit session: Session): StatementObjectRow#Type = s match {
       case o: SubStatement => subStatements add o
-      case o: Activity     => activities    addUnique o
+      case o: Activity     => activities    addOrUpdate o
       case o: Agent        => actors        addUnique o
       case o: Group        => actors        addUnique o
       case o: StatementReference => statementReferences addUnique o

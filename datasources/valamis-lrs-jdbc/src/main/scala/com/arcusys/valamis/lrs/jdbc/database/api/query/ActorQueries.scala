@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ActorRow
 trait ActorQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type MBoxCol        = ConstColumn[Option[String]]
   private type MBoxSha1SumCol = ConstColumn[Option[String]]

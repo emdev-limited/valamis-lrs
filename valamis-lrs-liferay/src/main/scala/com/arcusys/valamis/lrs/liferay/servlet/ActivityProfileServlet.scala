@@ -19,10 +19,10 @@ class ActivityProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj
                      response: HttpServletResponse): Unit = jsonAction[TincanActivityProfileRequest](model => {
 
     model.profileId match {
-      case None => lrs.getProfileIds(model.activityId, model.since)
-      case Some(profileId) => lrs.getDocument(model.activityId, profileId) match {
+      case None => lrs.getActivityProfileIds(model.activityId, model.since)
+      case Some(profileId) => lrs.getActivityProfile(model.activityId, profileId) match {
         case None => throw new NotFoundException("Activity Profile")
-        case Some(document) => {
+        case Some(document) =>
           // TODO: Check response for Other content type
           if (document.cType == ContentType.other) {
             response.setContentType("application/octet-stream")
@@ -30,7 +30,6 @@ class ActivityProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj
             response.getOutputStream.write(data)
             document.contents
           } else document.contents
-        }
       }
     }
   }, request, response)
@@ -39,7 +38,7 @@ class ActivityProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj
                       response: HttpServletResponse): Unit = jsonAction[TincanActivityProfileRequest](model => {
 
     model.profileId match {
-      case Some(profileId) => lrs.addOrUpdateDocument(model.activityId, profileId, model.document)
+      case Some(profileId) => lrs.addOrUpdateActivityProfile(model.activityId, profileId, model.document)
       case None => throw new InvalidOrMissingArgumentException("profileId")
     }
     Unit
@@ -49,7 +48,7 @@ class ActivityProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj
                      response: HttpServletResponse): Unit = jsonAction[TincanActivityProfileRequest](model => {
 
     model.profileId match {
-      case Some(profileId) => lrs.addOrUpdateDocument(model.activityId, profileId, model.document)
+      case Some(profileId) => lrs.addOrUpdateActivityProfile(model.activityId, profileId, model.document)
       case None => throw new InvalidOrMissingArgumentException("profileId")
     }
     Unit

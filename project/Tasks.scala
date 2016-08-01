@@ -13,16 +13,18 @@ object Tasks {
     println("Sql queries generation ...")
 
     val loader: ClassLoader = ClasspathUtilities.toLoader(classpath.map(_.data).map(_.getAbsoluteFile))
-    val clss = loader.loadClass("com.arcusys.valamis.lrs.liferay.util.SqlAccessGenerator")
-    clss.getMethod("sqlStatements").invoke(clss.newInstance())
+    val clss = loader.loadClass("com.arcusys.valamis.lrs.util.SqlAccessGenerator")
+    if(clss != null)
+      clss.getMethod("sqlStatements").invoke(clss.newInstance())
   }
 
   val sqlTablesGeneration: Def.Initialize[Task[Unit]] = (fullClasspath in Runtime) map { classpath =>
     println("Sql tables generation ...")
 
     val loader: ClassLoader = ClasspathUtilities.toLoader(classpath.map(_.data).map(_.getAbsoluteFile))
-    val clss = loader.loadClass("com.arcusys.valamis.lrs.liferay.util.SqlAccessGenerator")
-    clss.getMethod("sqlTables").invoke(clss.newInstance())
+    val clss = loader.loadClass("com.arcusys.valamis.lrs.util.SqlAccessGenerator")
+    if(clss != null)
+      clss.getMethod("sqlTables").invoke(clss.newInstance())
   }
 
 }

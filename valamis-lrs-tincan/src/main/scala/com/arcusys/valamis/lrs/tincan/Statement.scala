@@ -21,7 +21,7 @@ import org.joda.time.DateTime
  * @param version The Statement’s associated xAPI version
  * @param attachments Headers for attachments to the Statement
  */
-case class Statement(id:          Option[UUID] = Some(UUID.randomUUID()),
+case class Statement(id:          Statement#Id = Some(UUID.randomUUID()),
                      actor:       Actor,
                      verb:        Verb,
                      obj:         StatementObject,
@@ -32,6 +32,8 @@ case class Statement(id:          Option[UUID] = Some(UUID.randomUUID()),
                      authority:   Option[Actor] = None,
                      version:     Option[TincanVersion.Type] = Some(TincanVersion.ver101),
                      attachments: Seq[Attachment] = Seq()) {
+
+  type Id = Option[UUID]
 
   StatementValidator checkRequirements this
 

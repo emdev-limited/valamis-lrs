@@ -128,15 +128,3 @@ case class Account(homePage: String,
        |name       = $name
      """.stripMargin
 }
-
-case class AgentProfile(profileId: String,
-                        agent:     Agent,
-                        content:   Document) {
-  override def toString =
-    s"""
-       |AgentProfile instance
-       |profileId   = $profileId
-       |agent       = $agent
-       |content     = $content
-     """.stripMargin
-}

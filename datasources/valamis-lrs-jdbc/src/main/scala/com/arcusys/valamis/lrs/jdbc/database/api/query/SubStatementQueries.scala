@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 trait SubStatementQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type ActorKeyCol = ConstColumn[ActorRow#Type]
   private type KeyCol      = ConstColumn[SubStatementRow#Type]

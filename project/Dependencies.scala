@@ -1,21 +1,26 @@
+
 import sbt._
 
 object Version {
-
-  val scala                = "2.11.7"
+  val project              = "3.0.1"
+  val scala                = "2.11.8"
   val scalaAsync           = "0.9.4"
   val slick                = "2.1.0"
-  val slickDrivers         = "2.1.0"
+  val slickDrivers         = "2.1.2"
   val config               = "1.2.1"
   val json4s               = "3.2.11"
   val scalatest            = "2.2.3"
-  val scalacheck           = "1.12.1"
+  val scalacheck           = "1.12.5"
   val slf4j                = "1.6.4"
   val log4jExt             = "1.1"
   val httpClient           = "4.4"
   val httpMime             = "4.4"
   val portlet              = "2.0"
-  val liferayPortal62      = "6.2.2"
+
+  val liferayPortal62      = "6.2.5"
+  val liferayPortal70      = "7.0.0"
+  val liferayPlugins700    = "2.3.0"
+
   val akka                 = "2.3.9"
   val websocket            = "1.1"
 
@@ -31,8 +36,8 @@ object Version {
   val commonsLang          = "2.6"
   val oauth                = "20100527"
   val fileUpload           = "1.3.1"
-  val valamis              = "2.6.1"
-  val slickMigrations      = "2.1.0.3"
+  val valamisUtils         = "2.6.4"
+  val slickMigrations      = "2.1.4"
   val commonsIO            = "2.2"
 
   // Db
@@ -47,19 +52,6 @@ object Version {
 
   val metricsScala         = "3.5.1_a2.3"
   val metrics              = "3.1.2"
-
-  // Phantom Cassandra
-  val phantom              = "1.12.2"
-
-  val crossScala = Seq(scala, "2.10.5")
-
-  lazy val scalaVersion = sys.props.get("scala-2.11") match {
-    case Some(is) if is.nonEmpty && is.toBoolean => crossScala.head
-    case crossBuildFor                           => crossScala.last
-  }
-
-  /* For `scalaBinaryVersion.value outside an sbt task. */
-  lazy val scalaBinary = scalaVersion.dropRight(2)
 }
 
 object Libraries {
@@ -88,8 +80,8 @@ object Libraries {
   val httpClient            = "org.apache.httpcomponents"     %   "httpclient"                            % Version.httpClient
   val httpMime              = "org.apache.httpcomponents"     %   "httpmime"                              % Version.httpMime
   val guiceServlet          = "com.google.inject.extensions"  %   "guice-servlet"                         % Version.guice
-  val javaxServlet          = "javax.servlet"                 %   "javax.servlet-api"                     % Version.servletApi
-  val portlet               = "javax.portlet"                 %   "portlet-api"                           % Version.portlet
+  val servletApi            = "javax.servlet"                 %   "javax.servlet-api"                     % Version.servletApi
+  val portletApi            = "javax.portlet"                 %   "portlet-api"                           % Version.portlet
   val websocket             = "javax.websocket"               %   "javax.websocket-api"                   % Version.websocket
   val fileUpload            = "commons-fileupload"            %   "commons-fileupload"                    % Version.fileUpload
   val mockito               = "org.mockito"                   %   "mockito-all"                           % Version.mockito
@@ -97,6 +89,10 @@ object Libraries {
   // Liferay
   val liferayPortal62       = "com.liferay.portal"            %   "portal-service"                        % Version.liferayPortal62
   val liferayPortalImpl62   = "com.liferay.portal"            %   "portal-impl"                           % Version.liferayPortal62
+
+  // liferay 7.0
+  val lfPortalService700    = "com.liferay.portal"            %   "com.liferay.portal.kernel"             % Version.liferayPlugins700
+  val lfPortalImpl700       = "com.liferay.portal"            %   "com.liferay.portal.impl"               % Version.liferayPlugins700
 
   //OAuth 1.0 Provider & Consumer Library
   val oauthCore             = "net.oauth.core"                %   "oauth"                                 % Version.oauth
@@ -110,8 +106,8 @@ object Libraries {
   val postgres              = "org.postgresql"                %   "postgresql"                            % Version.postgres
 
   // Valamis
-  val valamisUtils          = "com.arcusys.valamis"           %%  "arcusys-util"                          % Version.valamis
-  val arcusysJson4s         = "com.arcusys.valamis"           %%  "arcusys-json4s"                        % Version.valamis
+  val valamisUtils          = "com.arcusys.valamis"           %%  "arcusys-util"                          % Version.valamisUtils
+  val arcusysJson4s         = "com.arcusys.valamis"           %%  "arcusys-json4s"                        % Version.valamisUtils
   val slickMigration        = "com.arcusys.slick"             %%  "slick-migration"                       % Version.slickMigrations
 
   val kafka                 = "org.apache.kafka"              %% "kafka"                                  % Version.kafka
@@ -121,10 +117,6 @@ object Libraries {
   val metrics               = "nl.grons"                      %% "metrics-scala"                          % Version.metricsScala
   val metricsServlet        = "io.dropwizard.metrics"         % "metrics-servlets"                        % Version.metrics
 
-  // Phantom Cassandra
-  val phantomDsl            = "com.websudos"                  %%  "phantom-dsl"                           % Version.phantom
-  val phantomTestkit        = "com.websudos"                  %%  "phantom-testkit"                       % Version.phantom
-  val phantomConnectors     = "com.websudos"                  %%  "phantom-connectors"                    % Version.phantom
 }
 
 
@@ -162,8 +154,8 @@ object Dependencies {
 
   // TODO: Uncomment when upload code to repository
   val jsonSet = Seq(
-//    json4s,
-//    json4sJackson,
+    json4s,
+    json4sJackson,
     json4sExt,
     arcusysJson4s
   )
@@ -182,8 +174,7 @@ object Dependencies {
   val common = Seq(
     scalaAsync,
     logback,
-    slf4j,
-    metrics
+    slf4j
   ) ++ testSet ++ joda
 
   val guice = Seq(
@@ -194,7 +185,7 @@ object Dependencies {
   val baseWeb = Seq(
     fileUpload,
     guiceServlet,
-    javaxServlet % Provided
+    servletApi % Provided
   )
 
   val tincan = Seq(
@@ -207,19 +198,25 @@ object Dependencies {
 
   val database = slickSet ++ jsonSet ++ testDbSet ++ util :+ reducedCommonsValidator
 
+  val metrics = Seq(
+    Libraries.metrics,
+    metricsServlet
+  )
+
   val web = Seq(
     commonsIO,
     websocket,
-    portlet % Provided,
     oauthCore,
     oauthConsumer,
     oauthProvider,
     kafkaClient,
-    metricsServlet,
     log4jExt
-  ) ++ guice ++ baseWeb ++  jsonSet ++ testDbSet ++ testWeb
+  ) ++ guice ++ baseWeb ++  jsonSet ++ testDbSet ++ testWeb ++ util
 
-  val api = baseWeb ++ testWeb ++ Seq(httpMime, httpClient)
+  val api = testWeb ++ Seq(httpMime, httpClient)
 
-  val liferay62 = Seq(liferayPortal62, liferayPortalImpl62).map { _ % Provided } ++ web ++ util
+
+  val liferay62 = Seq(portletApi, servletApi, liferayPortal62, liferayPortalImpl62).map( _ % Provided)
+  val liferay70 = Seq(portletApi, servletApi, lfPortalService700, lfPortalImpl700).map( _ % Provided)
+
 }

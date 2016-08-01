@@ -1,26 +1,16 @@
 package com.arcusys.valamis.lrs.liferay.history.ver230
 
-import com.arcusys.valamis.lrs.liferay.UpgradeProcess
+import com.arcusys.valamis.lrs.DbUpgrade
 import com.arcusys.valamis.lrs.liferay.history.SQLRunner
+import com.arcusys.valamis.lrs.liferay.UpgradeProcess
+import com.google.inject.Key
+import com.google.inject.name.Names
 
 class DbUpgradeProcess extends UpgradeProcess with SQLRunner {
   override def getThreshold = 230
-  val schema = new DbSchemaUpgrade(driver, db, lrs)
+  val schema = injector.getInstance(Key.get(classOf[DbUpgrade], Names.named("ver230")))
 
   override def doUpgrade() {
-    logger.info("Upgrading to 2.3")
-
-    if(logger.isDebugEnabled)
-      logger.debug(schema.upgradeMigrations.migrations.mkString(";\n"))
-
-    if(schema.hasNotTables) {
-      logger.info("Applying database schema changes")
-      schema.upgrade
-    }
-    else logger.info("Tables for version 2.3 exists already")
-
-    val dataMigration = new DataUpgrade(lrs)
-    logger.info("Applying data changes")
-    dataMigration.upgrade
+    schema.up(lrs)
   }
 }

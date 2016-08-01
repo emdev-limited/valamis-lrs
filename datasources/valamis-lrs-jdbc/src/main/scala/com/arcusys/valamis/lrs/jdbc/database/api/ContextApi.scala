@@ -17,7 +17,7 @@ trait ContextApi extends ContextActivityQueries {
     with ActivityApi
     with StatementRefApi =>
 
-  import executionContext. driver.simple._
+  import driver.simple._
 
   protected def convertContext (rec: ContextRow)
                                (implicit s: Session) =
@@ -73,35 +73,35 @@ trait ContextApi extends ContextActivityQueries {
 
   def findContextActivitiesByContextKeys (keys: Seq[ContextRow#Type])
                                          (implicit s: Session): Map[ContextRow#Type, Option[ContextActivities]]= {
-    findContextActivitiesByContextKeysQ (keys).run then { records =>
-      records groupBy { case (x1, x2) => x1.contextKey } map {
+    findContextActivitiesByContextKeysQ (keys).run afterThat { records =>
+      records groupBy { case (x1, x2) => x1._1.contextKey } map {
         case (k, v) => (k, contextActivitiesRowsToTincan (v))
       }
     }
   }
 
-  private def contextActivitiesRowsToTincan (seq: Seq[(ContextActivityRow, ActivityRow)]) =
+  private def contextActivitiesRowsToTincan (seq: Seq[((ContextActivityContextRow, ContextActivityActivityRow), ActivityRow)]) =
     if (seq.length > 0) {
       val parents = seq filter {
-        case (x1, x2) => x1.tpe == ContextActivityType.Parent
+        case (x1, x2) => x1._2.tpe == ContextActivityType.Parent
       } map {
         case (x1, x2) => ActivityReference(id = x2.id)
       }
 
       val grouping = seq filter {
-        case (x1, x2) => x1.tpe == ContextActivityType.Grouping
+        case (x1, x2) => x1._2.tpe == ContextActivityType.Grouping
       } map {
         case (x1, x2) => ActivityReference(id = x2.id)
       }
 
       val category = seq filter {
-        case (x1, x2) => x1.tpe == ContextActivityType.Category
+        case (x1, x2) => x1._2.tpe == ContextActivityType.Category
       } map {
         case (x1, x2) => ActivityReference(id = x2.id)
       }
 
       val other = seq filter {
-        case (x1, x2) => x1.tpe == ContextActivityType.Other
+        case (x1, x2) => x1._2.tpe == ContextActivityType.Other
       } map {
         case (x1, x2) => ActivityReference(id = x2.id)
       }
@@ -126,7 +126,7 @@ trait ContextApi extends ContextActivityQueries {
       rec.statement map { findStatementRefByKey }
 
     def getContextActivities(implicit s: Session): Option[ContextActivities] =
-      findContextActivitiesByContextKeyQC (rec.key get).run then contextActivitiesRowsToTincan
+      findContextActivitiesByContextKeyQC (rec.key get).run afterThat contextActivitiesRowsToTincan
   }
 
   implicit class ContextInsertQueries (q: ContextQ) {
@@ -161,7 +161,7 @@ trait ContextApi extends ContextActivityQueries {
       } build { r =>
         q += r
 
-      } then { key =>
+      } afterThat { key =>
         context.contextActivities map { x =>
 
           val withKeys = activities keysFor x.allIds
@@ -173,11 +173,21 @@ trait ContextApi extends ContextActivityQueries {
           } map { x =>
             (x._1, x._2 ?)
 
-          } then { result =>
+          } afterThat { result =>
             result ++ withKeys filter { y => y._2.isDefined }
 
-          } then { k =>
-            contextActivities ++= x.convert withContext key build k
+          } afterThat { k =>
+            val data = x.convert withContext key build k
+            data.map { d =>
+              val contextActivity = ContextActivityActivityRow(activityKey = d._2, tpe = d._1)
+
+              val result = contextActivitiesActivity.filter(a => (a.activityKey === d._2 && a.contextActivityType === d._1)).map(_.key).run
+
+              val keyActivity = result.headOption.getOrElse(
+                contextActivitiesActivity.returning(contextActivitiesActivity.map(_.key)).insert(contextActivity))
+                contextActivitiesContext.insert(ContextActivityContextRow(contextKey = d._3, activityKey = keyActivity))
+
+            }
           }
         }
         key

@@ -2,11 +2,10 @@ package com.arcusys.valamis.lrs.liferay.servlet.oauth
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
+import com.arcusys.learn.liferay.services.UserLocalServiceHelper
 import com.arcusys.valamis.lrs.liferay._
 import com.google.inject.{Inject, Injector, Singleton}
-import com.liferay.portal.service.UserLocalServiceUtil
-import com.liferay.portal.util.PortalUtil
-import net.oauth.server.OAuthServlet
+import com.arcusys.learn.liferay.util.PortalUtilHelper
 import net.oauth.{OAuth, OAuthAccessor}
 
 import scala.util._
@@ -54,10 +53,10 @@ class AuthorizeServlet @Inject()(inj: Injector) extends BaseAuthServlet(inj) {
   }
 
   private def getUserByRequest(request: HttpServletRequest) =
-    PortalUtil.getUser(request) match {
+    PortalUtilHelper.getUser(request) match {
       case null =>
-        val defaultCompanyId = PortalUtil.getDefaultCompanyId
-        UserLocalServiceUtil.getDefaultUser(defaultCompanyId)
+        val defaultCompanyId = PortalUtilHelper.getDefaultCompanyId
+        UserLocalServiceHelper().getDefaultUser(defaultCompanyId)
       case user => user
     }
 

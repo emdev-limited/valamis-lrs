@@ -8,7 +8,7 @@ import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 trait VerbQueries  extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type FilterCol = ConstColumn[Option[String]]
   private type NumCol    = ConstColumn[Long]

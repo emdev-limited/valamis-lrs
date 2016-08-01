@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.tincan.StatementObjectType.{Type => ObjType}
 trait StatementObjectSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class StatementObjectsTable(tag: Tag) extends LongKeyTable[StatementObjectRow](tag, tblName("statementObjects")) {
 

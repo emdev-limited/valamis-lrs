@@ -5,6 +5,7 @@ import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan.{LanguageMapValidator, Verb}
 import com.arcusys.valamis.lrs.util.IRI
 import org.json4s.JsonAST.JValue
+import com.arcusys.valamis.lrs.StringExtension
 
 import scala.util.{Success, Failure, Try}
 
@@ -23,7 +24,7 @@ object VerbValidator {
       Try {
         LanguageMapValidator checkRequirements lang
       } match {
-        case Failure(_) => throw new VerbInvalidException(v.id)
+        case Failure(e) => throw new VerbInvalidException(v.id, e)
         case Success(_) =>
       }
     }

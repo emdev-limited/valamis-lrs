@@ -20,7 +20,7 @@ trait SubStatementApi extends SubStatementQueries {
     with StatementObjectApi
     with ActorApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Load Tincan [[SubStatement]]s by storage keys
@@ -67,7 +67,7 @@ trait SubStatementApi extends SubStatementQueries {
    */
   def findSubStatementByKey (key: SubStatementRow#Type)
                                  (implicit session: Session): SubStatement =
-    findSubStatementByKeyQC (key).first then { rec =>
+    findSubStatementByKeyQC (key).first afterThat { rec =>
       rec.convert withActor {
         findActorByKey (rec.actorKey)
       } withStatementObject {

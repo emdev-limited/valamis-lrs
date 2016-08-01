@@ -51,5 +51,8 @@ object SubStatements {
     val empty           = Some(SubStatement())
     val verbDisplayOnly = Some(minimal.copy(verb = Verbs.Bad.displayOnly))
     val verbNotUriId    = Some(minimal.copy(verb = Verbs.Bad.invalidUriId))
+    val verbNotUriId2    = Some(minimal.copy(verb = Verbs.Bad.invalidUriId2))
+    val verbNotUriId3    = Some(minimal.copy(verb = Verbs.Bad.invalidUriId3))
+
   }
 }

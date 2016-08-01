@@ -10,7 +10,7 @@ import org.joda.time.DateTime
 trait DocumentQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
   private type ActorKeyCol = ConstColumn[ActorRow#Type]

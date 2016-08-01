@@ -12,7 +12,7 @@ import com.arcusys.valamis.lrs.tincan._
 trait ActivitySchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import ForeignKeyAction._
 
   class ActivitiesTable(tag: Tag) extends LongKeyTable[ActivityRow](tag, tblName("activities"), false) {

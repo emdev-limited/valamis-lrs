@@ -32,7 +32,7 @@ import java.sql._
 import com.arcusys.valamis.lrs.jdbc.database.typemap.CustomTypeMapper
 import com.arcusys.valamis.lrs.jdbc.database.typemap.joda.converter._
 
-import scala.slick.driver.JdbcDriver
+import scala.slick.driver.{MySQLDriver, JdbcDriver}
 import org.joda.time._
 import scala.slick.jdbc.{ PositionedResult, PositionedParameters }
 
@@ -104,7 +104,10 @@ class JodaDateTimeMapper(val driver: JdbcDriver) extends CustomTypeMapper[DateTi
     new DriverJdbcType[DateTime] with JodaDateTimeSqlTimestampConverter {
       def zero = new DateTime(0L)
       def sqlType = java.sql.Types.TIMESTAMP
-      override def sqlTypeName = columnTypes.timestampJdbcType.sqlTypeName
+      override def sqlTypeName =  driver match {
+        case driver: MySQLDriver => "DATETIME"
+        case _ => columnTypes.timestampJdbcType.sqlTypeName
+      }
       override def setValue(v: DateTime, p: PreparedStatement, idx: Int): Unit =
         p.setTimestamp(idx, toSqlType(v))
       override def getValue(r: ResultSet, idx: Int): DateTime =

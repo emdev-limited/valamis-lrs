@@ -13,7 +13,7 @@ import com.arcusys.valamis.lrs.tincan.Activity
 trait AgentProfileApi extends AgentProfileQueries {
   this: LrsDataContext with DocumentApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Delete Tincan [[com.arcusys.valamis.lrs.tincan.AgentProfile]] from a storage

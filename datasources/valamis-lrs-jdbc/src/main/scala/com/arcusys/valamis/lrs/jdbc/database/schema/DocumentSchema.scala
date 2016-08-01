@@ -14,7 +14,7 @@ import com.arcusys.valamis.lrs.tincan.ContentType.{Type => CntType}
 trait DocumentSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
   class DocumentsTable(tag: Tag) extends UUIDKeyTable[DocumentRow](tag, tblName("documents")) {

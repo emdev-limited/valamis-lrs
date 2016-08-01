@@ -14,7 +14,7 @@ trait ActorApi extends ActorQueries {
     with StatementObjectApi
     with AccountApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Load TinCan [[Group]] by storage key

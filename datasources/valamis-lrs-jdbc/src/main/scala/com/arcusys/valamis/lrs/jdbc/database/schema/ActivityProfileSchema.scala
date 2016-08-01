@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row._
 trait ActivityProfileSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import ForeignKeyAction._
 
   class ActivityProfilesTable(tag: Tag) extends Table[ActivityProfileRow](tag, tblName("activityProfiles")) {

@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ScoreRow
 trait ScoreSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class ScoresTable(tag: Tag) extends LongKeyTable[ScoreRow](tag, tblName("scores")) {
 

@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.{ScoreRow, ResultRow}
 trait ResultSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class ResultsTable(tag: Tag) extends LongKeyTable[ResultRow](tag, tblName("results")) {
     def * = (key.?, scoreKey, success.?, completion.?, response.?, duration.?, extensions.?) <>(ResultRow.tupled, ResultRow.unapply)

@@ -2,24 +2,26 @@ package com.arcusys.valamis.lrs.jdbc.database.api
 
 import java.net.URI
 
-import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.jdbc.database.converter._
-import com.arcusys.valamis.lrs.jdbc.database.api.query._
+import com.arcusys.valamis.lrs.{ApplicationIdThreadLocal, _}
+import com.arcusys.valamis.lrs.jdbc.JdbcSecurityManager
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
+import com.arcusys.valamis.lrs.jdbc.database.api.query._
 import com.arcusys.valamis.lrs.jdbc.database.row.ActivityRow
 import com.arcusys.valamis.lrs.tincan._
+import com.arcusys.valamis.lrs.ApplicationIdThreadLocal
 
 /**
  * LRS component for a Tincan [[Activity]]
  * @author Created by Iliya Tryapitsin on 08.07.15.
  */
-trait ActivityApi extends ActivityQueries with TypeAliases {
+trait ActivityApi extends ActivityQueries with TypeAliases{
   this: LrsDataContext
     with StatementObjectApi
     with ActorApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
+  val securityManager =  new JdbcSecurityManager(driver, db)
   /**
    * Load Tincan [[Activity]] by [[Activity.id]]
    * @param activityId [[Activity.id]]
@@ -150,7 +152,7 @@ trait ActivityApi extends ActivityQueries with TypeAliases {
       keys zip activities map { x =>
         x._2.convert withKey x._1 build
 
-      } then { x =>
+      } afterThat { x =>
         q ++= x
         x
       } map { x =>
@@ -164,8 +166,37 @@ trait ActivityApi extends ActivityQueries with TypeAliases {
      * @param session
      * @return Identity key in the storage
      */
-    def addUnique (activity: Activity)
-                  (implicit session: Session): ActivityRow#Type =
-      q keyFor activity getOrElse { q add activity }
+    def addOrUpdate(activity: Activity)
+                 (implicit session: Session): ActivityRow#Type = {
+      val key = q keyFor activity
+
+      key match {
+        case Some(k) => {
+
+          lazy val application = securityManager.getApplication(ApplicationIdThreadLocal.getApplicationId)
+
+          if (application.isDefined && application.get.scope.contains(AuthorizationScope.Define)) {
+            val newActivity = new ActivityRow(
+              key = k,
+              id = activity.id,
+              name = activity.name,
+              description = activity.description,
+              theType = activity.theType,
+              moreInfo = activity.moreInfo,
+              interactionType = activity.interactionType,
+              correctResponsesPattern = activity.correctResponsesPattern,
+              choices = activity.choices,
+              source = activity.source,
+              target = activity.target,
+              steps = activity.steps,
+              extensions = activity.extensions)
+
+            q.filter(x => x.key === k).update(newActivity)
+          }
+          k
+        }
+        case _ => q add activity
+      }
+    }
   }
 }

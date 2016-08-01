@@ -1,10 +1,10 @@
 package com.arcusys.valamis.lrs.liferay.util
 
-import javax.inject.{Inject, Named}
+import javax.inject.Inject
 
 import scala.concurrent.forkjoin.ForkJoinPool
 
-class ForkJoinPoolWithDbScope @Inject()(@Named("Simple") dbContext: LiferayDbContext)
+class ForkJoinPoolWithDbScope @Inject()(dbContext: DbContext)
   extends ForkJoinPool {
 
   override def execute(task: Runnable) {

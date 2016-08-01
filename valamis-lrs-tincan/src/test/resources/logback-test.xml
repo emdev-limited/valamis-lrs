@@ -4,7 +4,7 @@
             <pattern>*** \(%logger{30}\) %msg%n</pattern>
         </encoder>
     </appender>
-    <root level="${log.root:-debug}">
+    <root level="${log.root:-error}">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

@@ -11,7 +11,7 @@ import scala.util._
 /**
  * Created by Iliya Tryapitsin on 06.07.15.
  */
-class ActivityApi(implicit lrs: LrsSettings) extends BaseApi() {
+class ActivityApi(val oauthInvoker: Option[OAuthInvoker] = None)(implicit lrs: LrsSettings) extends BaseApi() {
   def getActivities(activity: String): Try[String] = {
     val uri = uriBuilder
       .clearParameters()
@@ -23,11 +23,7 @@ class ActivityApi(implicit lrs: LrsSettings) extends BaseApi() {
     httpGet.addHeader(Constants.Headers.Version, lrs.version)
     httpGet.addHeader(HttpHeaders.AUTHORIZATION, lrs.auth.getAuthString)
 
-    val response = httpClient.execute(httpGet)
-    if (response.getStatusLine.getStatusCode == HttpStatus.SC_OK) {
-      val content = EntityUtils.toString(response.getEntity)
-      Success(content)
-    } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
+    invokeHttpRequest(oauthInvoker, httpGet)
   }
 
   def getActivity(activityId: String): Try[Activity] = {
@@ -47,6 +43,9 @@ class ActivityApi(implicit lrs: LrsSettings) extends BaseApi() {
       val content = EntityUtils.toString(response.getEntity)
       Success(fromJson[Activity](content, new ActivitySerializer))
     } else Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
+
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent.map(fromJson[Activity](_, new ActivitySerializer))
   }
 
   val addressPathSuffix: String = "activities"

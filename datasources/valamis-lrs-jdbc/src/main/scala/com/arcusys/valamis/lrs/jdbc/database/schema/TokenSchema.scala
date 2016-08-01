@@ -13,12 +13,12 @@ import scala.slick.driver.JdbcDriver
 trait TokenSchema {
   this: SecurityDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
   import ForeignKeyAction._
   import DbNameUtils._
 
-  class TokenTable(tag: Tag) extends Table[TokenRow](tag, "lrs_tokens") {
+  class TokenTable(tag: Tag) extends Table[TokenRow](tag, tblName("tokens")) {
 
     def * = (userKey, appId, code, codeSecret, callback, issueAt, verifier, token, tokenSecret) <>
       (TokenRow.tupled, TokenRow.unapply)
@@ -27,7 +27,7 @@ trait TokenSchema {
     def appId      = column[String]               ("appId")
     def code       = column[String]               ("code_")
     def codeSecret = column[String]               ("codeSecret")
-    def callback   = column[String]               ("callback", O.DBType(varCharMax(Some("8000"))))
+    def callback   = column[String]               ("callback", O.Length(4000, varying = true))//TODO use another type for long string in Oracle
     def verifier   = column[Option[String]]       ("verifier")
     def token      = column[Option[String]]       ("token")
     def tokenSecret= column[Option[String]]       ("tokenSecret")

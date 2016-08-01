@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs
 import java.net.URI
 import java.util.UUID
 
-import com.arcusys.valamis.lrs.tincan.{Actor, FormatType}
+import com.arcusys.valamis.lrs.tincan.{Actor, FormatType, Statement}
 import org.joda.time.DateTime
 
 /**
@@ -47,8 +47,8 @@ import org.joda.time.DateTime
  *                    If false, the LRS sends the prescribed response with Content-Type application/json and cannot use attachments.
  * @param ascending If true, return results in ascending order of stored time
  */
-case class StatementQuery(statementId: Option[UUID] = None,
-                          voidedStatementId: Option[UUID] = None,
+case class StatementQuery(statementId: Statement#Id = None,
+                          voidedStatementId: Statement#Id = None,
                           agent: Option[Actor] = None,
                           verb: Option[URI] = None,
                           activity: Option[URI] = None,

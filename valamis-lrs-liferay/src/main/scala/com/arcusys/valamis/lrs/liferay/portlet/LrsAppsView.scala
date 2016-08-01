@@ -3,21 +3,19 @@ package com.arcusys.valamis.lrs.liferay.portlet
 import javax.portlet._
 
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.jdbc.SecurityManager
-import com.arcusys.valamis.lrs.liferay.{LrsTypeLocator, LrsModule}
+import com.arcusys.valamis.lrs.liferay.LrsModule
 import com.arcusys.valamis.lrs.security.AuthenticationType
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
 import com.google.inject._
-import com.google.inject.name.Names
 import html.apps.html._
 
 /**
  * Created by Iliya Tryapitsin on 21.04.15.
  */
-class LrsAppsView extends GenericPortlet with LrsTypeLocator {
+class LrsAppsView extends GenericPortlet {
 
-  lazy val injector        = Guice.createInjector(new LrsModule)
-  lazy val securityManager = injector.getInstance(Key.get(classOf[SecurityManager], Names.named(LrsType.Simple.toString)))
+  lazy val injector        = Guice.createInjector(LrsModule)
+  lazy val securityManager = injector.getInstance(Key.get(classOf[SecurityManager]))
 
   private def getOffset(r: PortletRequest) = {
     val o = r.getParameter("offset")
@@ -97,10 +95,6 @@ class LrsAppsView extends GenericPortlet with LrsTypeLocator {
         val appId     = request.getParameter("appId")
         securityManager.unblockApplication(appId)
 
-      case Some(Action.LrsTypeChanged) =>
-        val tpe           = request.getParameter("lrsType")
-        val msgBusAddress = request.getParameter("msgBus" )
-
       case _ =>
     }
 
@@ -138,7 +132,7 @@ class LrsAppsView extends GenericPortlet with LrsTypeLocator {
       case _ =>
         val result = securityManager.getApplications(appsCount, offset)
         val clientApiListView   = clientApiList(
-          new AppListPortletViewModel(result, LrsType.Simple)(request, response)
+          new AppListPortletViewModel(result)(request, response)
         )
         response.getWriter.write(index(clientApiListView) toString)
     }

@@ -15,7 +15,7 @@ trait SchemaUtil {
   val TQ = TableQuery
   type ?[A] = Option[A]
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   abstract class LongKeyTable[E](tag: Tag, name: String, useAutoInc: Boolean = true) extends Table[E](tag, name) {
     def key = if (useAutoInc)

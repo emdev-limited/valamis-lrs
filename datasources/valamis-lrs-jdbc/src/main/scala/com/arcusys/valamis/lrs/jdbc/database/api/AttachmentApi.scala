@@ -14,7 +14,7 @@ trait AttachmentApi extends TypeAliases {
     with ActorApi
     with ActivityApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   implicit class AttachmentInsertQueries (q: AttachmentQ) {
 

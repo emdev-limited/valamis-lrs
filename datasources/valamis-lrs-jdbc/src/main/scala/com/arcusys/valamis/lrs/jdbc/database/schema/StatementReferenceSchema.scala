@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.{StatementRow, StatementReferen
 trait StatementReferenceSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class StatementReferenceTable(tag: Tag) extends LongKeyTable[StatementReferenceRow](tag, tblName("stmntRefs"), false) {
     override def * = (key, statementId) <>(StatementReferenceRow.tupled, StatementReferenceRow.unapply)

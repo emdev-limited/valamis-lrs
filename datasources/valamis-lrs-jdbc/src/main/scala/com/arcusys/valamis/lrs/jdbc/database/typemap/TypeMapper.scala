@@ -20,7 +20,7 @@ import org.joda.time.Duration
 trait TypeMapper {
   this: BaseDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   implicit val localDateMapper: BaseColumnType[URI] = MappedColumnType.base[URI, String](
     to   => to.toString,

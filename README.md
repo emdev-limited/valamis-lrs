@@ -1,6 +1,8 @@
 # Valamis LRS
 [![build status](https://api.travis-ci.org/arcusys/valamis-lrs.png)](http://travis-ci.org/arcusys/valamis-lrs)
 
+## Version 3.0.3
+
 ## Version 2.6.1
 
 ## Version 2.5

@@ -15,7 +15,7 @@ import org.joda.time.DateTime
 trait DocumentApi extends DocumentQueries {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Delete Tincan [[com.arcusys.valamis.lrs.tincan.Document]] from a storage

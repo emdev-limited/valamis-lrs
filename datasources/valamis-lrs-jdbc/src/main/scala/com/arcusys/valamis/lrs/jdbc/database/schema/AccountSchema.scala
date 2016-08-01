@@ -13,7 +13,7 @@ import scala.slick.lifted.ProvenShape
 trait AccountSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class AccountsTable(tag: Tag) extends LongKeyTable[AccountRow](tag, tblName("accounts")) {
 
@@ -32,7 +32,9 @@ trait AccountSchema extends SchemaUtil {
     def homepage = column [String] ("homePage", O.DBType (varCharMax))
     def name     = column [String] ("name"    , O.DBType (varCharMax))
 
-    def indx = index (idxName("account"), key)
+    //def indx = index (idxName("account"), key) this one fails on Oracle, because
+    //primary key is already indexed; also, it's useless to create index on primary key in most RDBMS,
+    //because, it's usually automatically indexed by RDBMS itself
   }
 
   lazy val accounts = TQ[AccountsTable]

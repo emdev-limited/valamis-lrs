@@ -9,10 +9,13 @@ import com.google.inject.servlet.GuiceServletContextListener
  * Created by Iliya Tryapitsin on 17/01/15.
  */
 class GuiceConfig extends GuiceServletContextListener {
-  protected def getInjector() = Guice.createInjector(new WebServletModule)
+  protected def getInjector = Guice.createInjector(new WebServletModule)
+
+  override def contextInitialized(ev: ServletContextEvent) = {
+    super.contextInitialized(ev)
+  }
 
   override def contextDestroyed(ev: ServletContextEvent) = {
-
     super.contextDestroyed(ev)
   }
 }

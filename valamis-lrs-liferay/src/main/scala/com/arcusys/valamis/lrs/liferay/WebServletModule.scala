@@ -7,11 +7,11 @@ import com.arcusys.valamis.lrs.liferay.servlet.valamis._
 import com.google.inject.servlet.ServletModule
 import net.codingwell.scalaguice.ScalaModule
 
-class WebServletModule extends ServletModule with ScalaModule with LrsTypeLocator {
+class WebServletModule extends ServletModule with ScalaModule {
 
   override def configureServlets() {
 
-    install(new LrsModule)
+    install(LrsModule)
 
     filter(s"$lrsUrlPrefix/*") through classOf [LiferayContextFilter]
 
@@ -38,6 +38,7 @@ class WebServletModule extends ServletModule with ScalaModule with LrsTypeLocato
     serve (s"$lrsUrlPrefix/agents"             ) `with` classOf [AgentServlet          ]
     serve (s"$lrsUrlPrefix/activities"         ) `with` classOf [ActivityServlet       ]
     serve (s"$lrsUrlPrefix/statements"         ) `with` classOf [StatementServlet      ]
+    serve (s"$lrsUrlPrefix/statements/"        ) `with` classOf [StatementServlet      ]
     serve (s"$lrsUrlPrefix/oauth/token"        ) `with` classOf [TokenServlet          ]
     serve (s"$lrsUrlPrefix/OAuth/token"        ) `with` classOf [TokenServlet          ]
     serve (s"$lrsUrlPrefix/activity/state*"    ) `with` classOf [StateProfileServlet   ]

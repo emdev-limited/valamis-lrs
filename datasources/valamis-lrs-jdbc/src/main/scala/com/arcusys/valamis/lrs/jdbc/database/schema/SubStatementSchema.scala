@@ -12,7 +12,7 @@ import com.arcusys.valamis.lrs.tincan._
 trait SubStatementSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class SubStatementsTable(tag: Tag) extends LongKeyTable[SubStatementRow](tag, tblName("subStatements"), false) {
     override def * = (key, statementObjectKey, actorKey, verbId, verbDisplay) <>(SubStatementRow.tupled, SubStatementRow.unapply)

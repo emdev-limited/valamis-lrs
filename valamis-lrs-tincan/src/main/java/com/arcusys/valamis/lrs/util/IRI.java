@@ -751,8 +751,12 @@ public class IRI implements Serializable, Cloneable {
 
                 parseAuthority(builder.authority, builder);
 
+                if (builder.scheme == null || builder.scheme.isEmpty())
+                    throw new IRISyntaxException("Invalid Syntax");
+
                 try {
                     CharUtils.verify(builder.scheme, Constants.SCHEME);
+
                     CharUtils.verify(builder.path, Constants.IPATH);
                     CharUtils.verify(builder.query, Constants.IQUERY);
                     CharUtils.verify(builder.fragment, Constants.IFRAGMENT);

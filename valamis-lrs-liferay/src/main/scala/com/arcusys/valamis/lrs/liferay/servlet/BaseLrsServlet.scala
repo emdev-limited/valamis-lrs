@@ -4,49 +4,30 @@ import javax.servlet.ServletConfig
 import javax.servlet.http._
 
 import com.arcusys.json.JsonHelper
-import com.arcusys.valamis.lrs.{LrsType, Instrumented}
-import com.arcusys.valamis.lrs.jdbc._
+import com.arcusys.learn.liferay.LiferayClasses.LUser
+import com.arcusys.learn.liferay.services.{CompanyHelper, PermissionHelper, PrincipalHelper, UserLocalServiceHelper}
 import com.arcusys.valamis.lrs.liferay._
+import com.arcusys.valamis.lrs.liferay.util._
 import com.arcusys.valamis.lrs.liferay.message.Broker
+import com.arcusys.valamis.lrs.protocol._
 import com.arcusys.valamis.lrs.tincan.Constants.Headers
 import com.arcusys.valamis.lrs.tincan.TincanVersion
+import com.arcusys.valamis.lrs._
 import com.codahale.metrics.servlets.MetricsServlet
 import com.codahale.metrics.{MetricRegistry, Timer}
-import com.google.inject.name.Names
-import com.google.inject.{Key, Injector}
-import com.liferay.portal.model.User
-import com.liferay.portal.security.auth.{CompanyThreadLocal, PrincipalThreadLocal}
-import com.liferay.portal.security.permission.{PermissionCheckerFactoryUtil, PermissionThreadLocal}
-import com.liferay.portal.service.UserLocalServiceUtil
-import com.liferay.portal.util.PortalUtil
-import com.arcusys.valamis.lrs.protocol._
+import com.google.inject.{Injector, Key}
+import com.arcusys.learn.liferay.util.PortalUtilHelper
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
-abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with JsonServlet with LrsTypeLocator  with Instrumented {
+abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with Loggable with JsonServlet with Instrumented {
 
-  protected lazy val lrsType  = LrsType.Simple
   protected lazy val broker   = inj.getInstance(classOf[Broker])
-  /// TODO: Should be Lrs type
-  protected lazy val lrs = inj getInstance Key.get(
-    classOf[JdbcLrs],
-    Names.named(lrsType.toString)
-  )
+  protected lazy val lrs = inj getInstance Key.get(classOf[Lrs])
 
-  protected lazy val reporter = inj getInstance Key.get(
-    classOf[ValamisReporter],
-    Names.named(lrsType.toString)
-  )
+  protected lazy val reporter = inj getInstance Key.get(classOf[ValamisReporter])
 
-  protected lazy val securityManager = inj getInstance Key.get(
-    classOf[SecurityManager],
-    Names.named(lrsType.toString)
-  )
-
-  protected lazy val executionContext = inj getInstance Key.get(
-    classOf[ExecutionContext],
-    Names.named(lrsType.toString)
-  )
+  protected lazy val securityManager = inj getInstance Key.get(classOf[SecurityManager])
 
 
   private val MessageHead = "Valamis LRS"
@@ -74,20 +55,20 @@ abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with JsonServle
 
   protected def noContent = throw new NoSuchElementException
 
-  def getUserByRequest(request: HttpServletRequest): User = {
+  def getUserByRequest(request: HttpServletRequest): LUser = {
 
-    val user = PortalUtil.getUser(request) match {
-      case u: User if u == null  =>
-        UserLocalServiceUtil.getDefaultUser(PortalUtil.getDefaultCompanyId)
+    val user = PortalUtilHelper.getUser(request) match {
+      case u: LUser if u == null  =>
+        UserLocalServiceHelper().getDefaultUser(PortalUtilHelper.getDefaultCompanyId)
 
-      case u: User => u
+      case u: LUser => u
     }
 
-    val permissionChecker = PermissionCheckerFactoryUtil.create(user)
+    val permissionChecker = PermissionHelper.create(user)
 
-    PermissionThreadLocal.setPermissionChecker(permissionChecker)
-    PrincipalThreadLocal.setName(user.getUserId)
-    CompanyThreadLocal.setCompanyId(user.getCompanyId)
+    PermissionHelper.setPermissionChecker(permissionChecker)
+    PrincipalHelper.setName(user.getUserId)
+    CompanyHelper.setCompanyId(user.getCompanyId)
     user
   }
 

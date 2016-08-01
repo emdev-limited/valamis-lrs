@@ -22,7 +22,7 @@ trait StatementRefApi extends StatementRefQueries {
     with ActorApi
     with ActivityApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Find list of [[StatementReference]]s by list of storage keys

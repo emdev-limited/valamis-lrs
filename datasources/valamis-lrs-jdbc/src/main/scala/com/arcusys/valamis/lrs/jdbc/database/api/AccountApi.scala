@@ -13,7 +13,7 @@ import com.arcusys.valamis.lrs.tincan.Account
 trait AccountApi extends AccountQueries {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Load Tincan [[Account]] by storage key
