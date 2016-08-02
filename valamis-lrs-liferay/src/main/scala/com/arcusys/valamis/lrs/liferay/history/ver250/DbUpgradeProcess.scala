@@ -1,21 +1,17 @@
 package com.arcusys.valamis.lrs.liferay.history.ver250
 
-import com.arcusys.valamis.lrs.liferay.UpgradeProcess
+import com.arcusys.valamis.lrs.DbUpgrade
 import com.arcusys.valamis.lrs.liferay.history.SQLRunner
+import com.arcusys.valamis.lrs.liferay.{Loggable, UpgradeProcess}
+import com.google.inject.Key
+import com.google.inject.name.Names
 
-class DbUpgradeProcess extends UpgradeProcess with SQLRunner {
+class DbUpgradeProcess extends UpgradeProcess with SQLRunner with Loggable {
   override def getThreshold = 250
-  val schema = new DbSchemaUpgrade(driver, db)
+  val schema = injector.getInstance(Key.get(classOf[DbUpgrade], Names.named("ver250")))
 
   override def doUpgrade() {
-    logger.info("Upgrading to 2.5")
-
-    if(logger.isDebugEnabled)
-      logger.debug(schema.upgradeMigrations.migrations.mkString(";\n"))
-
-
-    logger.info("Applying database schema changes")
-    schema.upgrade
+    schema.up(lrs)
   }
 }
 

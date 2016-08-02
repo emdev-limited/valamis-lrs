@@ -3,10 +3,8 @@ package com.arcusys.valamis.lrs.liferay.portlet
 import javax.portlet._
 
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.jdbc.SecurityManager
-import com.arcusys.valamis.lrs.liferay.{LrsModeLocator, LrsModule}
+import com.arcusys.valamis.lrs.liferay.{LrsModule, LrsModeLocator}
 import com.google.inject._
-import com.google.inject.name.Names
 import html.apps.html._
 
 /**
@@ -14,8 +12,8 @@ import html.apps.html._
  */
 class LrsModeView extends GenericPortlet with LrsModeLocator {
 
-  lazy val injector        = Guice.createInjector(new LrsModule)
-  lazy val securityManager = injector.getInstance(Key.get(classOf[SecurityManager], Names.named(LrsType.Simple.toString)))
+  lazy val injector        = Guice.createInjector(LrsModule)
+  lazy val securityManager = injector.getInstance(Key.get(classOf[SecurityManager]))
 
   private def getAction(r: PortletRequest) = {
     val a = r.getParameter(Action.Name)

@@ -45,6 +45,8 @@ object Statements {
     val `statement verb should fail on empty` = minimal.copy(verb = Verbs.Bad.empty)
     val `statement verb missing "id"`         = minimal.copy(verb = Verbs.Bad.displayOnly)
     val `statement verb "id" not IRI`         = minimal.copy(verb = Verbs.Bad.invalidUriId)
+    val `statement verb "id" is string `         = minimal.copy(verb = Verbs.Bad.invalidUriId2)
+    val `statement verb "id" not IRI with space`         = minimal.copy(verb = Verbs.Bad.invalidUriId3)
     val `statement verb voided does not use object "StatementRef"` = minimal.copy(verb = Verbs.voiding)
     val `statement verb "display" not language` = minimal.copy(verb = Verbs.Bad.invalidLanguageMap)
 
@@ -65,6 +67,8 @@ object Statements {
 
     val `statement sub-statement verb missing "id"` = minimal.copy(`object` = SubStatements.Bad.verbDisplayOnly)
     val `statement sub-statement verb "id" not IRI` = minimal.copy(`object` = SubStatements.Bad.verbNotUriId)
+    val `statement sub-statement verb "id" is string` = minimal.copy(`object` = SubStatements.Bad.verbNotUriId2)
+    val `statement sub-statement verb "id" IRI wurh space` = minimal.copy(`object` = SubStatements.Bad.verbNotUriId3)
   }
 
   object Good {

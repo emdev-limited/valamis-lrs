@@ -15,4 +15,6 @@ import org.joda.time.DateTime
 case class Document(id: UUID = UUID.randomUUID(),
                     updated: DateTime = new DateTime(),
                     contents: String,
-                    cType: Type)
+                    cType: Type) {
+  type Id = UUID
+}

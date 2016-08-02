@@ -12,7 +12,7 @@ import com.arcusys.valamis.lrs.tincan._
 trait ContextSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class ContextsTable(tag: Tag) extends UUIDKeyTable[ContextRow](tag: Tag, tblName("contexts")) {
     override def * = (key.?, instructor.?, team.?, revision.?, platform.?, language.?, statementRefId.?, extensions.?) <>(ContextRow.tupled, ContextRow.unapply)
@@ -26,6 +26,9 @@ trait ContextSchema extends SchemaUtil {
     def extensions = column[ExtensionMap]("extensions", O.Nullable, O.DBType(varCharMax))
 
     def statementRef = foreignKey(fkName("cntxt2stmntRef"), statementRefId, TableQuery[StatementReferenceTable])(x => x.key)
+
+    def instructorIndx = index("idx_instructor", instructor)
+    def teamIndx = index("idx_team", team)
   }
 
   lazy val contexts = TableQuery[ContextsTable]

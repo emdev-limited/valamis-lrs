@@ -39,7 +39,7 @@ object ActorValidator {
       throw new IllegalArgumentException("Actor mbox: should contains 'mailto:' prefix")
     }
 
-    email removeAll mailTo then checkEmail
+    email removeAll mailTo afterThat checkEmail
   }
 
   private def checkEmail (email: String) = emailValidator isValid email whenFalse { r =>

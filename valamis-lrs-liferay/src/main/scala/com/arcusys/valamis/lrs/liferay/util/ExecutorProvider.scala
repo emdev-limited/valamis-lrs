@@ -5,7 +5,7 @@ import javax.inject.Named
 import com.google.inject.{Inject, Provider}
 import scala.concurrent.ExecutionContextExecutor
 
-class ExecutorProvider @Inject()(@Named("Simple") executorService: ExecutorService)
+class ExecutorProvider @Inject()(executorService: ExecutorService)
   extends Provider[ExecutionContextExecutor] {
 
   override def get() = {

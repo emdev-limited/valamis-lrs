@@ -3,6 +3,23 @@ import sbt.Keys._
 import Settings._
 import Tasks._
 
+import scala.UnsupportedOperationException
+
+def lrsStorage: Project = Settings.lrsStorage match {
+  case Settings.StorageType.jdbcType => `valamis-lrs-jdbc`
+  case _ => throw new UnsupportedOperationException("Unsupported data storage")
+}
+
+def lfService = Settings.liferay.version match {
+  case Settings.Liferay620.version => lfService620
+}
+
+lazy val lfService620 = (project in file("liferay/liferay620-services"))
+  .settings(commonSettings: _*)
+  .settings(organization := "com.arcusys.learn")
+  .settings(name := "liferay620-services")
+  .settings(libraryDependencies ++= Dependencies.liferay62)
+
 lazy val `valamis-lrs-jdbc` = (project in file("datasources/valamis-lrs-jdbc"))
   .settings(commonSettings: _*)
   .settings(disablePublishSettings: _*)
@@ -25,20 +42,31 @@ lazy val `valamis-lrs-liferay` = (project in file("valamis-lrs-liferay"))
     publishMavenStyle :=  true,
     sqlStatementsTask <<= sqlStatementsGeneration,
     sqlTablesTask     <<= sqlTablesGeneration,
-    libraryDependencies ++= Dependencies.liferay62,
+    libraryDependencies ++= Settings.liferay.dependencies,
+    libraryDependencies ++= Dependencies.web,
+    libraryDependencies ++= Dependencies.metrics,
     makePomConfiguration := makePomConfiguration.value.copy(
       process = PomFilters.dependencies(_)(filterOff = Seq("valamis-lrs-tincan", "valamis-lrs-data-storage", "valamis-lrs-auth"))
     ),
-    mappings     in(Compile, packageBin) ++= mappings.in(`valamis-lrs-jdbc`, Compile, packageBin).value,
+    mappings     in(Compile, packageBin) ++= mappings.in(lrsStorage, Compile, packageBin).value,
     artifactName in packageWar := { (sv: ScalaVersion, module: ModuleID, artifact: Artifact) =>  "valamis-lrs-portlet." + artifact.extension }
   )
+  .settings(postProcess in webapp := { webappDir =>
+    IO.delete(webappDir / Settings.liferayPluginPropertiesPath)
+
+    val propertiesContent = Settings.getLiferayPluginProperties(
+      webappDir / "../../src/main/webapp/WEB-INF/liferay-plugin-package.properties")
+
+    IO.write(webappDir / Settings.liferayPluginPropertiesPath, propertiesContent)
+  })
   .dependsOn(
     `valamis-lrs-util`,
     `valamis-lrs-tincan`,
     `valamis-lrs-protocol`,
     `valamis-lrs-api`  % Test,
     `valamis-lrs-test` % Test,
-    `valamis-lrs-jdbc`
+    lrsStorage,
+    lfService
   )
   .enablePlugins(SbtTwirl)
 
@@ -96,7 +124,7 @@ lazy val `valamis-lrs-test` = (project in file("valamis-lrs-test"))
   .settings(disablePublishSettings: _*)
   .settings(
     name := "valamis-lrs-test",
-    libraryDependencies ++= (Dependencies.database ++ Dependencies.testCluster)
+    libraryDependencies ++= (Dependencies.database ++ Dependencies.testCluster :+ Libraries.scalatest)
   )
   .dependsOn(`valamis-lrs-util`)
 
@@ -107,7 +135,7 @@ lazy val `valamis-lrs` = (project in file("."))
   .aggregate(
     `valamis-lrs-liferay`,
     `valamis-lrs-tincan`,
-    `valamis-lrs-jdbc`,
+    lrsStorage,
     `valamis-lrs-test`,
     `valamis-lrs-util`,
     `valamis-lrs-api`

@@ -1,18 +1,14 @@
 package com.arcusys.valamis.lrs.jdbc.database.converter
 
-import java.util.UUID
-
-import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
-import com.arcusys.valamis.lrs.jdbc.database.row._
-import com.arcusys.valamis.lrs.jdbc.database.schema.AccountSchema
-import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.jdbc.database.row._
+import com.arcusys.valamis.lrs.security.{Application, Token}
+import com.arcusys.valamis.lrs.tincan._
 
 /**
  * Created by Iliya Tryapitsin on 30.06.15.
  */
 trait ToTincanConverter {
-  this: LrsDataContext =>
 
   implicit class StatementRecExtension (rec: StatementRow) {
 
@@ -160,21 +156,21 @@ trait ToTincanConverter {
         member = members ?,
         mBox = rec.mBox,
         mBoxSha1Sum = rec.mBoxSha1Sum,
-        openId = rec.mBoxSha1Sum)
+        openId = rec.openId)
 
       def buildAgent = Agent(
         account = account,
         name = rec.name,
         mBox = rec.mBox,
         mBoxSha1Sum = rec.mBoxSha1Sum,
-        openId = rec.mBoxSha1Sum)
+        openId = rec.openId)
     }
 
     def convert = Builder()
   }
 
   implicit class StatementRefRecExtension (rec: StatementReferenceRow) {
-    def convert = rec.statementId.toUUID then { uuid => StatementReference(uuid) }
+    def convert = rec.statementId.toUUID afterThat { uuid => StatementReference(uuid) }
   }
 
   implicit class SubStatementRecExtension (rec: SubStatementRow) {
@@ -197,5 +193,13 @@ trait ToTincanConverter {
 
   implicit class DocumentRecExtension (rec: DocumentRow) {
     def convert = Document(rec.key toUUID, rec.updated, rec.contents, rec.cType)
+  }
+
+  implicit class ApplicationRecExtension (rec: ApplicationRow) {
+    def convert = Application(rec.appId, rec.name, rec.description, rec.appSecret, rec.scope, rec.regDateTime, rec.isActive, rec.authType)
+  }
+
+  implicit class TokenRecExtension (rec: TokenRow) {
+    def convert = Token(rec.userKey, rec.applicationKey, rec.code, rec.codeSecret, rec.callback,rec.issueAt, rec.verifier, rec.token, rec.tokenSecret)
   }
 }

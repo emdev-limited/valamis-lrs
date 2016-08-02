@@ -1,24 +1,20 @@
 package com.arcusys.valamis.lrs.liferay
 
+import com.arcusys.learn.liferay.LiferayClasses.{LCompany, LDuplicateColumnNameException, LDuplicateTableNameException}
+import com.arcusys.learn.liferay.services.{ClassNameLocalServiceHelper, CompanyLocalServiceHelper, ExpandoLocalServiceHelper}
+import com.arcusys.learn.liferay.util.PortalUtilHelper
 import com.arcusys.valamis.lrs._
-import com.liferay.portal.kernel.util.{PropsKeys, PropsUtil}
-import com.liferay.portal.model.Company
-import com.liferay.portal.service.{ClassNameLocalServiceUtil, CompanyLocalServiceUtil}
-import com.liferay.portal.util.PortalUtil
-import com.liferay.portlet.expando.{DuplicateColumnNameException, DuplicateTableNameException}
-import com.liferay.portlet.expando.model.ExpandoColumnConstants
-import com.liferay.portlet.expando.service.{ExpandoValueLocalServiceUtil, ExpandoColumnLocalServiceUtil, ExpandoTableLocalServiceUtil}
 
-import scala.util.{Success, Failure, Try}
+import scala.util.{Failure, Success, Try}
 
 /**
   * Created by iliyatryapitsin on 12/11/15.
   */
 trait LrsModeLocator extends Loggable {
-  lazy private val defaultCompanyId    = PortalUtil.getDefaultCompanyId
-  lazy private val company             = CompanyLocalServiceUtil.getCompany(defaultCompanyId)
-  lazy private val classNameId         = ClassNameLocalServiceUtil.getClassNameId(companyClassName)
-  lazy private val companyClassName    = classOf[Company].getName
+  lazy private val defaultCompanyId    = PortalUtilHelper.getDefaultCompanyId
+  lazy private val company             = CompanyLocalServiceHelper.getCompany(defaultCompanyId)
+  lazy private val classNameId         = ClassNameLocalServiceHelper.getClassNameId(companyClassName)
+  lazy private val companyClassName    = classOf[LCompany].getName
 
   private val modeColumnName = "VALAMIS_LRS_MODE"
 
@@ -28,9 +24,9 @@ trait LrsModeLocator extends Loggable {
     */
   def getLrsMode: RunningMode.Type = {
 
-    val table  = ExpandoTableLocalServiceUtil .getDefaultTable(company.getCompanyId, companyClassName)
-    val column = ExpandoColumnLocalServiceUtil.getColumn      (table.getTableId,     modeColumnName)
-    val value  = ExpandoValueLocalServiceUtil .getData(
+    val table  = ExpandoLocalServiceHelper .getDefaultTable(company.getCompanyId, companyClassName)
+    val column = ExpandoLocalServiceHelper.getColumn      (table.getTableId,     modeColumnName)
+    val value  = ExpandoLocalServiceHelper .getData(
       company.getCompanyId,
       companyClassName,
       table.getName,
@@ -48,11 +44,11 @@ trait LrsModeLocator extends Loggable {
     * @return
     */
   def saveLrsModeSettings(mode: String) = {
-    val table  = ExpandoTableLocalServiceUtil.getDefaultTable(company.getCompanyId, companyClassName)
-    val lrsModeCol = ExpandoColumnLocalServiceUtil.getColumn(table.getTableId,      modeColumnName)
+    val table  = ExpandoLocalServiceHelper.getDefaultTable(company.getCompanyId, companyClassName)
+    val lrsModeCol = ExpandoLocalServiceHelper.getColumn(table.getTableId,      modeColumnName)
 
-    ExpandoValueLocalServiceUtil.deleteValue(company.getCompanyId, companyClassName, table.getName, lrsModeCol.getName, classNameId)
-    ExpandoValueLocalServiceUtil.addValue   (company.getCompanyId, companyClassName, table.getName, lrsModeCol.getName, classNameId, mode)
+    ExpandoLocalServiceHelper.deleteValue(company.getCompanyId, companyClassName, table.getName, lrsModeCol.getName, classNameId)
+    ExpandoLocalServiceHelper.addValue   (company.getCompanyId, companyClassName, table.getName, lrsModeCol.getName, classNameId, mode)
 
     logger.info(s"Current mode is: $mode")
   }
@@ -60,11 +56,11 @@ trait LrsModeLocator extends Loggable {
   def initLrsModeSettings(): Unit = {
 
     val table = Try {
-      ExpandoTableLocalServiceUtil.addDefaultTable(company.getCompanyId, companyClassName)
+      ExpandoLocalServiceHelper.addDefaultTable(company.getCompanyId, companyClassName)
     } match {
-      case Failure(e: DuplicateTableNameException) =>
+      case Failure(e: LDuplicateTableNameException) =>
         logger.info(s"Table '$companyClassName' exists already")
-        ExpandoTableLocalServiceUtil.getDefaultTable(company.getCompanyId, companyClassName)
+        ExpandoLocalServiceHelper.getDefaultTable(company.getCompanyId, companyClassName)
 
       case Success(e) =>
         logger.info(s"Created '$companyClassName' table")
@@ -72,9 +68,9 @@ trait LrsModeLocator extends Loggable {
     }
 
     Try {
-      ExpandoColumnLocalServiceUtil.addColumn(table.getTableId, modeColumnName, ExpandoColumnConstants.STRING)
+      ExpandoLocalServiceHelper.addColumn(table.getTableId, modeColumnName, ExpandoLocalServiceHelper.Strings)
     } match {
-      case Failure(e: DuplicateColumnNameException) =>
+      case Failure(e: LDuplicateColumnNameException) =>
         logger.info(s"Column '$modeColumnName' exists already")
 
       case Success(e) =>

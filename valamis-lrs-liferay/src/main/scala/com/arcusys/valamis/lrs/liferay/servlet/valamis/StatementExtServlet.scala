@@ -2,12 +2,8 @@ package com.arcusys.valamis.lrs.liferay.servlet.valamis
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import com.arcusys.valamis.lrs.jdbc.{ExecutionContext, SimpleExecutionContext}
 import com.arcusys.valamis.lrs.liferay.servlet.BaseLrsServlet
-import com.arcusys.valamis.lrs.liferay.servlet.request.valamis.{ValamisStatementsRequest, ValamisScaleRequest}
-
-import scala.slick.driver.JdbcDriver
-import scala.slick.jdbc.JdbcBackend
+import com.arcusys.valamis.lrs.liferay.servlet.request.valamis.ValamisStatementsRequest
 
 //import com.arcusys.valamis.lrs.message.GetActivityScaled
 import com.google.inject._

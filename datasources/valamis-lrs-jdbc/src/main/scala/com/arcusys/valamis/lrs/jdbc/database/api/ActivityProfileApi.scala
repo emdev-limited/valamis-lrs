@@ -12,6 +12,6 @@ trait ActivityProfileApi  extends ActivityProfileQueries {
     with StatementObjectApi
     with AccountApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
 }

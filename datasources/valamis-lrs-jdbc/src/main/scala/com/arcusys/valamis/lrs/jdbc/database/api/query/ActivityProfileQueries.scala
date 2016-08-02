@@ -9,7 +9,7 @@ import org.joda.time.DateTime
 trait ActivityProfileQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
   private type UpdateCol = ConstColumn[DateTime]

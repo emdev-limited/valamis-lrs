@@ -2,17 +2,17 @@ package com.arcusys.valamis.lrs.api
 
 import java.net.URI
 import java.util.UUID
-import com.arcusys.valamis.lrs.serializer.{GroupSerializer, AgentSerializer, StatementSerializer}
+
+import com.arcusys.valamis.lrs.serializer.{AgentSerializer, GroupSerializer, StatementSerializer}
 import com.arcusys.valamis.lrs.tincan._
 import org.apache.http.HttpStatus
 import org.apache.http.client.entity.EntityBuilder
-import org.apache.http.client.methods.{HttpGet, HttpPost, HttpPut}
-
+import org.apache.http.client.methods._
 import org.joda.time.DateTime
 
-import scala.util.{Failure, Success, Try}
+import scala.util.{Success, Try}
 
-final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
+final class StatementApi(val oauthInvoker: Option[OAuthInvoker] = None)(implicit lrs: LrsSettings) extends BaseApi() {
   import Constants.Tincan.Field._
   import Constants.Tincan._
   import Constants._
@@ -34,17 +34,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
 
     httpPost.setEntity(entity)
 
-    val response = httpClient.execute(httpPost)
-    try {
-      if ((response.getStatusLine.getStatusCode == HttpStatus.SC_OK) ||
-        (response.getStatusLine.getStatusCode == HttpStatus.SC_NO_CONTENT)) {
-        Success(response.getStatusLine.getStatusCode)
-      } else {
-        Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
-      }
-    } finally {
-      response.close()
-    }
+    getResponseCode(httpPost)
   }
 
   def put(statementId: UUID, statementJsonString: String): Try[Int] = {
@@ -63,16 +53,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
 
     httpPut.setEntity(entity)
 
-    val response = httpClient.execute(httpPut)
-    try {
-      if (response.getStatusLine.getStatusCode == HttpStatus.SC_NO_CONTENT) {
-        Success(HttpStatus.SC_NO_CONTENT)
-      } else {
-        Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
-      }
-    } finally {
-      response.close()
-    }
+    getResponseCode(httpPut)
   }
 
   def addStatement(statement: Statement): Try[Int] = {
@@ -99,8 +80,7 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response)
+    invokeHttpRequest(oauthInvoker, httpGet)
   }
 
   def getStatementById(statementId: UUID): Try[Statement] = {
@@ -117,8 +97,8 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response).map(fromJson[Statement](_, new StatementSerializer))
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent.map(fromJson[Statement](_, new StatementSerializer))
   }
 
   def getByParams(agent:             Option[Actor]    = None,
@@ -161,11 +141,28 @@ final class StatementApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response) map { json =>
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent map { json =>
       fromJson[StatementResult](json, new StatementSerializer)
     }
   }
 
+  private def getResponseCode(request: HttpRequestBase): Try[Int] = {
+    oauthInvoker match {
+      case None =>
+        val response = httpClient.execute(request)
+        try {
+          val respCode = response.getStatusLine.getStatusCode
+          if ((respCode == HttpStatus.SC_OK) || (respCode == HttpStatus.SC_NO_CONTENT)) {
+            Success(respCode)
+          } else {
+            buildFailure(response)
+          }
+        } finally {
+          response.close()
+        }
+      case Some(invoker) => invoker(request) map (_.toInt)
+    }
+  }
 
 }

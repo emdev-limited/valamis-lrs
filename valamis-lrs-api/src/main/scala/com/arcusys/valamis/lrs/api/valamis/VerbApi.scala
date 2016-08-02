@@ -1,9 +1,9 @@
 package com.arcusys.valamis.lrs.api.valamis
 
-import com.arcusys.valamis.lrs.{SeqWithCount}
-import com.arcusys.valamis.lrs.api.{BaseApi, LrsSettings}
+import com.arcusys.valamis.lrs.SeqWithCount
+import com.arcusys.valamis.lrs.api._
 import com.arcusys.valamis.lrs.serializer.DateTimeSerializer
-import com.arcusys.valamis.lrs.tincan.{LanguageMap, Verb}
+import com.arcusys.valamis.lrs.tincan.Verb
 import com.arcusys.valamis.lrs.tincan.valamis.{ActivityIdLanguageMap,VerbStatistics}
 import org.apache.http.client.methods.HttpGet
 import org.joda.time.DateTime
@@ -13,7 +13,7 @@ import scala.util.Try
 /**
  * Created by Iliya Tryapitsin on 16.06.15.
  */
-class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
+class VerbApi(val oauthInvoker: Option[OAuthInvoker] = None)(implicit lrs: LrsSettings) extends BaseApi() {
 
   val addressPathSuffix = "valamis/verb"
 
@@ -46,8 +46,8 @@ class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response) map { json =>
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent map { json =>
       fromJson[VerbStatistics](json, DateTimeSerializer)
     }
   }
@@ -74,8 +74,8 @@ class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response) map { json =>
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent map { json =>
       fromJson[SeqWithCount[(Verb, ActivityIdLanguageMap, Option[DateTime])]](json, DateTimeSerializer)
     }
   }
@@ -92,7 +92,6 @@ class VerbApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response)
+    invokeHttpRequest(oauthInvoker, httpGet)
   }
 }

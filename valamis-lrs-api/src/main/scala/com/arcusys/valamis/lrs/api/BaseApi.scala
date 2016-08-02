@@ -2,11 +2,11 @@ package com.arcusys.valamis.lrs.api
 
 import java.io.InputStream
 import com.arcusys.valamis.lrs.tincan.Constants
-import org.apache.http.{HttpStatus, HttpHeaders}
 import org.apache.http.client.methods.{CloseableHttpResponse, HttpRequestBase}
 import org.apache.http.client.utils.URIBuilder
 import org.apache.http.entity.ContentType
 import org.apache.http.impl.client.HttpClients
+import org.apache.http.{HttpHeaders, HttpStatus}
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
 import scala.io.Source
@@ -29,15 +29,23 @@ abstract class BaseApi(implicit lrs: LrsSettings) {
     request.addHeader(HttpHeaders.CONTENT_TYPE,  ContentType.APPLICATION_JSON.toString)
   }
 
-  protected def getContent(response: CloseableHttpResponse) : Try[String] = {
+  protected def invokeHttpRequest(oAuthInvoker: Option[OAuthInvoker], req: HttpRequestBase): Try[String] =
+    oAuthInvoker.fold(getContent(httpClient.execute(req)))(_ (req))
 
+  protected def buildFailure[T](response: CloseableHttpResponse): Try[T] = {
+    val respCode = response.getStatusLine.getStatusCode
+    val respMsg = Option(response.getEntity).fold("")(entity => Source.fromInputStream(entity.getContent).mkString)
+    Failure(new FailureRequestException(respCode, respMsg))
+  }
+
+  protected def getContent(response: CloseableHttpResponse) : Try[String] = {
     var stream : InputStream = null
     try {
       if (response.getStatusLine.getStatusCode == HttpStatus.SC_OK) {
         stream = response.getEntity.getContent
         Success(Source.fromInputStream(stream).mkString)
       } else {
-        Failure(new FailureRequestException(response.getStatusLine.getStatusCode))
+        buildFailure(response)
       }
     } finally {
       response.close()

@@ -12,7 +12,7 @@ import com.arcusys.valamis.lrs.tincan._
 trait AttachmentSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   lazy val attachments = TableQuery[AttachmentsTable]
 

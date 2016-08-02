@@ -5,6 +5,7 @@ import javax.servlet.annotation.MultipartConfig
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.StatementQuery
 import com.arcusys.valamis.lrs.liferay.exception.NotFoundException
 import com.arcusys.valamis.lrs.liferay.servlet.request.TincanStatementRequest
 import com.arcusys.valamis.lrs.tincan.StatementResult
@@ -12,7 +13,7 @@ import com.google.inject.{Inject, Injector, Singleton}
 
 @Singleton
 @MultipartConfig
-class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj){
+class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
 
   override def doGet(request: HttpServletRequest,
                      response: HttpServletResponse): Unit = jsonAction[TincanStatementRequest](model => {
@@ -52,7 +53,6 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj){
 
   override def doPost(request: HttpServletRequest,
                       response: HttpServletResponse): Unit = jsonAction[TincanStatementRequest](model => {
-
     val result = model.statements map { x => lrs.addStatement(x.copy(id = UUID.randomUUID.toOption)) }
     result
 
@@ -60,7 +60,6 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj){
 
   override def doPut(request: HttpServletRequest,
                      response: HttpServletResponse): Unit = jsonAction[TincanStatementRequest](model => {
-
     model.statements.map(x => model.statementId match {
       case Some(value) => lrs.addStatement(x.copy(id = Some(value)))
       case None => lrs.addStatement(x)
@@ -73,4 +72,5 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj){
     else model.toMoreIRL
 
   override val ServletName: String = "Statements"
+
 }

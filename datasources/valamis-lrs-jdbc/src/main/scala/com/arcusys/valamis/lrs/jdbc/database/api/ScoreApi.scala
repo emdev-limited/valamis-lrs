@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.tincan.Score
 trait ScoreApi extends ScoreQueries {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   /**
    * Load Tincan [[Score]] by storage key

@@ -3,21 +3,18 @@ package com.arcusys.valamis.lrs.jdbc.database.api
 import java.net.URI
 import java.util.UUID
 
-import com.arcusys.valamis.lrs.exception.ConflictEntityException
-import com.arcusys.valamis.lrs.jdbc.database.converter._
-import com.arcusys.valamis.lrs.jdbc.database.api.query.TypeAliases
-import com.arcusys.valamis.lrs.jdbc.database.row._
+import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.jdbc.Loggable
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api.query.{StatementQueries, TypeAliases}
 import com.arcusys.valamis.lrs.jdbc.database.row.StatementRow
-import com.arcusys.valamis.lrs.jdbc.Loggable
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.lrs._
 import org.joda.time.DateTime
 
 import scala.async.Async
-import scala.concurrent._
 import scala.async.Async.async
+import scala.concurrent._
+import scala.concurrent.duration.Duration
 import scala.slick.jdbc.JdbcBackend
 
 /**
@@ -37,19 +34,9 @@ trait StatementApi extends StatementQueries {
   with ActivityApi
   with TypeAliases =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
-  /**
-   * Find Tincan [[Statement]] by [[Statement.id]] exclude voided statements
-   * @param id Tincan [[Statement.id]]
-   * @param s
-   * @return Tincan [[Statement]] or None
-   */
-  def findStatementById(id: String)
-                       (implicit s: Session): Future[Option[Statement]] =
-    if (isVoided (id)) async { None }
-    else findVoidedStatement(id)
 
   /**
    * Find Tincan [[Statement]] by [[Statement.id]] include voided [[Statement]]s
@@ -57,84 +44,85 @@ trait StatementApi extends StatementQueries {
    * @param s
    * @return Tincan [[Statement]] or None
    */
-  def findVoidedStatement (id: String)
-                          (implicit s: Session): Future[Option[Statement]] = async {
+  def findStatementImpl (id: String)
+                          (implicit s: Session): Future[Option[Statement]] =  {
+    val result = findResultByStatementIdQC (id).firstOption whenDefined convertResult
+    async {
+      val contextTask     = async { findContextByStatementIdQC(id).firstOption whenDefined convertContext }
+      val attachmentsTask = async { findAttachmentsByStatementIdQC(id).run map { it => it convert }       }
+      val statementTask   = async { findStatementByIdQC (id).firstOption } flatMap {
+        case Some(statementRec) =>
+          val actorTask           = async { findActorByKey (statementRec.actorKey)               }
+          val authorityTask       = async { statementRec.authorityKey whenDefined findAgentByKey }
+          val statementObjectTask = async { findStatementObjectByKey (statementRec.objectKey)    }
 
-    val resultTask      = async { findResultByStatementIdQC (id).firstOption whenDefined convertResult  }
-    val contextTask     = async { findContextByStatementIdQC(id).firstOption whenDefined convertContext }
-    val attachmentsTask = async { findAttachmentsByStatementIdQC(id).run map { it => it convert }       }
-    val statementTask   = async { findStatementByIdQC (id).firstOption } flatMap {
-      case Some(statementRec) =>
-        val actorTask           = async { findActorByKey (statementRec.actorKey)               }
-        val authorityTask       = async { statementRec.authorityKey whenDefined findAgentByKey }
-        val statementObjectTask = async { findStatementObjectByKey (statementRec.objectKey)    }
+          for {
+            actor           <- actorTask
+            context         <- contextTask
+            authority       <- authorityTask
+            attachments     <- attachmentsTask
+            statementObject <- statementObjectTask
+          } yield {
+            val statement = statementRec.convert withActor {
+              actor
 
-        for {
-          actor           <- actorTask
-          result          <- resultTask
-          context         <- contextTask
-          authority       <- authorityTask
-          attachments     <- attachmentsTask
-          statementObject <- statementObjectTask
-        } yield {
-          val statement = statementRec.convert withActor {
-            actor
+            } withResult {
+              result
 
-          } withResult {
-            result
+            } withContext {
+              context
 
-          } withContext {
-            context
+            }  withAuthority {
+              authority
 
-          }  withAuthority {
-            authority
+            } withAttachments {
+              attachments
 
-          } withAttachments {
-            attachments
+            } withObj {
+              statementObject
 
-          } withObj {
-            statementObject
+            } build
 
-          } build
+            statement ?
+          }
 
-          statement ?
-        }
+        case None => async { None }
+      }
 
-      case None => async { None }
+      Async await statementTask
     }
-
-    Async await statementTask
   }
 
-  def findStatementsByParams (q: StatementQuery)
-                             (implicit s: Session): Future[PartialSeq[Statement]] = async {
-    val query = statements.withoutVoided filterRegistration {
-      q registration
+  def findStatementsByParamsImpl (q: StatementQuery)
+                            (implicit s: Session): Future[PartialSeq[Statement]] = {
+    val allCount = statements.length.run
+    async {
+      val query = statements.withoutVoided filterRegistration {
+        q registration
 
-    } filterVerb {
-      q verb
+      } filterVerb {
+        q verb
 
-    } filterActivities (
-      q.activity, q.relatedActivities
+      } filterActivities(
+        q.activity, q.relatedActivities
 
-    ) filterActor (
-      q.agent, q.relatedAgents
-    ) onlyWithAttachments q.attachments sortByStore q.ascending since q.since until q.until
+        ) filterActor(
+        q.agent, q.relatedAgents
+        ) onlyWithAttachments q.attachments sortByStore q.ascending since q.since until q.until
 
-    val recsQuery = query limit {
-      q.limit + q.offset
-    } drop q.offset
+      val recsQuery = query limit {
+        q.limit + q.offset
+      } drop q.offset
 
-    val countQueryTask  = async { recsQuery.length run      }
-    val countTask       = async { statements.length run }
+    val countQueryTask  = async { recsQuery.length run }
 
     val result = for {
       c <- countQueryTask
-      l <- countTask
-      s <- buildStatements (recsQuery run)
-    } yield s toPartialSeq (l == c)
+      s <- buildStatementsAsync (recsQuery run)
+    } yield s toPartialSeq (allCount <= c + q.offset)
 
-    Async await result
+      Async await result
+    }
   }
 
   /**
@@ -143,7 +131,7 @@ trait StatementApi extends StatementQueries {
    * @param s
    * @return List of Tincan [[Statement]]s
    */
-  private def buildStatements (recs: Seq[StatementRow])
+  def buildStatementsAsync (recs: Seq[StatementRow])
                               (implicit s: Session): Future[Seq[Statement]] =
     if (recs isEmpty) async { Seq() }
     else {
@@ -158,11 +146,11 @@ trait StatementApi extends StatementQueries {
       )
 
       val resultTask = async {
-        findResultsByStatementKeysQ (statementKeys).run map { _._2 } then convertResults
+        findResultsByStatementKeysQ (statementKeys).run map { _._2 } afterThat convertResults
       }
 
       val contextTask = async {
-        findContextsByStatementKeysQ (statementKeys).run map { _._2 } then convertContexts
+        findContextsByStatementKeysQ (statementKeys).run map { _._2 } afterThat convertContexts
       }
 
       val attachmentsTask = async {
@@ -213,18 +201,70 @@ trait StatementApi extends StatementQueries {
       }
   }
 
-  /**
-   * Save new [[Statement]] in the LRS
-   * @param statement [[Statement]] instance
-   * @return Saved [[Statement.id]]
+/**
+   * Building Tincan [[Statement]]s by storage records
+   * @param recs List of [[StatementRow]]
+   * @param s
+   * @return List of Tincan [[Statement]]s
    */
-  def addStatement(statement: Statement): UUID = db.withTransaction { implicit session =>
+  def buildStatements (recs: Seq[StatementRow])
+                              (implicit s: Session): Seq[Statement] =
+    if (recs isEmpty) Seq()
+    else {
+      val authorityKeys    = recs filter { it => it.authorityKey isDefined } map { _.authorityKey get }
+      val statementKeys    = recs map { _ key       }
+      val actorKeys        = recs map { _ actorKey  }
+      val statementObjKeys = recs map { _ objectKey }
 
-    if (statement exists)
-      throw new ConflictEntityException(s"Statement with key = '${statement.id}' already exist")
+      // start async queries to data storage
+      val statementObjects = findStatementObjectsByKeys (
+        authorityKeys ++ actorKeys ++ statementObjKeys
+      )
 
-    statements add statement
-  } then UUID.fromString
+      val results = findResultsByStatementKeysQ (statementKeys).run map { _._2 } afterThat convertResults
+
+      val contexts = findContextsByStatementKeysQ (statementKeys).run map { _._2 } afterThat convertContexts
+
+      val attachments = findAttachmentsByStatementKeysQ (statementKeys).run map { x => (x.statementId, x convert) }
+
+      // a wait async tasks result
+      recs map {
+
+        // building the Tincan Statement instances
+        it =>
+          val actor = statementObjects get it.actorKey whenDefined {
+            x => x.asInstanceOf[Actor]
+          } get
+
+          val authority = it.authorityKey whenDefined {
+            statementObjects.get(_).get.asInstanceOf[Actor]
+          }
+
+          val result  = it.resultKey  whenDefined { r => results .get(it.resultKey ) } flatMap { x => x }
+          val context = it.contextKey whenDefined { r => contexts.get(it.contextKey) } flatMap { x => x }
+          val attachment = attachments filter { _._1 == it.key } map { _._2 }
+
+          it.convert withActor {
+            actor.asInstanceOf[Actor]
+
+          } withAuthority {
+            authority
+
+          } withObj {
+            statementObjects get it.objectKey get
+
+          } withResult {
+            result
+
+          } withContext {
+            context
+
+          } withAttachments {
+            attachment
+
+          } build
+      }
+  }
 
   /**
    * Return [[Statement]]s since date. If date is None return latest TakeCount [[Statement]]s
@@ -232,7 +272,8 @@ trait StatementApi extends StatementQueries {
    * @return List of [[Statement]]s
    */
   def statementsSince (date: Option[DateTime]) =
-    date whenDefined { findStatementsSinceDateQC(_) } getOrElse { takeTopStatementsQC(TakeCount) }
+    date whenDefined { findSinceQ (_) } getOrElse { takeTopQ (TakeCount) }
+
 
   /**
    * Return [[Statement]]s since date. If date is None return latest TakeCount [[Statement]]s
@@ -246,7 +287,7 @@ trait StatementApi extends StatementQueries {
     } getOrElse {
       statements
 
-    } then { q =>
+    } afterThat { q =>
       verb whenDefined {
         x => q filter { it => it.verbId like x.toString }
       } getOrElse q
@@ -266,8 +307,8 @@ trait StatementApi extends StatementQueries {
      * @return Identity key in the storage
      */
     def add (s: Statement)
-            (implicit session: Session): StatementRow#Type =
-      s.convert withObj {
+            (implicit session: Session): UUID =
+      UUID fromString (s.convert withObj {
         statementObjects addExt s.obj
 
       } withResult {
@@ -285,15 +326,15 @@ trait StatementApi extends StatementQueries {
       } build { r =>
         q += r
 
-      } then { key =>
+      } afterThat { key =>
         s.attachments map { a =>
           a.convert withStatement key build
 
-        } then { a =>
+        } afterThat { a =>
           attachments addSeq a
         }
         key
-      }
+      })
   }
 
   implicit class StorageStatementExtension (s: Statement)  {
@@ -409,9 +450,13 @@ trait StatementApi extends StatementQueries {
           s => s.statementObjectKey in activityKeyQuery
         } map { _.key }
 
-        val contextKeyQuery = contextActivities filter {
+        val contextKeyQuery = contextActivitiesActivity filter {
           c => c.activityKey in activityKeyQuery
-        } map { _.contextKey }
+        } join contextActivitiesContext on {
+          (x1, x2) => x1.key === x2.activityKey
+        } map (_._2.contextKey)
+
+
 
         if (arg._2) q filter { st =>
           (st.objectKey  in activityKeyQuery    ) ||
@@ -435,9 +480,11 @@ trait StatementApi extends StatementQueries {
         s => s.statementObjectKey in activityKeyQuery
       } map { _.key }
 
-      val contextKeyQuery = contextActivities filter {
+      val contextKeyQuery = contextActivitiesActivity filter {
         c => c.activityKey in activityKeyQuery
-      } map { _.contextKey }
+      } join contextActivitiesContext on {
+        (x1, x2) => x1.key === x2.activityKey
+      } map (_._2.contextKey)
 
       if (arg._2) q filter { st =>
         (st.objectKey  in activityKeyQuery    ) ||

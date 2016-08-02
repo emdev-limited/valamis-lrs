@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.jdbc.database.utils
 
-import com.arcusys.slick.drivers.SQLServerDriver
+import com.arcusys.slick.drivers.{OracleDriver, SQLServerDriver}
 import scala.slick.ast.ColumnOption
 import scala.slick.driver._
 
@@ -9,25 +9,31 @@ import scala.slick.driver._
  */
 object DbNameUtils {
 
-  def tblName(str: String) = s"lrs_$str"
+  val NameSizeLimit = 30
 
-  def fkName(str: String) = s"fk_$str"
+  def checkLengthAndReturn(name: String) = {
+    assert(name.length < NameSizeLimit, s"Name '$name' is too long: ${name.length}")
+    name
+  }
 
-  def idxName(str: String) = s"idx_$str"
+  def tblName(str: String) = checkLengthAndReturn(s"lrs_$str")
 
-  def pkName(str: String) = s"pk_$str"
+  def fkName(str: String) = checkLengthAndReturn(s"fk_$str")
+
+  def idxName(str: String) = checkLengthAndReturn(s"idx_$str")
+
+  def pkName(str: String) = checkLengthAndReturn(s"pk_$str")
 
   // UUID not supported in Postgres < 4.3
   def uuidKeyLength = "char(36)"
 
-  def varCharMax(implicit driver: JdbcDriver): String = varCharMax(None)
-
-  def varCharMax(value: Option[String])(implicit driver: JdbcDriver): String = driver match {
-      case driver: MySQLDriver => "text"
-      case driver: PostgresDriver => s"varchar(${ value getOrElse "10485760" })"
-      case driver: SQLServerDriver => s"varchar(${ value getOrElse "max" })"
-      case _ => s"varchar(${ value getOrElse "2147483647" })"
-    }
+  def varCharMax(implicit driver: JdbcProfile) = driver match {
+    case driver: MySQLDriver => "text"
+    case driver: PostgresDriver => "varchar(10485760)"
+    case driver: SQLServerDriver => "varchar(max)"
+    case driver: OracleDriver => "varchar2(4000)"
+    case _ => "varchar(2147483647)"
+  }
 
   def varCharPk(implicit driver: JdbcDriver): String = varCharPk(None)
 

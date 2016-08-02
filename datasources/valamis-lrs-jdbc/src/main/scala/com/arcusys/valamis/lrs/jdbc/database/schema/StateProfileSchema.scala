@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row._
 trait StateProfileSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class StateProfilesTable(tag: Tag) extends Table[StateProfileRow](tag, tblName("stateProfiles")) {
     override def * = (stateId, agentKey, activityKey, registration, documentKey) <> (StateProfileRow.tupled, StateProfileRow.unapply)

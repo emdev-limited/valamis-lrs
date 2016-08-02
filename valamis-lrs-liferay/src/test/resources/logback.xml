@@ -5,11 +5,11 @@
         </encoder>
     </appender>
 
-    <logger name="com.arcusys" level="INFO">
+    <logger name="com.arcusys" level="ERROR">
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

@@ -9,7 +9,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ActorRow
 trait AgentProfileQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type ActorKeyCol  = ConstColumn[ActorRow#Type]
   private type ProfileIdCol = ConstColumn[String]

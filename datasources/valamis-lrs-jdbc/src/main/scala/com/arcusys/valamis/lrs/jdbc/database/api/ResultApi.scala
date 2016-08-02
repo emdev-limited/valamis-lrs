@@ -13,7 +13,7 @@ import com.arcusys.valamis.lrs.tincan._
 trait ResultApi extends ResultQueries {
   this: LrsDataContext with ScoreApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   implicit class ResultRowExtension (result: ResultRow) {
 

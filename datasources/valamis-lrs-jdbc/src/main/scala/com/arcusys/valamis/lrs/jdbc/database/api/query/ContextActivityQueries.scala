@@ -9,20 +9,27 @@ import com.arcusys.valamis.lrs.jdbc.database.row.ContextRow
 trait ContextActivityQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   private type ContextKeyCol = ConstColumn[ContextRow#Type]
 
   def findContextActivitiesByContextKeyQ (key: ContextKeyCol) =
-    contextActivities filter {
+    contextActivitiesContext.filter {
       x => x.contextKey === key
-    } join activities on { (x1, x2) => x1.activityKey === x2.key }
+    } join contextActivitiesActivity on {
+      (x1, x2) => x1.activityKey === x2.key
+    } join activities on {
+      (x1, x2) => x1._2.activityKey === x2.key
+    }
+
 
   def findContextActivitiesByContextKeysQ (keys: Seq[ContextRow#Type]) =
-    contextActivities filter {
+    contextActivitiesContext filter {
       x => x.contextKey inSet keys
-    } join activities on {
+    } join contextActivitiesActivity on {
       (x1, x2) => x1.activityKey === x2.key
+    } join activities on {
+      (x1, x2) => x1._2.activityKey === x2.key
     }
 
   val findContextActivitiesByContextKeyQC = Compiled(

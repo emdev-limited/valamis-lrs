@@ -1,7 +1,7 @@
 package com.arcusys.valamis.lrs.jdbc.database.converter
 
-import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.row._
+import com.arcusys.valamis.lrs.security.{Token, Application}
 import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs._
 
@@ -10,7 +10,6 @@ import com.arcusys.valamis.lrs._
  */
 
 trait ToRowConverter {
-  this: LrsDataContext =>
 
   trait StatementObj {
     def toStatementObj: StatementObjectRow
@@ -18,6 +17,11 @@ trait ToRowConverter {
 
   implicit class DocumentExtension (d: Document) {
     def convert = Builder()
+    def toRow = DocumentRow(
+      key      = d.id.toString,
+      contents = d.contents,
+      cType    = d.cType
+    )
 
     case class Builder (aKey: Option[ActorRow#Type] = None) {
       def withAgent (arg: ActorRow#Type) = copy(arg ?)
@@ -58,7 +62,7 @@ trait ToRowConverter {
           stored       = s.stored,
           authorityKey = aKey,
           version      = s.version
-        ) then act
+        ) afterThat act
 
         s.id.get.toString
       }
@@ -86,11 +90,7 @@ trait ToRowConverter {
 
         } map { case (tpe, x) =>
           val key = activities.find(_._1 == x.id).get._2.get
-          ContextActivityRow(
-            contextKey = id get,
-            tpe = tpe,
-            activityKey = key
-          )
+          (tpe, key, id.get) // tpe, activityKey, contentKey
         }
       }
     }
@@ -115,7 +115,7 @@ trait ToRowConverter {
           statement  = rKey,
           extensions = context.extensions
         )
-        rec then act
+        rec afterThat act
         rec.key get
       }
     }
@@ -322,5 +322,33 @@ trait ToRowConverter {
     }
 
     def convert = Builder()
+  }
+
+  implicit class ApplicationExtension(app: Application) {
+    def convert: ApplicationRow = ApplicationRow(
+      appId       = app.appId      ,
+      name        = app.name       ,
+      description = app.description,
+      appSecret   = app.appSecret  ,
+      scope       = app.scope      ,
+      regDateTime = app.regDateTime,
+      isActive    = app.isActive   ,
+      authType    = app.authType
+    )
+  }
+
+
+  implicit class TokenExtension(app: Token) {
+    def convert: TokenRow = TokenRow(
+      userKey        = app.userKey,
+      applicationKey = app.applicationKey,
+      code           = app.code,
+      codeSecret     = app.codeSecret,
+      callback       = app.callback,
+      issueAt        = app.issueAt,
+      verifier       = app.verifier,
+      token          = app.token,
+      tokenSecret    = app.tokenSecret
+    )
   }
 }

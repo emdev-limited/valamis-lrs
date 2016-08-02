@@ -4,16 +4,13 @@ import javax.servlet.http.HttpServletRequest
 
 import com.arcusys.valamis.lrs.liferay.exception.InvalidOrMissingArgumentException
 import com.arcusys.json.JsonHelper
-import com.liferay.portal.util.PortalUtil
+import com.arcusys.learn.liferay.util.PortalUtilHelper
 import org.apache.commons.lang.CharEncoding
 import org.json4s.DefaultFormats
 
 import scala.collection.JavaConverters._
 import scala.io.Source
 
-/**
- * Created by iliyatryapitsin on 27/12/14.
- */
 class BaseLrsRequest(var request: HttpServletRequest) {
 
   implicit val formats = DefaultFormats
@@ -79,7 +76,7 @@ class BaseLrsRequest(var request: HttpServletRequest) {
   def contentType: Option[String] = Option(request.getContentType)
 
   def body: String = {
-    val uploadRequest = PortalUtil.getUploadServletRequest(request)
+    val uploadRequest = PortalUtilHelper.getUploadServletRequest(request)
     val encoding = uploadRequest.getCharacterEncoding
     val enc = if (encoding == null || encoding.trim.length == 0) CharEncoding.UTF_8
     else encoding

@@ -18,6 +18,8 @@ trait LrsDataContext extends BaseDataContext
   with AgentProfileSchema
   with AttachmentSchema
   with ContextActivitySchema
+  with ContextActivityActivitySchema
+  with ContextActivityContextSchema
   with ContextSchema
   with DocumentSchema
   with ResultSchema

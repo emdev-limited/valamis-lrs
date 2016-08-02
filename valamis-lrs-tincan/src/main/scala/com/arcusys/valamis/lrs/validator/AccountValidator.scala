@@ -24,8 +24,8 @@ object AccountValidator {
       case RunningMode.Production  => new UrlValidator
     }
 
-    if (account.homePage.isEmpty && account.name.isEmpty)
-      throw new IllegalArgumentException("Account homepage and Account.name is empty")
+    if (account.homePage.isEmpty || account.name.isEmpty)
+      throw new IllegalArgumentException("Account homepage or Account.name is empty")
 
     if (!urlValidator.isValid(account.homePage))
       throw new IllegalArgumentException("Account homePage: incorrect URI")

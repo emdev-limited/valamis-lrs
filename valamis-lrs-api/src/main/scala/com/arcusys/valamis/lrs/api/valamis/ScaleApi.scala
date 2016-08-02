@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.api.valamis
 
 import java.net.URI
 
-import com.arcusys.valamis.lrs.api.{BaseApi, LrsSettings}
+import com.arcusys.valamis.lrs.api._
 import com.arcusys.valamis.lrs.tincan.Activity
 import org.apache.http.client.methods.HttpGet
 
@@ -11,7 +11,7 @@ import scala.util.Try
 /**
  * Created by Iliya Tryapitsin on 21.07.15.
  */
-class ScaleApi(implicit lrs: LrsSettings) extends BaseApi() {
+class ScaleApi(val oauthInvoker: Option[OAuthInvoker] = None)(implicit lrs: LrsSettings) extends BaseApi() {
 
   val addressPathSuffix = "valamis/scale"
 
@@ -32,8 +32,8 @@ class ScaleApi(implicit lrs: LrsSettings) extends BaseApi() {
     val httpGet = new HttpGet(uri)
     initRequestAsJson(httpGet)
 
-    val response = httpClient.execute(httpGet)
-    getContent(response) map { json =>
+    val respContent = invokeHttpRequest(oauthInvoker, httpGet)
+    respContent map { json =>
       fromJson[Seq[(Activity#Id, Option[Float])]](json)
     }
   }

@@ -15,7 +15,7 @@ package object lrs {
 
     def ? : Option[T] = Option(obj)
 
-    def then[E] (act: (T) => E) = act(obj)
+    def afterThat[E] (act: (T) => E) = act(obj)
 
     def toSeq = Seq(obj)
 

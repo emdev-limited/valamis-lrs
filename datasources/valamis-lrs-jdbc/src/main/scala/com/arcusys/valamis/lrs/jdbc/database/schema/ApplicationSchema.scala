@@ -16,10 +16,10 @@ import scala.slick.jdbc.JdbcBackend
 trait ApplicationSchema {
   this: SecurityDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
-  class ApplicationTable(tag: Tag) extends Table[ApplicationRow](tag,"lrs_applications") {
+  class ApplicationTable(tag: Tag) extends Table[ApplicationRow](tag,tblName("applications")) {
 
     def * = (appId, name, description, appSecret, scope, regDateTime, isActive, authType) <>
       (ApplicationRow.tupled, ApplicationRow.unapply)

@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 trait StatementSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
   class StatementsTable (tag: Tag) extends UUIDKeyTable [StatementRow] (tag, tblName("statements")) {
@@ -49,6 +49,12 @@ trait StatementSchema extends SchemaUtil {
     def result          = foreignKey (fkName("stmnt2result"  ), resultKey   , TableQuery[ResultsTable])         (_.key)
     def context         = foreignKey (fkName("stmnt2cntxt"   ), contextKey  , TableQuery[ContextsTable])        (_.key)
     def statementObject = foreignKey (fkName("stmnt2stmntObj"), objectKey   , TableQuery[StatementObjectsTable])(_.key)
+
+    def actorKeyIndx = index("idx_actor_key", actorKey)
+    def authorityIndx = index("idx_authority_key", authorityKey)
+    def resultIndx = index("idx_result_key",  resultKey)
+    def contextIndx = index("idx_contextKey_key",  contextKey)
+    def objectIndx = index("idx_object_key",  objectKey)
   }
 
   lazy val statements = TableQuery[StatementsTable]

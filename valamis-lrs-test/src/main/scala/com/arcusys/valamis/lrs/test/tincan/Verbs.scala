@@ -11,6 +11,8 @@ case class Verb(id:      Option[String] = None,
 object Verbs {
 
   val invalidUri = "_abc://should.fail.com"
+  val invalidUri2 = "Test"
+  val invalidUri3 = "http://adlnet.gov/expapi/ verbs/experienced"
   val validUri   = "http://tincanapi.com/conformancetest/verbid"
   val voidedUri  = "http://adlnet.gov/expapi/verbs/voided/"
 
@@ -24,6 +26,8 @@ object Verbs {
     val empty              = Some(Verb())
     val displayOnly        = Some(Verb(None,         LanguageMaps.good3))
     val invalidUriId       = Some(Verb(invalidUri ?, LanguageMaps.good3))
+    val invalidUriId2      = Some(Verb(invalidUri2 ?, LanguageMaps.good3))
+    val invalidUriId3      = Some(Verb(invalidUri3 ?, LanguageMaps.good3))
     val invalidLanguageMap = Some(Verb(validUri   ?, LanguageMaps.bad))
   }
 

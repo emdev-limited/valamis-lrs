@@ -8,7 +8,7 @@ import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 trait AccountQueries extends TypeAliases {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   type StringCol = ConstColumn[String]
 

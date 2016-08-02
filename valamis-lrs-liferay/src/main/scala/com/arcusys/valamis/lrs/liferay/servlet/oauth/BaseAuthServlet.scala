@@ -2,27 +2,24 @@ package com.arcusys.valamis.lrs.liferay.servlet.oauth
 
 import java.util.UUID
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
-import com.arcusys.valamis.lrs.LrsType
-import com.arcusys.valamis.lrs.jdbc.SecurityManager
-import com.arcusys.valamis.lrs.liferay.{LrsTypeLocator, Loggable}
+
+import com.arcusys.valamis.lrs.SecurityManager
+import com.arcusys.valamis.lrs.liferay.Loggable
 import com.arcusys.valamis.lrs.liferay.servlet.BaseServlet
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
-import com.google.inject.name.Names
-import com.google.inject.{Key, Injector}
-import com.liferay.portal.util.PortalUtil
+import com.google.inject.{Injector, Key}
+import com.arcusys.learn.liferay.util.PortalUtilHelper
 import net.oauth._
 import net.oauth.server.OAuthServlet
 
-abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with LrsTypeLocator {
-
-  lazy val lrsType         = LrsType.Simple
-  lazy val securityManager = inj.getInstance(Key.get(classOf[SecurityManager], Names.named(lrsType.toString)))
+abstract class BaseAuthServlet(inj: Injector) extends BaseServlet with Loggable {
+  def securityManager = inj.getInstance(Key.get(classOf[SecurityManager]))
   val validator       = new SimpleOAuthValidator
   val Name            = "name"
 
 
   protected def getMessage(request: HttpServletRequest) = {
-    val url = PortalUtil.getCurrentCompleteURL(request)
+    val url = PortalUtilHelper.getCurrentCompleteURL(request)
     OAuthServlet.getMessage(request, url)
   }
 

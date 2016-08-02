@@ -14,7 +14,7 @@ import scala.slick.lifted.ProvenShape
 trait ActorsSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
 
   class ActorsTable(tag: Tag) extends LongKeyTable[ActorRow](tag: Tag, tblName("actors"), false) {
 

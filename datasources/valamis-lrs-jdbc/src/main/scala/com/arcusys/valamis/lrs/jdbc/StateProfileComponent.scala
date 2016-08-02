@@ -15,88 +15,16 @@ trait StateProfileComponent {
     with ActorApi
     with StatementObjectApi =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import jodaSupport._
 
-//  def getProfile(agent: Agent,
-//                 activityId: String,
-//                 stateId: String,
-//                 registration: Option[UUID]): Option[Document] =
-//    db.withSession { implicit session =>
-//      actors keyFor agent match {
-//        case Some(value) => getDocumentRow(value, activityId, stateId, registration).map(x => x.toModel)
-//        case None => None
-//      }
-//    }
 
-//  def getProfiles(agent: Agent,
-//                  activityId: String,
-//                  registration: Option[UUID],
-//                  since: Option[DateTime]): Seq[String] = db.withSession { implicit session =>
-//    actors keyFor agent match {
-//      case Some(value) => getDocuments(value, activityId, registration, since).map(x => x.key)
-//      case None => Seq()
-//    }
-//  }
-
-//  def deleteProfiles(agent: Agent,
-//                     activityId: String,
-//                     registration: Option[UUID]): Unit = db.withSession { implicit session =>
-//    actors keyFor agent match {
-//      case Some(value) =>
-//        val docKeys = getDocuments(value, activityId, registration, None) map { x => x.key }
-//        documents filter { x => x.key inSet docKeys } delete
-//
-//      case None => Unit
-//    }
-//  }
-
-  /**
-   * Add or Update if exist the specified profile document in the context of the specified Activity.
-   * @param agent The agent associated with these profiles.
-   * @param activityId The activity id associated with these profiles.
-   * @param stateId The state id associated with this profile.
-   * @param registration The registration UUID associated with this profile.
-   * @param doc The new document version
-   */
-  def addOrUpdateDocument(agent: Agent,
-                          activityId: String,
-                          stateId: String,
-                          registration: Option[UUID],
-                          doc: Document): Unit = db.withSession { implicit session =>
-    val agentKey = statementObjects addExt agent
-
-    getDocumentRow(agentKey, activityId, stateId, registration) match {
-      case None =>
-        val activityKey =  statementObjects addExt Activity(id = activityId)
-
-        documents.insert(DocumentRow(doc.id.toString, contents = doc.contents, cType = doc.cType))
-        stateProfiles.insert(StateProfileRow(stateId, agentKey, activityKey, registration.map(_.toString), doc.id.toString))
-
-      case Some(document) =>
-        val newContent = if (doc.cType == ContentType.json && document.cType == ContentType.json)
-          JsonHelper.combine(document.contents, doc.contents)
-        else
-          doc.contents
-
-        val newDoc = document.copy(
-          contents = newContent,
-          cType = doc.cType,
-          updated = DateTime.now)
-
-        documents.filter(x => x.key === newDoc.key).update(newDoc)
-    }
-  }
-
-
-
-
-  private def stateProfileQuery(implicit session: Session) =
+  def stateProfileQuery(implicit session: Session) =
       stateProfiles
       .join(activities).on((sp, a) => sp.activityKey === a.key)
       .join(documents).on((sp, document) => sp._1.documentKey === document.key)
 
-  private def filterStateProfileQuery(agentKey: AgentRow#Type,
+  def filterStateProfileQuery(agentKey: AgentRow#Type,
                                       activityId: String,
                                       stateId: Option[String],
                                       registration: Option[UUID],
@@ -122,7 +50,7 @@ trait StateProfileComponent {
     query
   }
 
-  private def getDocumentQuery(agentKey: AgentRow#Type,
+  def getDocumentQuery(agentKey: AgentRow#Type,
                                activityId: String,
                                stateId: Option[String],
                                registration: Option[UUID],
@@ -130,14 +58,14 @@ trait StateProfileComponent {
                               (implicit session: Session) =
     filterStateProfileQuery(agentKey, activityId, stateId, registration, since).map(x => x._2)
 
-  private def getDocumentRow(agentKey: AgentRow#Type,
+  def getDocumentRow(agentKey: AgentRow#Type,
                              activityId: String,
                              stateId: String,
                              registration: Option[UUID])
                             (implicit session: Session) =
     getDocumentQuery(agentKey, activityId, Option(stateId), registration).firstOption
 
-  private def getDocuments(agentKey: AgentRow#Type,
+  def getDocuments(agentKey: AgentRow#Type,
                            activityId: String,
                            registration: Option[UUID],
                            since: Option[DateTime])

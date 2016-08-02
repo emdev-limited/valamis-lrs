@@ -15,7 +15,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
 
     model.stateId match {
       case Some(stateId) =>
-        lrs.getDocument(
+        lrs.getStateProfile(
           model.agent,
           model.activityId,
           stateId,
@@ -25,7 +25,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
           case None => throw new NotFoundException("State profile")
         }
       case None =>
-        lrs.getDocuments(
+        lrs.getStateProfiles(
           model.agent,
           model.activityId,
           model.registration,
@@ -36,7 +36,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
   override def doPost(request: HttpServletRequest,
                       response: HttpServletResponse): Unit = jsonAction[TincanActivityStateRequest](model => {
     model.stateId match {
-      case Some(stateId) => lrs.addOrUpdateDocument(model.agent,
+      case Some(stateId) => lrs.addOrUpdateStateProfile(model.agent,
         model.activityId,
         stateId,
         model.registration,
@@ -52,7 +52,7 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
                      response: HttpServletResponse): Unit = jsonAction[TincanActivityStateRequest](model => {
 
     model.stateId match {
-      case Some(stateId) => lrs.addOrUpdateDocument(model.agent,
+      case Some(stateId) => lrs.addOrUpdateStateProfile(model.agent,
         model.activityId,
         stateId,
         model.registration,
@@ -67,13 +67,13 @@ class StateProfileServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
 
     model.stateId match {
       case Some(stateId) =>
-        lrs.deleteProfile(
+        lrs.deleteStateProfile(
           model.agent,
           model.activityId,
           stateId,
           model.registration)
       case None =>
-        lrs.deleteProfiles(
+        lrs.deleteStateProfiles(
           model.agent,
           model.activityId,
           model.registration)

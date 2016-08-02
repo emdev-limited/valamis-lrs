@@ -11,7 +11,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row._
 trait AgentProfileSchema extends SchemaUtil {
   this: LrsDataContext =>
 
-  import executionContext.driver.simple._
+  import driver.simple._
   import ForeignKeyAction._
 
   class AgentProfilesTable(tag: Tag) extends Table[AgentProfileRow](tag, tblName("agentProfiles")) {
