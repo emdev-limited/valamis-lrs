@@ -38,7 +38,7 @@ object Settings {
 
   object Liferay620 {
     val dependencies = Dependencies.liferay62
-    val supportVersion = "6.2.5"
+    val supportVersion = "6.2.*"
     val version = Version.liferayPortal62
   }
 
