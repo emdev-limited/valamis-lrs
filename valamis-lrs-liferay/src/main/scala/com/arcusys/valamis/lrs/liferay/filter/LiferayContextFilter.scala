@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest
 
 import com.arcusys.valamis.lrs.liferay.util.DbContext
 import com.google.inject.{Inject, Singleton}
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 
 @Singleton
 class LiferayContextFilter @Inject()(liferayContext: DbContext)

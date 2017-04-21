@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.jdbc
 
 import javax.inject.Inject
 
-import com.arcusys.valamis.lrs.LrsImpl
+import com.arcusys.valamis.lrs.{LrsImpl}
 
 import scala.concurrent.ExecutionContextExecutor
 import scala.slick.driver.JdbcDriver

@@ -1,11 +1,12 @@
 package com.arcusys.valamis.lrs.test
 
-import com.arcusys.valamis.lrs.history.BaseDbUpgrade
-import com.arcusys.valamis.lrs.history.ver230.{DbSchemaUpgrade => Ver230}
-import com.arcusys.valamis.lrs.history.ver240.{DbSchemaUpgrade => Ver240}
-import com.arcusys.valamis.lrs.history.ver250.{DbSchemaUpgrade => Ver250}
-import com.arcusys.valamis.lrs.history.ver270.{DbSchemaUpgrade => Ver270}
-import com.arcusys.valamis.lrs.history.ver300.{DbSchemaUpgrade => Ver300}
+import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
+import com.arcusys.valamis.lrs.jdbc.history.ver230.{DbSchemaUpgrade => Ver230}
+import com.arcusys.valamis.lrs.jdbc.history.ver240.{DbSchemaUpgrade => Ver240}
+import com.arcusys.valamis.lrs.jdbc.history.ver250.{DbSchemaUpgrade => Ver250}
+import com.arcusys.valamis.lrs.jdbc.history.ver270.{DbSchemaUpgrade => Ver270}
+import com.arcusys.valamis.lrs.jdbc.history.ver300.{DbSchemaUpgrade => Ver300}
+import com.arcusys.valamis.lrs.jdbc.history.ver310.{DbSchemaUpgrade => Ver310}
 import com.arcusys.valamis.lrs.jdbc.{JdbcValamisReporter, JdbcSecurityManager, JdbcLrs}
 import com.arcusys.valamis.lrs.test.config.DbInit
 import com.arcusys.valamis.lrs._
@@ -33,6 +34,7 @@ abstract class BaseCoreModule(val dbInit: DbInit) extends ScalaModule {
     bind [Lrs             ].to[JdbcLrs                ]
     bind [SecurityManager ].to[JdbcSecurityManager    ]
     bind [ValamisReporter ].to[JdbcValamisReporter    ]
+    bind [SparkProcessor  ].to[EmptySparkProcessor    ]
 
 
 
@@ -41,5 +43,6 @@ abstract class BaseCoreModule(val dbInit: DbInit) extends ScalaModule {
     bind [BaseDbUpgrade          ].annotatedWithName("ver250").to[Ver250 ]
     bind [BaseDbUpgrade          ].annotatedWithName("ver270").to[Ver270 ]
     bind [BaseDbUpgrade          ].annotatedWithName("ver300").to[Ver300 ]
+    bind [BaseDbUpgrade          ].annotatedWithName("ver310").to[Ver310 ]
   }
 }

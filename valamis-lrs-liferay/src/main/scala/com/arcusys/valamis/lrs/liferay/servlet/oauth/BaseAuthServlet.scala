@@ -8,7 +8,7 @@ import com.arcusys.valamis.lrs.liferay.Loggable
 import com.arcusys.valamis.lrs.liferay.servlet.BaseServlet
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
 import com.google.inject.{Injector, Key}
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 import net.oauth._
 import net.oauth.server.OAuthServlet
 

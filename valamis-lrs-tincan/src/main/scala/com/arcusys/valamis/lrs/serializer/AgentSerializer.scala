@@ -1,5 +1,5 @@
 package com.arcusys.valamis.lrs.serializer
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs.validator.ActorValidator
 import org.json4s.JsonAST.{JField, JObject, JString}

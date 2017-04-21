@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.test.tincan
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
   
 /**
  * Created by Iliya Tryapitsin on 13/02/15.

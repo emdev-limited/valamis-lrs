@@ -5,7 +5,9 @@ import java.util.UUID
 import com.arcusys.json.JsonHelper
 import com.arcusys.valamis.lrs.exception.ConflictEntityException
 import com.arcusys.valamis.lrs.tincan._
+import com.arcusys.valamis.lrs.utils.PartialSeq
 import org.joda.time.DateTime
+import com.arcusys.valamis.lrs.utils._
 
 /**
   * LRS
@@ -14,22 +16,14 @@ trait LrsImpl extends Lrs {
   this: LrsComponent =>
 
   // Statement API
-  override def findStatements(query: StatementQuery): PartialSeq[Statement] = query match {
-    case q if q.statementId isDefined       =>
-                                                (if(!statementStorage.isVoidedStatement(q.statementId))
-                                                  statementStorage findStatement q.statementId
-                                                else
-                                                  None) toPartialSeq
-
-    case q if q.voidedStatementId isDefined =>
-                                                (if(statementStorage.isVoidedStatement(q.voidedStatementId))
-                                                  statementStorage findStatement q.voidedStatementId
-                                                else
-                                                  None) toPartialSeq
-
-    case q                                  =>  statementStorage findStatementsByParams q
-
+  override def findStatements(query: StatementQuery): Seq[Statement] = query match {
+    case q if q.statementId isDefined       => getStatement(q.statementId)
+    case q if q.voidedStatementId isDefined => getStatement(q.voidedStatementId)
+    case q                                  => statementStorage.findStatementsByParams(q)
   }
+
+  private def getStatement(id :Statement#Id): Seq[Statement] =
+    statementStorage.findStatement(id) map (Seq(_)) getOrElse Seq()
 
   override def addStatement(statement: Statement): UUID = {
     if (statementStorage containStatement statement)

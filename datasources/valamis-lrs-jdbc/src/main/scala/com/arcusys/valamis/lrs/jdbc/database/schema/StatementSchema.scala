@@ -31,15 +31,15 @@ trait StatementSchema extends SchemaUtil {
       version
     ) <> (StatementRow.tupled, StatementRow.unapply)
 
-    def actorKey    = column [ActorRow#Type]          ("actorId"    , O.NotNull)
-    def objectKey   = column [StatementObjectRow#Type]("objectKey"  , O.NotNull)
-    def verbId      = column [String]                 ("verbId"     , O.NotNull, O.DBType(varCharMax)) // TODO: Change type to [[java.net.URI]]
-    def verbDisplay = column [LanguageMap]            ("verbDisplay", O.NotNull, O.DBType(varCharMax))
+    def actorKey    = column [ActorRow#Type]          ("actorId"    )
+    def objectKey   = column [StatementObjectRow#Type]("objectKey"  )
+    def verbId      = column [String]                 ("verbId"     , O.Length(2000, varying = true)) // TODO: Change type to [[java.net.URI]]
+    def verbDisplay = column [LanguageMap]            ("verbDisplay", O.Length(2000, varying = true))
 
-    def resultKey   = column [?[ResultRow#Type]]      ("resultId"   , O.Nullable)
-    def authorityKey= column [?[ActorRow#Type]]       ("authorityId", O.Nullable)
-    def contextKey  = column [?[ContextRow#Type]]     ("contextId"  , O.Nullable, O.DBType(uuidKeyLength))
-    def version     = column [?[TincanVersion.Type]]  ("version"    , O.Nullable, O.DBType(varCharMax))
+    def resultKey   = column [?[ResultRow#Type]]      ("resultId"   )
+    def authorityKey= column [?[ActorRow#Type]]       ("authorityId")
+    def contextKey  = column [?[ContextRow#Type]]     ("contextId"  , O.DBType(uuidKeyLength))
+    def version     = column [?[TincanVersion.Type]]  ("version"    , O.Length(50, varying = true))
 
     def timestamp   = column [DateTime] ("timestamp")
     def stored      = column [DateTime] ("stored"   )

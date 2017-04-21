@@ -2,13 +2,13 @@ package com.arcusys.valamis.lrs.jdbc.database.api
 
 import java.net.URI
 
-import com.arcusys.valamis.lrs.{ApplicationIdThreadLocal, _}
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.JdbcSecurityManager
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api.query._
 import com.arcusys.valamis.lrs.jdbc.database.row.ActivityRow
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.lrs.ApplicationIdThreadLocal
+import com.arcusys.valamis.lrs.utils.ApplicationIdThreadLocal
 
 /**
  * LRS component for a Tincan [[Activity]]
@@ -171,12 +171,12 @@ trait ActivityApi extends ActivityQueries with TypeAliases{
       val key = q keyFor activity
 
       key match {
-        case Some(k) => {
+        case Some(k) =>
 
           lazy val application = securityManager.getApplication(ApplicationIdThreadLocal.getApplicationId)
 
           if (application.isDefined && application.get.scope.contains(AuthorizationScope.Define)) {
-            val newActivity = new ActivityRow(
+            val newActivity = ActivityRow(
               key = k,
               id = activity.id,
               name = activity.name,
@@ -194,7 +194,6 @@ trait ActivityApi extends ActivityQueries with TypeAliases{
             q.filter(x => x.key === k).update(newActivity)
           }
           k
-        }
         case _ => q add activity
       }
     }

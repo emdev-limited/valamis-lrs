@@ -1,8 +1,11 @@
-import sbt._, Keys._
+import sbt._
+import Keys._
 
 // === Common settings for all projects
 object Settings {
   val graphSettings = net.virtualvoid.sbt.graph.Plugin.graphSettings
+
+  val liferay = Liferay620
 
   val commonSettings = Seq(
     organization := "com.arcusys.valamis",
@@ -10,7 +13,7 @@ object Settings {
     scalaVersion := Version.scala,
     parallelExecution in Test := false,
     resolvers ++= Seq(
-      DefaultMavenRepository,
+      ArcusysResolvers.mavenCentral,
       ArcusysResolvers.public,
       ArcusysResolvers.typesafeReleases,
       ArcusysResolvers.typesafeSnapshots,
@@ -18,6 +21,7 @@ object Settings {
     ),
     resolvers += Resolver.mavenLocal,
     libraryDependencies ++= Dependencies.common,
+    updateOptions := updateOptions.value.withLatestSnapshots(false),
     javacOptions        ++= Seq("-source", "1.6", "-target", "1.6"),
     scalacOptions        += "-target:jvm-1.6"
   ) ++ graphSettings
@@ -33,8 +37,6 @@ object Settings {
   object StorageType {
     val jdbcType = "jdbc"
   }
-
-  val liferay = Liferay620
 
   object Liferay620 {
     val dependencies = Dependencies.liferay62

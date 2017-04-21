@@ -6,6 +6,7 @@ import com.arcusys.valamis.lrs._
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.row._
 import com.arcusys.valamis.lrs.tincan._
+import com.arcusys.valamis.lrs.utils.PartialSeq
 import org.joda.time.DateTime
 
 import scala.concurrent.Await
@@ -34,7 +35,7 @@ trait JdbcLrsComponent extends LrsComponent
       isVoided(id.toString)
     }
 
-    override def findStatementsByParams(params: StatementQuery): PartialSeq[Statement] = db withSession { implicit session =>
+    override def findStatementsByParams(params: StatementQuery): Seq[Statement] = db withSession { implicit session =>
       Await.result(findStatementsByParamsImpl(params), timeout)
     }
 

@@ -1,6 +1,7 @@
 package com.arcusys.valamis.lrs.jdbc.database.utils
 
-import com.arcusys.slick.drivers.{OracleDriver, SQLServerDriver}
+import com.arcusys.slick.drivers.{DB2Driver, OracleDriver, SQLServerDriver}
+
 import scala.slick.ast.ColumnOption
 import scala.slick.driver._
 
@@ -32,6 +33,7 @@ object DbNameUtils {
     case driver: PostgresDriver => "varchar(10485760)"
     case driver: SQLServerDriver => "varchar(max)"
     case driver: OracleDriver => "varchar2(4000)"
+    case driver: DB2Driver => "CLOB"
     case _ => "varchar(2147483647)"
   }
 

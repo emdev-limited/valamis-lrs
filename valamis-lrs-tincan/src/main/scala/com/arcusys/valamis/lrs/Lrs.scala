@@ -17,7 +17,7 @@ trait Lrs {
    * @param query
    * @return
    */
-  def findStatements (query: StatementQuery): PartialSeq[Statement]
+  def findStatements (query: StatementQuery): Seq[Statement]
 
   /**
    * Save new [[Statement]] in the LRS

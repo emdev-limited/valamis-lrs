@@ -1,0 +1,1546 @@
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+}
+
+/**
+ * Remove default margin.
+ */
+body {
+  margin: 0;
+}
+
+/* HTML5 display definitions
+   ========================================================================== */
+/**
+ * Correct `block` display not defined for any HTML5 element in IE 8/9.
+ * Correct `block` display not defined for `details` or `summary` in IE 10/11
+ * and Firefox.
+ * Correct `block` display not defined for `main` in IE 11.
+ */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/**
+ * 1. Correct `inline-block` display not defined in IE 8/9.
+ * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
+ */
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Address `[hidden]` styling not present in IE 8/9/10.
+ * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
+ */
+[hidden],
+template {
+  display: none;
+}
+
+/* Links
+   ========================================================================== */
+/**
+ * Remove the gray background color from active links in IE 10.
+ */
+a {
+  background-color: transparent;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+a:active,
+a:hover {
+  outline: 0;
+}
+
+/* Text-level semantics
+   ========================================================================== */
+/**
+ * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
+ */
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
+ */
+b,
+strong {
+  font-weight: bold;
+}
+
+/**
+ * Address styling not present in Safari and Chrome.
+ */
+dfn {
+  font-style: italic;
+}
+
+/**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari, and Chrome.
+ */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+mark {
+  background: #ff0;
+  color: #000;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sup {
+  top: -0.5em;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+/* Embedded content
+   ========================================================================== */
+/**
+ * Remove border when inside `a` element in IE 8/9/10.
+ */
+img {
+  border: 0;
+}
+
+/**
+ * Correct overflow not hidden in IE 9/10/11.
+ */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Grouping content
+   ========================================================================== */
+/**
+ * Address margin not present in IE 8/9 and Safari.
+ */
+figure {
+  margin: 1em 40px;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ */
+hr {
+  box-sizing: content-box;
+  height: 0;
+}
+
+/**
+ * Contain overflow in all browsers.
+ */
+pre {
+  overflow: auto;
+}
+
+/**
+ * Address odd `em`-unit font size rendering in all browsers.
+ */
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+/* Forms
+   ========================================================================== */
+/**
+ * Known limitation: by default, Chrome and Safari on OS X allow very limited
+ * styling of `select`, unless a `border` property is set.
+ */
+/**
+ * 1. Correct color not being inherited.
+ *    Known issue: affects color of disabled elements.
+ * 2. Correct font properties not being inherited.
+ * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
+ */
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+  margin: 0;
+  /* 3 */
+}
+
+/**
+ * Address `overflow` set to `hidden` in IE 8/9/10/11.
+ */
+button {
+  overflow: visible;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
+ * Correct `select` style inheritance in Firefox.
+ */
+button,
+select {
+  text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+  cursor: pointer;
+  /* 3 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+input {
+  line-height: normal;
+}
+
+/**
+ * It's recommended that you don't attempt to style these elements.
+ * Firefox's implementation doesn't respect box-sizing, padding, or width.
+ *
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
+ */
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+ * Fix the cursor style for Chrome's increment/decrement buttons. For certain
+ * `font-size` values of the `input`, it causes the cursor style of the
+ * decrement button to change from `default` to `text`.
+ */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
+ *    (include `-moz` to future-proof).
+ */
+input[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  /* 2 */
+  box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari and Chrome on OS X.
+ * Safari (but not Chrome) clips the cancel button when the search input has
+ * padding (and `textfield` appearance).
+ */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+/**
+ * 1. Correct `color` not being inherited in IE 8/9/10/11.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+legend {
+  border: 0;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+ * Remove default vertical scrollbar in IE 8/9/10/11.
+ */
+textarea {
+  overflow: auto;
+}
+
+/**
+ * Don't inherit the `font-weight` (applied by a rule above).
+ * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
+ */
+optgroup {
+  font-weight: bold;
+}
+
+/* Tables
+   ========================================================================== */
+/**
+ * Remove most spacing between table cells.
+ */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+td,
+th {
+  padding: 0;
+}
+
+@font-face {
+  font-family: "valamis-icons";
+  font-style: normal;
+  font-weight: normal;
+  src: url('../fonts/valamis-icons32.eot?#iefix') format("embedded-opentype"), url('../fonts/valamis-icons32.woff') format("woff"), url('../fonts/valamis-icons32.ttf') format("truetype"), url('../fonts/valamis-icons32.svg#valamis-icons') format("svg");
+}
+
+/* Neat 1.7.0
+ * http://neat.bourbon.io
+ * Copyright 2012-2014 thoughtbot, inc.
+ * MIT License */
+.valamis-lrs {
+  /* Button Groups */
+}
+
+.valamis-lrs .shift-right .button {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+.valamis-lrs .shift-right .button:first-child {
+  margin-left: 0;
+}
+
+.valamis-lrs .button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  margin-right: 10px;
+  transition: 0.05s all linear;
+  border-radius: 3px;
+  border: 1px solid;
+  color: white;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0 14px;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.valamis-lrs .button.shift-right {
+  margin-right: 0px;
+  margin-left: 10px;
+}
+
+.valamis-lrs .button.shift-right:last-child {
+  margin-left: 0px;
+}
+
+.valamis-lrs .button.shift-right.js-display-option {
+  margin-left: 0px;
+}
+
+.valamis-lrs .button.shift-right.no-text.simple {
+  margin-left: 0px;
+}
+
+.valamis-lrs .button:hover {
+  text-decoration: none;
+}
+
+.valamis-lrs .button.no-text {
+  width: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 0px;
+}
+
+.valamis-lrs .button.no-text > [class^="val-icon-"]:before,
+.valamis-lrs .button.no-text > [class*=" val-icon-"]:before {
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  height: 100%;
+  line-height: inherit;
+}
+
+.valamis-lrs .button.big {
+  line-height: 36px;
+  height: 40px;
+}
+
+.valamis-lrs .button.big.no-text {
+  width: 40px;
+}
+
+.valamis-lrs .button.big.button-tooltip {
+  width: 40px;
+  padding: 0;
+}
+
+.valamis-lrs .button.medium {
+  line-height: 32px;
+  height: 34px;
+}
+
+.valamis-lrs .button.medium.no-text {
+  width: 34px;
+}
+
+.valamis-lrs .button.medium.button-tooltip {
+  width: 34px;
+  padding: 0;
+}
+
+.valamis-lrs .button.small {
+  line-height: 24px;
+  height: 26px;
+}
+
+.valamis-lrs .button.small.no-text {
+  width: 26px;
+}
+
+.valamis-lrs .button.primary {
+  border-color: #598000;
+  background: #598000;
+  color: white;
+}
+
+.valamis-lrs .button.primary:hover {
+  background: #3E5900;
+  border-color: #3E5900;
+}
+
+.valamis-lrs .button.primary [class^="val-icon-"]:before,
+.valamis-lrs .button.primary [class*=" val-icon-"]:before {
+  color: white;
+}
+
+.valamis-lrs .button.neutral {
+  background: #F2F2F2;
+  color: #555;
+  border-color: #CCCCCC;
+}
+
+.valamis-lrs .button.neutral:hover {
+  color: #2c2c2c;
+}
+
+.valamis-lrs .button.neutral:hover > [class^="val-icon-"]:before,
+.valamis-lrs .button.neutral:hover > [class*=" val-icon-"]:before {
+  color: #555;
+}
+
+.valamis-lrs .button.neutral.active {
+  background: #ebebeb;
+}
+
+.valamis-lrs .button.neutral.active-page {
+  color: #2974A6;
+  border: 1px solid #2974A6;
+}
+
+.valamis-lrs .button.neutral > [class^="val-icon-"]:before,
+.valamis-lrs .button.neutral > [class*=" val-icon-"]:before {
+  color: #AAA;
+}
+
+.valamis-lrs .button.danger {
+  background: #CC4233;
+  color: white;
+  border-color: #CC4233;
+}
+
+.valamis-lrs .button.danger:hover {
+  background-color: #993226;
+  border-color: #993226;
+}
+
+.valamis-lrs .button.simple {
+  background: transparent;
+  color: #555;
+  border: 1px solid transparent;
+}
+
+.valamis-lrs .button.simple > span {
+  color: #AAA;
+}
+
+.valamis-lrs .button.simple:hover {
+  color: #2c2c2c;
+}
+
+.valamis-lrs .button.simple:hover > span {
+  color: #555;
+}
+
+.valamis-lrs .button.simple.active {
+  color: #2c2c2c;
+  border: 1px solid #CCCCCC;
+  border-radius: 0;
+}
+
+.valamis-lrs .button.simple.active > span {
+  color: #555;
+}
+
+.valamis-lrs .button.simple.danger-color {
+  color: #CC4233;
+}
+
+.valamis-lrs .button:focus {
+  outline: none;
+}
+
+.valamis-lrs .button > [class^="val-icon-"],
+.valamis-lrs .button > [class*=" val-icon-"] {
+  width: 20px;
+  height: 20px;
+}
+
+.valamis-lrs .button > [class^="val-icon-"]:before,
+.valamis-lrs .button > [class*=" val-icon-"]:before {
+  margin: -2px 10px 0 -4px;
+  vertical-align: middle;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+}
+
+.valamis-lrs .button > .val-icon-right:before {
+  margin: -1px -4px 0 10px;
+}
+
+.valamis-lrs .button:last-child {
+  margin-right: 0;
+}
+
+.valamis-lrs .button.button-tooltip {
+  position: relative;
+}
+
+.valamis-lrs .button.button-tooltip:hover .val-badge {
+  display: block;
+}
+
+.valamis-lrs .button.button-tooltip.correct:hover .linked-slide-thumbnail {
+  display: block;
+}
+
+.valamis-lrs .button.button-tooltip.incorrect:hover .linked-slide-thumbnail {
+  display: block;
+}
+
+.valamis-lrs .button.button-tooltip .val-badge {
+  background-color: #555;
+  position: absolute;
+  display: none;
+  top: 7px;
+  left: 100%;
+  margin: 0 0 0 5px;
+  z-index: 10000;
+}
+
+.valamis-lrs .button.button-tooltip .val-badge.left {
+  top: 7px;
+  left: -5px;
+  margin: 0 5px 0 0;
+  -ms-transform: translate(-100%, 0);
+      transform: translate(-100%, 0);
+}
+
+.valamis-lrs .button.button-tooltip .val-badge.bottom {
+  left: 0;
+  top: 34px;
+  bottom: -16px;
+  -ms-transform: translate(0, 100%);
+      transform: translate(0, 100%);
+  margin: 0;
+}
+
+.valamis-lrs .button.button-tooltip .linked-slide-thumbnail {
+  position: absolute;
+  display: none;
+  width: 1000px;
+  height: 750px;
+  left: 43px;
+  top: 38px;
+  -moz-transform: scale(0.2);
+  -moz-transform-origin: 0% 0%;
+  -webkit-transform: scale(0.2);
+  -webkit-transform-origin: 0% 0%;
+  -ms-transform: scale(0.2);
+  -ms-transform-origin: 0% 0%;
+  border: none;
+  word-break: break-word;
+  white-space: normal;
+  color: black;
+}
+
+.valamis-lrs .button.button-tooltip .linked-slide-thumbnail.slide-thumbnail-bordered {
+  border: 5px solid #1C1C1C !important;
+}
+
+.valamis-lrs .button.button-tooltip > [class^="val-icon-"]:before,
+.valamis-lrs .button.button-tooltip > [class*=" val-icon-"]:before {
+  margin: 0 auto;
+}
+
+.valamis-lrs .button.google-drive-icon {
+  background: url("../img/icon-drive.png") no-repeat 10px center;
+  background-size: 20px;
+  padding-left: 40px;
+}
+
+.valamis-lrs .button[disabled] {
+  color: #AAA;
+  background: #EAEAEA;
+  border-color: #EAEAEA;
+  cursor: default;
+}
+
+.valamis-lrs .button[disabled]:hover {
+  color: #AAA;
+  background: #EAEAEA;
+  border-color: #EAEAEA;
+}
+
+.valamis-lrs .button[disabled]:hover > [class^="val-icon-"]:before,
+.valamis-lrs .button[disabled]:hover > [class*=" val-icon-"]:before {
+  color: #AAA;
+}
+
+.valamis-lrs .button-group {
+  float: left;
+  margin-right: 10px;
+}
+
+.valamis-lrs .button-group > * {
+  margin-right: 0px;
+  float: left;
+}
+
+.valamis-lrs .button-group.button-group-big {
+  float: none;
+  display: inline-block;
+  margin: 0 0 20px 0;
+}
+
+.valamis-lrs .button-group.button-group-big .button {
+  margin: 0;
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-right: 0;
+  background-color: transparent;
+  border-color: #F2F2F2;
+  color: #777;
+  border-radius: 0;
+}
+
+.valamis-lrs .button-group.button-group-big .button.active {
+  background-color: #F2F2F2;
+  border-color: #2974A6;
+  color: #4C4C4C;
+}
+
+.valamis-lrs td.button-group > * {
+  float: none;
+}
+
+.valamis-lrs .button-block .button {
+  display: block;
+  margin-bottom: 6.06667px;
+}
+
+.valamis-lrs .button-block .button:last-child {
+  margin-bottom: 0;
+}
+
+.valamis-lrs .button-block .button.inline {
+  display: inline-block;
+}
+
+.valamis-lrs .button-block.wide .button {
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.valamis-lrs .button-divider-v {
+  display: inline-block;
+  width: 6px;
+  height: 34px;
+  border-right: 1px solid #000000;
+  margin-right: 5px;
+  vertical-align: top;
+}
+
+.valamis-lrs .button-divider-v.neutral {
+  border-color: #CCCCCC;
+}
+
+.valamis-lrs .val-table {
+  border-collapse: collapse;
+  margin: 9.1px 0;
+  width: 100%;
+  background: #FFF;
+  border: 1px solid #CCCCCC;
+}
+
+.valamis-lrs .val-table.no-out-margin {
+  margin: 0;
+}
+
+.valamis-lrs .val-table.no-border {
+  border: none;
+}
+
+.valamis-lrs .val-table.no-border th, .valamis-lrs .val-table.no-border tr, .valamis-lrs .val-table.no-border td {
+  border: none;
+}
+
+.valamis-lrs .val-table.no-side-border {
+  border: none;
+}
+
+.valamis-lrs .val-table.no-top-border {
+  border-top: none;
+}
+
+.valamis-lrs .val-table.no-top-border tr:first-child {
+  border-top: none;
+}
+
+.valamis-lrs .val-table.no-top-border tr:first-child td, .valamis-lrs .val-table.no-top-border tr:first-child th {
+  border-top: none;
+}
+
+.valamis-lrs .val-table.no-bottom-border {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-table.no-bottom-border tr:last-child {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-table.no-bottom-border tr:last-child td, .valamis-lrs .val-table.no-bottom-border tr:last-child th {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-table th {
+  background-color: #F2F2F2;
+  border-bottom: 1px solid #CCCCCC;
+  font-weight: bold;
+  padding: 9.1px 18.2px;
+  text-align: left;
+  color: #555;
+  line-height: 20px;
+}
+
+.valamis-lrs .val-table th.narrow-col {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.valamis-lrs .val-table td {
+  border-bottom: 1px solid #CCCCCC;
+  padding: 9.1px 0;
+  font-weight: bold;
+}
+
+.valamis-lrs .val-table td.buttons {
+  text-align: right;
+}
+
+.valamis-lrs .val-table td.buttons button {
+  float: none;
+}
+
+.valamis-lrs .val-table td.narrow-col {
+  white-space: nowrap;
+  width: 1%;
+}
+
+.valamis-lrs .val-table td > p,
+.valamis-lrs .val-table td > span {
+  line-height: 1.4;
+}
+
+.valamis-lrs .val-table td a {
+  color: inherit;
+  font-weight: inherit;
+}
+
+.valamis-lrs .val-table td .val-icon-sort {
+  color: #AAA;
+}
+
+.valamis-lrs .val-table tr,
+.valamis-lrs .val-table td,
+.valamis-lrs .val-table th {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-all;
+  vertical-align: middle;
+  border: 1px solid #CCCCCC;
+}
+
+.valamis-lrs .val-table tr, .valamis-lrs .val-table li {
+  background-color: #FFF;
+}
+
+.valamis-lrs .val-table tr:nth-child(even) {
+  background-color: #FAFAFA;
+}
+
+.valamis-lrs .val-table tr.selected {
+  border: 2px solid #598000;
+}
+
+.valamis-lrs .val-table.neutral tr {
+  background-color: #F2F2F2;
+}
+
+.valamis-lrs .val-table.simple {
+  border: none;
+}
+
+.valamis-lrs .val-table.simple tr {
+  border: none;
+  background-color: #FFF;
+}
+
+.valamis-lrs .val-table.simple tr td {
+  border-left: none;
+  border-right: none;
+}
+
+.valamis-lrs .val-table.simple tr:first-child td {
+  border-top: none;
+}
+
+.valamis-lrs .val-table.simple tr:last-child td {
+  border-bottom: none;
+}
+
+.valamis-lrs .list th {
+  border: none;
+  border-bottom: 1px solid #CCCCCC;
+  font-size: inherit;
+}
+
+.valamis-lrs .list td, .valamis-lrs .list tr {
+  border-right: none;
+  border-left: none;
+}
+
+.valamis-lrs .big td {
+  line-height: 34px;
+  padding: 12.13333px 9.1px;
+}
+
+.valamis-lrs .big td.buttons {
+  white-space: nowrap;
+  padding-right: 0;
+}
+
+.valamis-lrs .medium td {
+  line-height: 30px;
+  padding: 9.1px;
+}
+
+.valamis-lrs .small td {
+  line-height: 26px;
+  padding: 6.06667px;
+}
+
+.valamis-lrs .big td:first-child, .valamis-lrs .medium td:first-child, .valamis-lrs .small td:first-child {
+  padding-left: 18.2px;
+}
+
+.valamis-lrs .big td:last-child, .valamis-lrs .medium td:last-child, .valamis-lrs .small td:last-child {
+  padding-right: 18.2px;
+}
+
+.valamis-lrs .big td.buttons, .valamis-lrs .medium td.buttons, .valamis-lrs .small td.buttons {
+  padding-right: 9.1px;
+}
+
+.valamis-lrs .div-table {
+  display: table;
+  width: 100%;
+}
+
+.valamis-lrs .div-row {
+  display: table-row;
+}
+
+.valamis-lrs .div-col {
+  display: table-cell;
+}
+
+.valamis-lrs .val-info-table {
+  border-collapse: collapse;
+}
+
+.valamis-lrs .val-info-table .div-row {
+  border-bottom: 1px solid #CCCCCC;
+}
+
+.valamis-lrs .val-info-table .div-row:last-child {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-info-table .div-row.without-bottom-border {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-info-table .div-row.without-bottom-border .div-col {
+  padding-bottom: 0;
+}
+
+.valamis-lrs .val-info-table .div-col {
+  padding: 18.2px;
+}
+
+.valamis-lrs .val-info-table .div-col > input:last-child {
+  margin-bottom: 0 !important;
+}
+
+.valamis-lrs .val-info-table .name-col {
+  text-align: right;
+  vertical-align: middle;
+  font-weight: bolder;
+  padding-left: 10%;
+}
+
+.valamis-lrs .val-info-table .content-col {
+  width: 65%;
+  padding-right: 10%;
+}
+
+.valamis-lrs .val-info-table.settings-table .name-col {
+  text-align: left;
+  padding-left: 18.2px;
+  width: 200px;
+}
+
+.valamis-lrs .val-info-table.settings-table .content-col {
+  width: initial;
+  padding-left: 18.2px;
+}
+
+.valamis-lrs .val-info-table.small-width .name-col {
+  padding-left: 5%;
+}
+
+.valamis-lrs .val-info-table.small-width .content-col {
+  width: 75%;
+  padding-right: 5%;
+}
+
+.valamis-lrs td.checkbox-col {
+  width: 16px;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.valamis-lrs td.checkbox-col label {
+  margin: 0;
+}
+
+.valamis-lrs td.checkbox-col label:before {
+  margin-right: 0;
+}
+
+.valamis-lrs td.thin {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.valamis-lrs td.handle {
+  cursor: move;
+}
+
+.valamis-lrs .new-packages-list-table td:first-child {
+  width: 1%;
+}
+
+.valamis-lrs .new-packages-list-table .name-col {
+  padding-left: 0;
+}
+
+.valamis-lrs .div-table.no-content-table {
+  height: 200px;
+}
+
+.valamis-lrs .div-table.no-content-table .div-col-center {
+  vertical-align: middle;
+  text-align: center;
+  font-weight: bold;
+}
+
+.valamis-lrs .val-list-table {
+  padding: 0 18.2px;
+}
+
+.valamis-lrs .val-list-table a {
+  color: inherit;
+}
+
+.valamis-lrs .val-list-table .handle {
+  cursor: move;
+  color: #AAA;
+  padding-right: 16px;
+}
+
+.valamis-lrs .val-list-table .checkbox-label {
+  margin: 0;
+}
+
+.valamis-lrs .val-list-table .checkbox-label:before {
+  margin: 0;
+}
+
+.valamis-lrs .val-list-table .val-list-table-header {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #777;
+  padding: 9.1px 0;
+  border-bottom: 2px solid #CCCCCC;
+}
+
+.valamis-lrs .val-list-table .list-table-row {
+  line-height: 50px;
+}
+
+.valamis-lrs .val-list-table .list-table-row .val-during-period {
+  padding-top: 8px;
+}
+
+.valamis-lrs .val-list-table .list-table-row .title {
+  font-weight: bold;
+}
+
+.valamis-lrs .val-list-table .list-table-row .goal-changes {
+  padding-top: 9px;
+}
+
+.valamis-lrs .val-list-table .list-table-row .goal-changes .name, .valamis-lrs .val-list-table .list-table-row .goal-changes .date {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.valamis-lrs .val-list-table .list-table-row .inactive {
+  opacity: 0.6;
+}
+
+.valamis-lrs .val-list-table .goals-group .list-table-row .title {
+  padding-left: 30px;
+  font-weight: normal;
+}
+
+.valamis-lrs .val-list-table > ul > li {
+  border-bottom: 1px solid #CCCCCC;
+}
+
+.valamis-lrs .val-list-table > ul > li:last-child {
+  border-bottom: none;
+}
+
+.valamis-lrs [data-icon]:before {
+  font-family: valamis-icons !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.valamis-lrs [class^="val-icon"]:before,
+.valamis-lrs [class*="val-icon"]:before {
+  font-family: valamis-icons !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+.valamis-lrs .val-icon-with-label {
+  display: inline;
+}
+
+.valamis-lrs .val-icon-with-label:before {
+  vertical-align: middle;
+}
+
+.valamis-lrs .val-icon-with-label span {
+  vertical-align: middle;
+  margin-left: 3px;
+  text-indent: -9999px;
+  display: none;
+}
+
+.valamis-lrs .portlet[min-width~="768px"] .val-icon-with-label span {
+  text-indent: inherit;
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-arrow-left-two:before,
+.valamis-lrs .val-icon-arrow-right-two:before,
+.valamis-lrs .val-icon-arrow-down-two:before {
+  content: "y";
+}
+
+.valamis-lrs .val-icon-arrow-left-two:before,
+.valamis-lrs .val-icon-arrow-right-two:before {
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-arrow-left-two:before {
+  -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
+}
+
+.valamis-lrs .val-icon-arrow-right-two:before {
+  -ms-transform: rotate(270deg);
+      transform: rotate(270deg);
+}
+
+.valamis-lrs .val-icon-drag:before {
+  content: "c";
+}
+
+.valamis-lrs .val-icon-bell:before {
+  content: "F";
+}
+
+.valamis-lrs .val-icon-heart:before {
+  content: "e";
+}
+
+.valamis-lrs .val-icon-menu-hamburger:before {
+  content: "5";
+}
+
+.valamis-lrs .val-icon-settings:before {
+  content: "N";
+}
+
+.valamis-lrs .val-icon-star:before {
+  content: "Q";
+}
+
+.valamis-lrs .val-icon-link:before {
+  content: "C";
+}
+
+.valamis-lrs .val-icon-arrange:before {
+  content: "w";
+}
+
+.valamis-lrs .val-icon-arrow-down:before {
+  content: "x";
+}
+
+.valamis-lrs .val-icon-arrow-left:before {
+  content: "x";
+  -ms-transform: rotate(90deg);
+      transform: rotate(90deg);
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-arrow-right:before {
+  content: "x";
+  -ms-transform: rotate(270deg);
+      transform: rotate(270deg);
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-arrow-up:before {
+  content: "x";
+  -ms-transform: rotate(180deg);
+      transform: rotate(180deg);
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-dropdown:before {
+  content: "A";
+}
+
+.valamis-lrs .val-icon-menu:before {
+  content: "L";
+}
+
+.valamis-lrs .val-icon-upload:before {
+  content: "m";
+}
+
+.valamis-lrs .val-icon-video:before {
+  content: "o";
+}
+
+.valamis-lrs .val-icon-minus:before {
+  content: "1";
+}
+
+.valamis-lrs .val-icon-duplicate:before {
+  content: "z";
+}
+
+.valamis-lrs .val-icon-edit:before {
+  content: "E";
+}
+
+.valamis-lrs .val-icon-pause:before {
+  content: "h";
+}
+
+.valamis-lrs .val-icon-pdf:before {
+  content: "g";
+}
+
+.valamis-lrs .val-icon-plus:before {
+  content: "t";
+}
+
+.valamis-lrs .val-icon-ppt:before {
+  content: "s";
+}
+
+.valamis-lrs .val-icon-book:before {
+  content: "G";
+}
+
+.valamis-lrs .val-icon-checkmark:before {
+  content: "6";
+}
+
+.valamis-lrs .val-icon-clock:before {
+  content: "3";
+}
+
+.valamis-lrs .val-icon-content:before {
+  content: "Y";
+}
+
+.valamis-lrs .val-icon-dots:before {
+  content: "W";
+}
+
+.valamis-lrs .val-icon-download-import-down:before {
+  content: "d";
+}
+
+.valamis-lrs .val-icon-download-import-right:before {
+  content: "d";
+  -ms-transform: rotate(270deg);
+      transform: rotate(270deg);
+  display: inline-block;
+}
+
+.valamis-lrs .val-icon-drop:before {
+  content: "v";
+}
+
+.valamis-lrs .val-icon-list-view:before {
+  content: "D";
+}
+
+.valamis-lrs .val-icon-image-bg:before {
+  content: "B";
+}
+
+.valamis-lrs .val-icon-image:before {
+  content: "u";
+}
+
+.valamis-lrs .val-icon-iframe:before {
+  content: "f";
+}
+
+.valamis-lrs .val-icon-grid:before {
+  content: "U";
+}
+
+.valamis-lrs .val-icon-grid-view:before {
+  content: "V";
+}
+
+.valamis-lrs .val-icon-globe:before {
+  content: "Z";
+}
+
+.valamis-lrs .val-icon-fullscreen-exit:before {
+  content: "2";
+}
+
+.valamis-lrs .val-icon-fullscreen:before {
+  content: "4";
+}
+
+.valamis-lrs .val-icon-folder:before {
+  content: "I";
+}
+
+.valamis-lrs .val-icon-exit:before {
+  content: "J";
+}
+
+.valamis-lrs .val-icon-presentation:before {
+  content: "r";
+}
+
+.valamis-lrs .val-icon-preview:before {
+  content: "q";
+}
+
+.valamis-lrs .val-icon-question:before {
+  content: "p";
+}
+
+.valamis-lrs .val-icon-search:before {
+  content: "M";
+}
+
+.valamis-lrs .val-icon-sort:before {
+  content: "P";
+}
+
+.valamis-lrs .val-icon-text:before {
+  content: "j";
+}
+
+.valamis-lrs .val-icon-trash:before {
+  content: "k";
+}
+
+.valamis-lrs .val-icon-undo:before {
+  content: "l";
+}
+
+.valamis-lrs .val-icon-redo:before {
+  content: "l";
+  -ms-transform: scaleX(-1);
+      transform: scaleX(-1);
+}
+
+.valamis-lrs .val-icon-display:before {
+  content: "X";
+}
+
+.valamis-lrs .val-icon-user:before {
+  content: "n";
+}
+
+.valamis-lrs .val-icon-alert:before {
+  content: "b";
+}
+
+.valamis-lrs .val-icon-math:before {
+  content: "K";
+}
+
+.valamis-lrs .val-icon-share:before {
+  content: "O";
+}
+
+.valamis-lrs .val-icon-3d:before {
+  content: "a";
+}
+
+.valamis-lrs .val-icon-brush:before {
+  content: "H";
+}
+
+.valamis-lrs .val-icon-move-backward:before {
+  content: "0";
+}
+
+.valamis-lrs .val-icon-move-forward:before {
+  content: "T";
+}
+
+.valamis-lrs .val-icon-star-half:before {
+  content: "R";
+}
+
+.valamis-lrs .val-icon-navigator-view:before {
+  content: "S";
+}
+
+.valamis-lrs .val-icon-table-view:before {
+  content: "i";
+}
+
+.valamis-lrs .val-icon-attach:before {
+  content: "7";
+}
+
+.valamis-lrs .val-icon-print:before {
+  content: "8";
+}
+
+.valamis-lrs .val-icon-audio:before {
+  content: "9";
+}
+
+.valamis-lrs .val-icon-delete:before {
+  content: "J";
+}
+
+.valamis-lrs tr:nth-child(even) {
+  background-color: #F8F8F8;
+}
+
+.valamis-lrs tr td {
+  border: 1px solid #CCCCCC;
+}
+
+.valamis-lrs tr th {
+  padding-left: 20px;
+  box-shadow: inset 0px -30px 30px 0px rgba(0, 0, 0, 0.1);
+  color: #777;
+  font-size: 13px;
+  text-transform: uppercase;
+  font-weight: bold;
+  text-align: left;
+}
+
+.valamis-lrs .controls > div {
+  float: left;
+  margin-right: 10px;
+}
+
+.valamis-lrs form input, .valamis-lrs form select {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 30px;
+}
+
+.valamis-lrs label.checkbox input[type=checkbox] {
+  min-height: 20px;
+  margin-top: 0;
+}

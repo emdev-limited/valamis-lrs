@@ -3,7 +3,9 @@ package com.arcusys.valamis.lrs.liferay.portlet
 import javax.portlet._
 
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.liferay.{LrsModule, LrsModeLocator}
+import com.arcusys.valamis.lrs.utils._
+import com.arcusys.valamis.lrs.liferay.{LrsModeLocator, LrsModule}
+import com.arcusys.valamis.lrs.utils.RunningMode
 import com.google.inject._
 import html.apps.html._
 

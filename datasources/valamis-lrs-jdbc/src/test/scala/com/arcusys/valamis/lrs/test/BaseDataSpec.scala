@@ -2,6 +2,7 @@ package com.arcusys.valamis.lrs.test
 
 import com.arcusys.json.JsonHelper
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.security.{AuthenticationStatus, AuthenticationType}
 import com.arcusys.valamis.lrs.serializer.StatementSerializer
 import com.arcusys.valamis.lrs.test.tincan.{Helper, Statements}

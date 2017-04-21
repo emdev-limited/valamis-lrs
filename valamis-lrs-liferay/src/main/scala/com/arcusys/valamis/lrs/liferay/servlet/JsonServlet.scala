@@ -25,7 +25,7 @@ trait JsonServlet {
   def jsonAction[T <: BaseLrsRequest](action: (T) => Any,
                                       request: HttpServletRequest,
                                       response: HttpServletResponse)(implicit manifest: Manifest[T]): Unit = {
-    val time = requestsTimer time
+    val time = requestsTimer.map(_.time)
 
     try {
       val r = manifest.runtimeClass
@@ -61,7 +61,7 @@ trait JsonServlet {
         }
       }, request, response)
 
-    } finally { time stop }
+    } finally { time.foreach(_.stop) }
 
   }
 

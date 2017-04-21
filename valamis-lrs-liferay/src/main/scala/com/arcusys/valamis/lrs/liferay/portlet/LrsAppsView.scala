@@ -3,6 +3,7 @@ package com.arcusys.valamis.lrs.liferay.portlet
 import javax.portlet._
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.liferay.LrsModule
 import com.arcusys.valamis.lrs.security.AuthenticationType
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope

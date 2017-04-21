@@ -1,9 +1,10 @@
 package com.arcusys.valamis.lrs.liferay
 
-import com.arcusys.learn.liferay.LiferayClasses.{LCompany, LDuplicateColumnNameException, LDuplicateTableNameException}
-import com.arcusys.learn.liferay.services.{ClassNameLocalServiceHelper, CompanyLocalServiceHelper, ExpandoLocalServiceHelper}
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.LiferayClasses.{LCompany, LDuplicateColumnNameException, LDuplicateTableNameException}
+import com.arcusys.learn.liferay.lrs.services.{ClassNameLocalServiceHelper, CompanyLocalServiceHelper, ExpandoLocalServiceHelper}
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils.RunningMode
 
 import scala.util.{Failure, Success, Try}
 
@@ -55,27 +56,37 @@ trait LrsModeLocator extends Loggable {
 
   def initLrsModeSettings(): Unit = {
 
-    val table = Try {
+    val tableOpt = Try {
       ExpandoLocalServiceHelper.addDefaultTable(company.getCompanyId, companyClassName)
     } match {
       case Failure(e: LDuplicateTableNameException) =>
         logger.info(s"Table '$companyClassName' exists already")
-        ExpandoLocalServiceHelper.getDefaultTable(company.getCompanyId, companyClassName)
+        Some(ExpandoLocalServiceHelper.getDefaultTable(company.getCompanyId, companyClassName))
 
       case Success(e) =>
         logger.info(s"Created '$companyClassName' table")
-        e
+        Some(e)
+
+      case Failure(e) =>
+        logger.warn(s"Failed to create table '$companyClassName'", e)
+        None
     }
 
-    Try {
-      ExpandoLocalServiceHelper.addColumn(table.getTableId, modeColumnName, ExpandoLocalServiceHelper.Strings)
-    } match {
-      case Failure(e: LDuplicateColumnNameException) =>
-        logger.info(s"Column '$modeColumnName' exists already")
+    tableOpt.foreach { table =>
+      Try {
+        ExpandoLocalServiceHelper.addColumn(table.getTableId, modeColumnName, ExpandoLocalServiceHelper.Strings)
+      } match {
+        case Failure(e: LDuplicateColumnNameException) =>
+          logger.info(s"Column '$modeColumnName' exists already")
 
-      case Success(e) =>
-        logger.info(s"Created '$modeColumnName' column")
+        case Success(e) =>
+          logger.info(s"Created '$modeColumnName' column")
+
+        case Failure(e) =>
+          logger.warn(s"Failed to create column '$modeColumnName'", e)
+      }
     }
+
   }
 
 }

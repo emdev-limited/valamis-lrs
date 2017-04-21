@@ -21,9 +21,9 @@ trait ActivityProfileSchema extends SchemaUtil {
       documentKey
     ) <> (ActivityProfileRow.tupled, ActivityProfileRow.unapply)
 
-    def activityKey = column [ActivityRow#Type] ("activityKey", O.NotNull)
-    def profileId   = column [String]           ("profileId"  , O.NotNull, O.DBType(varCharPk))
-    def documentKey = column [DocumentRow#Type] ("documentKey", O.NotNull, O.DBType(uuidKeyLength))
+    def activityKey = column [ActivityRow#Type] ("activityKey")
+    def profileId   = column [String]           ("profileId"  , O.DBType(varCharPk))
+    def documentKey = column [DocumentRow#Type] ("documentKey", O.DBType(uuidKeyLength))
 
     def activity = foreignKey(fkName("activityProfile2activity" ), activityKey, TQ[ActivitiesTable]) (x => x.key, onUpdate = Restrict, onDelete = Cascade)
     def document = foreignKey(fkName("activityProfiles2document"), documentKey, TQ[DocumentsTable ]) (x => x.key, onUpdate = Restrict, onDelete = Cascade)

@@ -8,7 +8,7 @@ import org.joda.time.DateTime
  */
 case class Application(appId     :Application#Id,
                       name       :String,
-                      description:String,
+                      description:Option[String],
                       appSecret  :String,
                       scope      :AuthorizationScope.ValueSet,
                       regDateTime:DateTime,

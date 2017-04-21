@@ -9,12 +9,14 @@ import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api.query.{StatementQueries, TypeAliases}
 import com.arcusys.valamis.lrs.jdbc.database.row.StatementRow
 import com.arcusys.valamis.lrs.tincan._
+import com.arcusys.valamis.lrs.utils._
 import org.joda.time.DateTime
 
 import scala.async.Async
 import scala.async.Async.async
 import scala.concurrent._
 import scala.concurrent.duration.Duration
+import scala.language.postfixOps
 import scala.slick.jdbc.JdbcBackend
 
 /**
@@ -94,35 +96,23 @@ trait StatementApi extends StatementQueries {
   }
 
   def findStatementsByParamsImpl (q: StatementQuery)
-                            (implicit s: Session): Future[PartialSeq[Statement]] = {
-    val allCount = statements.length.run
-    async {
-      val query = statements.withoutVoided filterRegistration {
-        q registration
+                            (implicit s: Session): Future[Seq[Statement]] = {
 
-      } filterVerb {
-        q verb
-
-      } filterActivities(
+    val query = statements.withoutVoided filterRegistration {
+      q registration
+    } filterVerb {
+      q verb
+    } filterActivities(
         q.activity, q.relatedActivities
-
-        ) filterActor(
+      ) filterActor (
         q.agent, q.relatedAgents
-        ) onlyWithAttachments q.attachments sortByStore q.ascending since q.since until q.until
+      ) onlyWithAttachments q.attachments sortByStore q.ascending since q.since until q.until
 
-      val recsQuery = query limit {
-        q.limit + q.offset
-      } drop q.offset
+    val recs = query limit {
+      q.limit + q.offset
+    } drop q.offset run
 
-    val countQueryTask  = async { recsQuery.length run }
-
-    val result = for {
-      c <- countQueryTask
-      s <- buildStatementsAsync (recsQuery run)
-    } yield s toPartialSeq (allCount <= c + q.offset)
-
-      Async await result
-    }
+    buildStatementsAsync(recs)
   }
 
   /**
@@ -131,8 +121,8 @@ trait StatementApi extends StatementQueries {
    * @param s
    * @return List of Tincan [[Statement]]s
    */
-  def buildStatementsAsync (recs: Seq[StatementRow])
-                              (implicit s: Session): Future[Seq[Statement]] =
+  def buildStatementsAsync(recs: Seq[StatementRow])
+                          (implicit s: Session): Future[Seq[Statement]] =
     if (recs isEmpty) async { Seq() }
     else {
       val authorityKeys    = recs filter { it => it.authorityKey isDefined } map { _.authorityKey get }
@@ -423,25 +413,30 @@ trait StatementApi extends StatementQueries {
      * @param s
      * @return [[Statement]] storage query
      */
-    def filterActor (arg: (Option[Actor], Boolean)): StatementQ  =
-      arg._1 map { actor =>
+    def filterActor (actorOpt: Option[Actor], related_agents: Boolean): StatementQ  =
+      actorOpt map { actor =>
         val subStatementQuery = subStatements keyForQ actor
         val actorKeyQuery     = actors        keyForQ actor
         val contextQuery      = contexts      keyForQ actor
 
-        if (arg._2) q filter { it =>
-          it.actorKey in actorKeyQuery
-
-        } else q filter { it =>
-          (it.actorKey   in actorKeyQuery     ) ||
-          (it.objectKey  in subStatementQuery ) ||
-          (it.contextKey in contextQuery      )
+        if (related_agents) {
+          q filter { it =>
+            (it.actorKey in actorKeyQuery) ||
+              (it.objectKey in actorKeyQuery) ||
+              (it.objectKey in subStatementQuery) ||
+              (it.contextKey in contextQuery)
+          }
+        } else {
+          q filter { it =>
+            (it.actorKey in actorKeyQuery) ||
+              (it.objectKey in actorKeyQuery)
+          }
         }
       } getOrElse q
 
-    def filterActivities (arg: (Option[URI], Boolean))
+    def filterActivities (activityIdOpt: Option[URI], related_activities: Boolean)
                          (implicit session: JdbcBackend#Session): StatementQ =
-      arg._1 map { activityId =>
+      activityIdOpt map { activityId =>
         val activityKeyQuery = activities filter {
           a => a.id === activityId.toString
         } map { _.key }
@@ -458,7 +453,7 @@ trait StatementApi extends StatementQueries {
 
 
 
-        if (arg._2) q filter { st =>
+        if (related_activities) q filter { st =>
           (st.objectKey  in activityKeyQuery    ) ||
           (st.objectKey  in subStatementKeyQuery) ||
           (st.contextKey in contextKeyQuery     )
@@ -468,9 +463,9 @@ trait StatementApi extends StatementQueries {
         }
       } getOrElse q
 
-    def filterActivities (arg: (Seq[URI], Boolean)): StatementQ = {
+    def filterActivities (activitiesIds: Seq[URI], related_activities: Boolean): StatementQ = {
 
-      val activityKeys = arg._1 map { _.toString }
+      val activityKeys = activitiesIds map { _.toString }
 
       val activityKeyQuery = activities filter {
         a => a.id inSetBind activityKeys
@@ -486,7 +481,7 @@ trait StatementApi extends StatementQueries {
         (x1, x2) => x1.key === x2.activityKey
       } map (_._2.contextKey)
 
-      if (arg._2) q filter { st =>
+      if (related_activities) q filter { st =>
         (st.objectKey  in activityKeyQuery    ) ||
         (st.objectKey  in subStatementKeyQuery) ||
         (st.contextKey in contextKeyQuery     )

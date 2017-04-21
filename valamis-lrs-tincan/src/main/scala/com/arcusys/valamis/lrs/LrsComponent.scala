@@ -3,6 +3,7 @@ package com.arcusys.valamis.lrs
 import java.util.UUID
 
 import com.arcusys.valamis.lrs.tincan._
+import com.arcusys.valamis.lrs.utils.PartialSeq
 import org.joda.time.DateTime
 
 /**
@@ -20,7 +21,7 @@ trait LrsComponent {
 
     def isVoidedStatement(id: Statement#Id): Boolean
 
-    def findStatementsByParams(params: StatementQuery): PartialSeq[Statement]
+    def findStatementsByParams(params: StatementQuery): Seq[Statement]
 
     def containStatement(s: Statement): Boolean
 

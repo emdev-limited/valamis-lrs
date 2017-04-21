@@ -22,10 +22,10 @@
         <control-panel-entry-category>content</control-panel-entry-category>
         <control-panel-entry-weight>17.5</control-panel-entry-weight>
         <preferences-unique-per-layout>true</preferences-unique-per-layout>
+        <show-portlet-access-denied>false</show-portlet-access-denied>
         <instanceable>true</instanceable>
         <ajaxable>false</ajaxable>
-        <header-portlet-css>/styles/buttons.css</header-portlet-css>
-        <header-portlet-css>/styles/tables.css</header-portlet-css>
+        <header-portlet-css>/styles/valamis_lrs.css</header-portlet-css>
     </portlet>
 
     <portlet>
@@ -34,9 +34,9 @@
         <control-panel-entry-category>content</control-panel-entry-category>
         <control-panel-entry-weight>17.5</control-panel-entry-weight>
         <preferences-unique-per-layout>true</preferences-unique-per-layout>
+        <show-portlet-access-denied>false</show-portlet-access-denied>
         <instanceable>true</instanceable>
         <ajaxable>false</ajaxable>
-        <header-portlet-css>/styles/buttons.css</header-portlet-css>
-        <header-portlet-css>/styles/tables.css</header-portlet-css>
+        <header-portlet-css>/styles/valamis_lrs.css</header-portlet-css>
     </portlet>
 </liferay-portlet-app>

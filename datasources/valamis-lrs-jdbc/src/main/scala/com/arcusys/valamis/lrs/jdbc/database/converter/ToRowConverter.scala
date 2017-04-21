@@ -4,6 +4,7 @@ import com.arcusys.valamis.lrs.jdbc.database.row._
 import com.arcusys.valamis.lrs.security.{Token, Application}
 import com.arcusys.valamis.lrs.tincan._
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 
 /**
  * Created by Iliya Tryapitsin on 30.06.15.

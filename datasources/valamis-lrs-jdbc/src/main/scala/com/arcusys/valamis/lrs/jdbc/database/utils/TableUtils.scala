@@ -1,7 +1,8 @@
 package com.arcusys.valamis.lrs.jdbc.database.utils
 
-import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.util.ast.AstHelpers
+import com.arcusys.valamis.lrs.utils._
+import com.arcusys.valamis.lrs.jdbc.util.ast.AstHelpers
+
 import scala.slick.driver.JdbcProfile
 import scala.slick.lifted.Column
 

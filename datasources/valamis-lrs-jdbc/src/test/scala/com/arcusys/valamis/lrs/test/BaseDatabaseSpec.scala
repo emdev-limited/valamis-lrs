@@ -1,10 +1,11 @@
 package com.arcusys.valamis.lrs.test
 
 import com.arcusys.valamis.lrs._
-import com.arcusys.valamis.lrs.history.BaseDbUpgrade
-import com.arcusys.valamis.lrs.history.ver230.{DbSchemaUpgrade => Upgrade230}
-import com.arcusys.valamis.lrs.history.ver240.{DbSchemaUpgrade => Upgrade240}
-import com.arcusys.valamis.lrs.history.ver250.{DbSchemaUpgrade => Upgrade250}
+import com.arcusys.valamis.lrs.utils._
+import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
+import com.arcusys.valamis.lrs.jdbc.history.ver230.{DbSchemaUpgrade => Upgrade230}
+import com.arcusys.valamis.lrs.jdbc.history.ver240.{DbSchemaUpgrade => Upgrade240}
+import com.arcusys.valamis.lrs.jdbc.history.ver250.{DbSchemaUpgrade => Upgrade250}
 import com.arcusys.valamis.lrs.jdbc.JdbcLrs
 import com.arcusys.valamis.lrs.test.config.DbInit
 import com.arcusys.valamis.lrs.test.tincan._
@@ -48,6 +49,7 @@ abstract class BaseDatabaseSpec(module: BaseCoreModule)
   val ver240   = injector.getInstance(Key.get(classOf[BaseDbUpgrade], Names.named("ver240")))
   val ver250   = injector.getInstance(Key.get(classOf[BaseDbUpgrade], Names.named("ver250")))
   val ver300   = injector.getInstance(Key.get(classOf[BaseDbUpgrade], Names.named("ver300")))
+  val ver310   = injector.getInstance(Key.get(classOf[BaseDbUpgrade], Names.named("ver310")))
 
 
   override def beforeEach = startDateTime = DateTime.now()
@@ -72,6 +74,9 @@ abstract class BaseDatabaseSpec(module: BaseCoreModule)
 
     logger.debug(ver300.upgradeMigrations.migrations.mkString(";\n"))
     ver300.upgrade
+
+    logger.debug(ver310.upgradeMigrations.migrations.mkString(";\n"))
+    ver310.upgrade
 
 
   }
