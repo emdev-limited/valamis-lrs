@@ -11,7 +11,7 @@ import org.apache.commons.lang.CharEncoding
 
 import scala.collection.JavaConverters._
 import scala.io.Source
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 
 
 @Singleton

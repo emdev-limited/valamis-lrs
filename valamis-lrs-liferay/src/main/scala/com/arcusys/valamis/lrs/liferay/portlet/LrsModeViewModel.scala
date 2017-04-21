@@ -1,7 +1,9 @@
 package com.arcusys.valamis.lrs.liferay.portlet
 
 import com.arcusys.valamis.lrs._
-import javax.portlet.{RenderResponse, RenderRequest}
+import javax.portlet.{RenderRequest, RenderResponse}
+
+import com.arcusys.valamis.lrs.utils.RunningMode
 
 /**
   * Created by iliyatryapitsin on 12/11/15.

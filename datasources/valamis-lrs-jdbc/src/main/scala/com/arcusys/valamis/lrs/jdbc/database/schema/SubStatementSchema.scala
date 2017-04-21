@@ -18,9 +18,9 @@ trait SubStatementSchema extends SchemaUtil {
     override def * = (key, statementObjectKey, actorKey, verbId, verbDisplay) <>(SubStatementRow.tupled, SubStatementRow.unapply)
 
     def statementObjectKey = column[StatementObjectRow#Type]("statementObject")
-    def actorKey = column[ActorRow#Type]("actorId", O.NotNull)
-    def verbId = column[String]("verbId", O.NotNull, O.DBType(varCharMax))
-    def verbDisplay = column[LanguageMap]("verbDisplay", O.NotNull, O.DBType(varCharMax))
+    def actorKey = column[ActorRow#Type]("actorId")
+    def verbId = column[String]("verbId", O.DBType(varCharMax))
+    def verbDisplay = column[LanguageMap]("verbDisplay", O.DBType(varCharMax))
 
     def actor = foreignKey(fkName("subStmnt2actor"), actorKey, TableQuery[ActorsTable])(_.key)
     def statementObject = foreignKey(fkName("subSstmnt2stmntObj"), statementObjectKey, TableQuery[StatementObjectsTable])(_.key)

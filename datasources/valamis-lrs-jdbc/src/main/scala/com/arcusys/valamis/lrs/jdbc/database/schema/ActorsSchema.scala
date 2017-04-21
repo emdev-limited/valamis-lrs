@@ -19,7 +19,7 @@ trait ActorsSchema extends SchemaUtil {
   class ActorsTable(tag: Tag) extends LongKeyTable[ActorRow](tag: Tag, tblName("actors"), false) {
 
     override def * = ProvenShape.proveShapeOf(
-      (key, name.?, descriptor, mBox.?, mBoxSha1Sum.?, openId.?, accountKey.?, groupKey.?)
+      (key, name, descriptor, mBox, mBoxSha1Sum, openId, accountKey, groupKey)
         .<>[ActorRow, (ActorRow#Type, Option[String], String, Option[String], Option[String], Option[String], AccountRow#KeyType, Option[GroupRow#Type])](
       {
         case (key, name, actor, mBox, mBoxSha1Sum, openId, accountKey, groupKey) => actor match {
@@ -38,13 +38,13 @@ trait ActorsSchema extends SchemaUtil {
     def group           = foreignKey(fkName("actor2group"),    groupKey,   TableQuery[ActorsTable])          (_.key)
     def statementObject = foreignKey(fkName("actor2stmntObj"), key,        TableQuery[StatementObjectsTable])(_.key)
 
-    def accountKey  = column[AccountRow#Type]("accountKey", O.Nullable)
-    def groupKey    = column[GroupRow#Type]  ("groupKey",   O.Nullable)
-    def name        = column[String](C.Tincan.Field.name,   O.Nullable, O.DBType(varCharMax))
-    def descriptor  = column[String](C.Tincan.Field.descriptor, O.NotNull, O.DBType(varCharMax))
-    def mBox        = column[String]("mBox", O.Nullable, O.DBType(varCharMax))
-    def mBoxSha1Sum = column[String]("mBoxSha1Sum", O.Nullable, O.DBType(varCharMax))
-    def openId      = column[String]("openId", O.Nullable, O.DBType(varCharMax))
+    def accountKey  = column[?[AccountRow#Type]]("accountKey")
+    def groupKey    = column[?[GroupRow#Type]]  ("groupKey")
+    def name        = column[?[String]](C.Tincan.Field.name, O.DBType(varCharMax))
+    def descriptor  = column[String](C.Tincan.Field.descriptor, O.DBType(varCharMax))
+    def mBox        = column[?[String]]("mBox", O.DBType(varCharMax))
+    def mBoxSha1Sum = column[?[String]]("mBoxSha1Sum", O.DBType(varCharMax))
+    def openId      = column[?[String]]("openId", O.DBType(varCharMax))
   }
 
   lazy val actors = TableQuery[ActorsTable]

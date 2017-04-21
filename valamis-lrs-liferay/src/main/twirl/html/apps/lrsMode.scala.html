@@ -1,20 +1,20 @@
 @(model: com.arcusys.valamis.lrs.liferay.portlet.LrsModeViewModel)
-@import com.arcusys.valamis.lrs.RunningMode
 @import com.arcusys.valamis.lrs.liferay.portlet.Action
+@import com.arcusys.valamis.lrs.utils.RunningMode
 
 <form action="@model.response.createActionURL()" method="post">
     <input type="hidden" name="@model.getTagName(Action.Name)" value="lrs-mode-changed"/>
-    <div class="form-group">
-        <label for="exampleInputEmail1">Current mode</label>
-        <select class="form-control span12" name="@model.getTagName("currentMode")">
+    <div>
+        <p>Current mode</p>
+        <select name="@model.getTagName("currentMode")">
         @for(value <- RunningMode.AvailableModes) {
             <option @model.isSelectedCurrentMode(value) value="@value">@value</option>
         }
         </select>
     </div>
 
-    <div class="form-group">
-        <button type="submit" class="button valamis medium green">Save</button>
-        <button class="button valamis medium grey" href="@model.response.createRenderURL()">Cancel</button>
+    <div>
+        <button type="submit" class="button medium primary">Save</button>
+        <button class="button medium neutral" href="@model.response.createRenderURL()">Cancel</button>
     </div>
 </form>

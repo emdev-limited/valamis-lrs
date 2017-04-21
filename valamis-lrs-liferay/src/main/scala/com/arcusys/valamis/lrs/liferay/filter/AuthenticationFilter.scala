@@ -9,9 +9,10 @@ import com.arcusys.valamis.lrs.liferay._
 import com.arcusys.valamis.lrs.liferay.exception._
 import com.arcusys.valamis.lrs.security.AuthenticationStatus
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
-import com.arcusys.valamis.lrs.{ApplicationIdThreadLocal, SecurityManager}
+import com.arcusys.valamis.lrs.SecurityManager
 import com.google.inject._
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
+import com.arcusys.valamis.lrs.utils.ApplicationIdThreadLocal
 import net.oauth._
 import net.oauth.server.OAuthServlet
 

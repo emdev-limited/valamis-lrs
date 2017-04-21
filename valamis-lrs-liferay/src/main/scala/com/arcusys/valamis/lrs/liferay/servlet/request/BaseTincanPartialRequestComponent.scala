@@ -6,8 +6,9 @@ package com.arcusys.valamis.lrs.liferay.servlet.request
 trait BaseTincanPartialRequestComponent {
   r: BaseLrsRequest =>
 
-  def limit   = optionalInt(Limit)       getOrElse 100
-  def offset  = optionalInt(Offset)      getOrElse 0
+  // Handle limit with 0
+  def limit   = optionalInt(Limit) getOrElse 100 match { case x if (x <= 0) => 100 case value => value }
+  def offset  = optionalInt(Offset) getOrElse 0
   def nameSort = optionalBoolean(NameSort) getOrElse true
   def timeSort = optionalBoolean(TimeSort) getOrElse false
   def sortTimeFirst = optionalBoolean(SortTimeFirst) getOrElse false

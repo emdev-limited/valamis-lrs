@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.serializer
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan.{FormatType, _}
 import com.arcusys.valamis.lrs.validator.GroupValidator

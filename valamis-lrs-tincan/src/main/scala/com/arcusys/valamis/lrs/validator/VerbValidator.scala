@@ -5,7 +5,7 @@ import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
 import com.arcusys.valamis.lrs.tincan.{LanguageMapValidator, Verb}
 import com.arcusys.valamis.lrs.util.IRI
 import org.json4s.JsonAST.JValue
-import com.arcusys.valamis.lrs.StringExtension
+import com.arcusys.valamis.lrs.utils.StringExtension
 
 import scala.util.{Success, Failure, Try}
 

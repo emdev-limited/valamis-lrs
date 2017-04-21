@@ -18,7 +18,7 @@ trait AgentProfileSchema extends SchemaUtil {
 
     def * = (profileId, agentKey, documentKey) <>(AgentProfileRow.tupled, AgentProfileRow.unapply)
 
-    def profileId   = column[String]("profileId", O.NotNull, O.DBType(varCharPk))
+    def profileId   = column[String]("profileId", O.DBType(varCharPk))
     def agentKey    = column[AgentRow#Type]("agentKey")
     def documentKey = column[DocumentRow#Type]("documentKey", O.DBType(uuidKeyLength))
 

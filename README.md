@@ -1,6 +1,8 @@
 # Valamis LRS
 [![build status](https://api.travis-ci.org/arcusys/valamis-lrs.png)](http://travis-ci.org/arcusys/valamis-lrs)
 
+## Version 3.2
+
 ## Version 3.0.3
 
 ## Version 2.6.1
@@ -19,5 +21,4 @@ Since version 2.4 Valamis Community Edition is separated into two packages in Gi
 
 
 ### Building
-  
-  This is SBT project.
+This is SBT project.

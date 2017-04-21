@@ -1,6 +1,7 @@
 package com.arcusys.valamis.lrs.jdbc.database.api
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api.query.ActorQueries
 import com.arcusys.valamis.lrs.jdbc.database.row._

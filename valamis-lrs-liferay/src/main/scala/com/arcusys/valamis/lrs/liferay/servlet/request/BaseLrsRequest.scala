@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest
 
 import com.arcusys.valamis.lrs.liferay.exception.InvalidOrMissingArgumentException
 import com.arcusys.json.JsonHelper
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 import org.apache.commons.lang.CharEncoding
 import org.json4s.DefaultFormats
 

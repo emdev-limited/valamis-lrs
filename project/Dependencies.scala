@@ -2,11 +2,11 @@
 import sbt._
 
 object Version {
-  val project              = "3.0.1"
+  val project              = "3.2.0"
   val scala                = "2.11.8"
   val scalaAsync           = "0.9.4"
   val slick                = "2.1.0"
-  val slickDrivers         = "2.1.2"
+  val slickDrivers         = "2.1.3"
   val config               = "1.2.1"
   val json4s               = "3.2.11"
   val scalatest            = "2.2.3"
@@ -18,8 +18,6 @@ object Version {
   val portlet              = "2.0"
 
   val liferayPortal62      = "6.2.5"
-  val liferayPortal70      = "7.0.0"
-  val liferayPlugins700    = "2.3.0"
 
   val akka                 = "2.3.9"
   val websocket            = "1.1"
@@ -89,10 +87,6 @@ object Libraries {
   // Liferay
   val liferayPortal62       = "com.liferay.portal"            %   "portal-service"                        % Version.liferayPortal62
   val liferayPortalImpl62   = "com.liferay.portal"            %   "portal-impl"                           % Version.liferayPortal62
-
-  // liferay 7.0
-  val lfPortalService700    = "com.liferay.portal"            %   "com.liferay.portal.kernel"             % Version.liferayPlugins700
-  val lfPortalImpl700       = "com.liferay.portal"            %   "com.liferay.portal.impl"               % Version.liferayPlugins700
 
   //OAuth 1.0 Provider & Consumer Library
   val oauthCore             = "net.oauth.core"                %   "oauth"                                 % Version.oauth
@@ -215,8 +209,6 @@ object Dependencies {
 
   val api = testWeb ++ Seq(httpMime, httpClient)
 
-
   val liferay62 = Seq(portletApi, servletApi, liferayPortal62, liferayPortalImpl62).map( _ % Provided)
-  val liferay70 = Seq(portletApi, servletApi, lfPortalService700, lfPortalImpl700).map( _ % Provided)
 
 }

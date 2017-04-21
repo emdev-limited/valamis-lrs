@@ -1,8 +1,8 @@
 package com.arcusys.valamis.lrs.validator
 
-import com.arcusys.valamis.lrs.RunningMode
 import com.arcusys.valamis.lrs.tincan.Account
 import com.arcusys.valamis.lrs.tincan.Constants.Tincan.Field._
+import com.arcusys.valamis.lrs.utils.RunningMode
 import org.apache.commons.validator.routines.UrlValidator
 import org.json4s.JsonAST.JValue
 
