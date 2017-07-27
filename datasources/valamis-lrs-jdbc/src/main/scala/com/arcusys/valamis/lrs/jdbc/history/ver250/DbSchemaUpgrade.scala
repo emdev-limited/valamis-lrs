@@ -10,28 +10,19 @@ import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
 
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
-
-import com.arcusys.slick.drivers.OracleDriver
+import org.apache.commons.logging.Log
 
 /**
   * Created by Iliya Tryapitsin on 20.04.15.
   */
 class DbSchemaUpgrade @Inject() (val jdbcDriver: JdbcDriver,
                                  val database: JdbcBackend#Database,
-                                 val lrs: Lrs) extends BaseDbUpgrade {
+                                 val lrs: Lrs,
+                                 val logger: Log) extends BaseDbUpgrade {
   val jodaSupport      = new SimpleJodaSupport(jdbcDriver)
   val authDataContext  = new JdbcSecurityManager(jdbcDriver, database)
 
   val tokens = authDataContext.tokens.baseTableRow
-
-  val tablesInMigration = Seq(
-    tokens.tableName
-  ).map { name =>
-    jdbcDriver match {
-      case OracleDriver => name.toUpperCase()
-      case _ => name
-    }
-  }
 
   def upgradeMigrations = MigrationSeq(
     tokens.alterColumnType(_.callback)

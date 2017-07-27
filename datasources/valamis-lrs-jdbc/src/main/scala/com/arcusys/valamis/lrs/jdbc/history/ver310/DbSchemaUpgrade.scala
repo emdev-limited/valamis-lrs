@@ -7,13 +7,15 @@ import com.arcusys.slick.migration.table.TableMigration
 import com.arcusys.valamis.lrs.Lrs
 import com.arcusys.valamis.lrs.jdbc.JdbcLrs
 import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
+import org.apache.commons.logging.Log
 
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
 
 class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
                                 val database: JdbcBackend#Database,
-                                val lrs: Lrs) extends BaseDbUpgrade {
+                                val lrs: Lrs,
+                                val logger: Log) extends BaseDbUpgrade {
   val dataContext = lrs.asInstanceOf[JdbcLrs]
 
   import jdbcDriver.simple._
@@ -27,7 +29,6 @@ class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
   )
 
   def up(lrs: Lrs): Unit = {
-
     logger.info("Upgrading to 3.1")
 
     if (logger.isDebugEnabled)
@@ -38,7 +39,11 @@ class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
     dataMigration.upgrade
 
     logger.info("Applying database schema changes")
-    upgrade
+
+    try upgrade catch {
+      case e: MigrationException => logger.warn(e.getMessage)
+      case e: Exception => logger.error("Couldn't migrate schema up to 3.1 version", e)
+    }
   }
 
   def down(lrs: Lrs): Unit = ()

@@ -24,8 +24,6 @@ abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with Loggable w
 
   protected lazy val broker   = inj.getInstance(classOf[Broker])
   protected lazy val lrs = inj getInstance Key.get(classOf[Lrs])
-  protected lazy val sparkProcessor = inj getInstance Key.get(classOf[SparkProcessor])
-
   protected lazy val reporter = inj getInstance Key.get(classOf[ValamisReporter])
 
   protected lazy val securityManager = inj getInstance Key.get(classOf[SecurityManager])

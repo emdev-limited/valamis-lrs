@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<component name="com.arcusys.valamis.lrs.liferay.portlet.LrsModeView" immediate="true">
+    <implementation class="com.arcusys.valamis.lrs.liferay.portlet.LrsModeView"/>
+    <service>
+        <provide interface="javax.portlet.Portlet"/>
+    </service>
+    <property name="com.liferay.portlet.display-category" type="String" value="Valamis Administration"/>
+    <property name="javax.portlet.info.title" type="String" value="Valamis LRS Mode"/>
+    <property name="javax.portlet.display-name" type="String" value="Valamis LRS Mode"/>
+    <property name="javax.portlet.portlet-name" type="String" value="com_arcusys_valamis_lrs_liferay_portlet_LrsModeView"/>
+
+    <property name="javax.portlet.portlet-mode" type="String" value="text/html;view"/>
+
+    <property name="com.liferay.portlet.show-portlet-access-denied" type="Boolean" value="false"/>
+    <property name="com.liferay.portlet.friendly-url-mapping" type="String" value="valamis-lrs-mode-portlet"/>
+    <property name="com.liferay.portlet.control-panel-entry-category" type="String" value="content"/>
+    <property name="com.liferay.portlet.control-panel-entry-weight" type="String" value="17.5"/>
+    <property name="com.liferay.portlet.preferences-unique-per-layout" type="Boolean" value="true"/>
+    <property name="com.liferay.portlet.instanceable" type="Boolean" value="true"/>
+    <property name="com.liferay.portlet.ajaxable" type="Boolean" value="false"/>
+
+    <property name="com.liferay.portlet.header-portlet-css" type="String">
+        /styles/valamis_lrs.css
+    </property>
+
+</component>

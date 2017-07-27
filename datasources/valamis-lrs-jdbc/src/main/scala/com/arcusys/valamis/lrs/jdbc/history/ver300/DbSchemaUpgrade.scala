@@ -7,13 +7,16 @@ import com.arcusys.slick.migration._
 import com.arcusys.valamis.lrs.Lrs
 import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
 import com.arcusys.valamis.lrs.jdbc.JdbcLrs
+import org.apache.commons.logging.Log
 
+import scala.language.postfixOps
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
 
 class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
                                 val database: JdbcBackend#Database,
-                                val lrs: Lrs) extends BaseDbUpgrade {
+                                val lrs: Lrs,
+                                val logger: Log) extends BaseDbUpgrade {
   val dataContext = lrs.asInstanceOf[JdbcLrs]
 
   val contextActivityActivity = dataContext.contextActivitiesActivity baseTableRow
@@ -41,12 +44,15 @@ class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
     }
   }
 
-  def hasNotTables(tablesSeq: Seq[String]) = tables
-    .map { t => t.name.name }
-    .intersect {
-      tablesSeq
+  private lazy val allTables = tables
+
+  private def hasNotTables(tablesSeq: Seq[String]) = {
+    jdbcDriver match {
+      case OracleDriver => !(tablesSeq exists hasTableInOracle)
+      case _ =>
+        allTables map { t => t.name.name } intersect tablesSeq isEmpty
     }
-    .isEmpty
+  }
 
   def downgradeMigrations = throw new Exception("Can't apply migration 'cause it contains irreversible steps")
 

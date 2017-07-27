@@ -5,20 +5,24 @@ import javax.inject.Inject
 import com.arcusys.slick.migration._
 import com.arcusys.valamis.lrs.Lrs
 import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
-import com.arcusys.valamis.lrs.jdbc.{Loggable, JdbcLrs}
+import com.arcusys.valamis.lrs.jdbc.JdbcLrs
 import com.arcusys.valamis.lrs.jdbc.database.utils.DbNameUtils._
 
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
-
 import com.arcusys.slick.drivers.OracleDriver
+import org.apache.commons.logging.Log
+
+import scala.language.postfixOps
 
 /**
- * Created by Iliya Tryapitsin on 20/01/15.
- */
-class DbSchemaUpgrade @Inject() (val jdbcDriver: JdbcDriver,
-                       val database  : JdbcBackend#Database,
-                       val lrs : Lrs) extends BaseDbUpgrade {
+  * Created by Iliya Tryapitsin on 20/01/15.
+  *
+  */
+class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
+                                val database: JdbcBackend#Database,
+                                val lrs: Lrs,
+                                val logger: Log) extends BaseDbUpgrade {
   val dataContext = lrs.asInstanceOf[JdbcLrs]
 
   val actors              = dataContext.actors              baseTableRow
@@ -62,10 +66,13 @@ class DbSchemaUpgrade @Inject() (val jdbcDriver: JdbcDriver,
     }
   }
 
-  def hasNotTables = tables
-    .map { t => t.name.name }
-    .intersect { tablesInMigration }
-    .isEmpty
+  private def hasNotTables = {
+    jdbcDriver match {
+      case OracleDriver => !(tablesInMigration exists hasTableInOracle)
+      case _ =>
+        tables map { t => t.name.name } intersect tablesInMigration isEmpty
+    }
+  }
 
   def downgradeMigrations =
     dropForeignKey(fkName("activityProfiles2document"), tblName("activityProfiles")) &
