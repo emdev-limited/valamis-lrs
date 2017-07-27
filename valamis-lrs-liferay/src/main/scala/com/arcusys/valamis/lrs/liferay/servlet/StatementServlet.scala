@@ -34,10 +34,7 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
       model.attachments,
       model.ascending)
 
-    val statements = if(sparkProcessor.support && query.statementId.isEmpty && query.voidedStatementId.isEmpty) // using spark only for query find statements
-        sparkProcessor.findStatementsByParams(query)
-      else
-        lrs.findStatements(query)
+    val statements = lrs.findStatements(query)
 
     // Statement requested by id not found
     if (model.isRequestingSingleStatement && statements.seq.isEmpty) {

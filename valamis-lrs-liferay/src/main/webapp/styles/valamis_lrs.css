@@ -764,12 +764,12 @@ th {
   margin-bottom: 6.06667px;
 }
 
-.valamis-lrs .button-block .button:last-child {
-  margin-bottom: 0;
-}
-
 .valamis-lrs .button-block .button.inline {
   display: inline-block;
+}
+
+.valamis-lrs .button-block .button:not(.inline):last-child {
+  margin-bottom: 0;
 }
 
 .valamis-lrs .button-block.wide .button {
@@ -791,191 +791,77 @@ th {
   border-color: #CCCCCC;
 }
 
+.valamis-lrs .val-table-wrapper {
+  padding: 0 32px;
+  border-top: 1px solid #CCCCCC;
+}
+
 .valamis-lrs .val-table {
-  border-collapse: collapse;
-  margin: 9.1px 0;
   width: 100%;
-  background: #FFF;
-  border: 1px solid #CCCCCC;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-weight: normal;
+  line-height: 1.5;
 }
 
-.valamis-lrs .val-table.no-out-margin {
-  margin: 0;
-}
-
-.valamis-lrs .val-table.no-border {
-  border: none;
-}
-
-.valamis-lrs .val-table.no-border th, .valamis-lrs .val-table.no-border tr, .valamis-lrs .val-table.no-border td {
-  border: none;
-}
-
-.valamis-lrs .val-table.no-side-border {
-  border: none;
-}
-
-.valamis-lrs .val-table.no-top-border {
-  border-top: none;
-}
-
-.valamis-lrs .val-table.no-top-border tr:first-child {
-  border-top: none;
-}
-
-.valamis-lrs .val-table.no-top-border tr:first-child td, .valamis-lrs .val-table.no-top-border tr:first-child th {
-  border-top: none;
-}
-
-.valamis-lrs .val-table.no-bottom-border {
-  border-bottom: none;
-}
-
-.valamis-lrs .val-table.no-bottom-border tr:last-child {
-  border-bottom: none;
-}
-
-.valamis-lrs .val-table.no-bottom-border tr:last-child td, .valamis-lrs .val-table.no-bottom-border tr:last-child th {
-  border-bottom: none;
-}
-
-.valamis-lrs .val-table th {
-  background-color: #F2F2F2;
-  border-bottom: 1px solid #CCCCCC;
-  font-weight: bold;
-  padding: 9.1px 18.2px;
-  text-align: left;
+.valamis-lrs .val-table .info {
   color: #555;
-  line-height: 20px;
+  font-size: 13px;
 }
 
-.valamis-lrs .val-table th.narrow-col {
+.valamis-lrs .val-table .title {
+  font-weight: bold;
+}
+
+.valamis-lrs .val-table th, .valamis-lrs .val-table td {
+  overflow-wrap: normal;
+  word-wrap: normal;
+  word-break: normal;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #DEDEDE;
+}
+
+.valamis-lrs .val-table th.narrow-col, .valamis-lrs .val-table td.narrow-col {
   white-space: nowrap;
   width: 1%;
+}
+
+.valamis-lrs .val-table tbody tr:last-child th, .valamis-lrs .val-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .valamis-lrs .val-table td {
-  border-bottom: 1px solid #CCCCCC;
-  padding: 9.1px 0;
-  font-weight: bold;
+  padding: 16px 16px;
 }
 
-.valamis-lrs .val-table td.buttons {
-  text-align: right;
-}
-
-.valamis-lrs .val-table td.buttons button {
-  float: none;
-}
-
-.valamis-lrs .val-table td.narrow-col {
-  white-space: nowrap;
-  width: 1%;
-}
-
-.valamis-lrs .val-table td > p,
-.valamis-lrs .val-table td > span {
-  line-height: 1.4;
-}
-
-.valamis-lrs .val-table td a {
-  color: inherit;
-  font-weight: inherit;
-}
-
-.valamis-lrs .val-table td .val-icon-sort {
-  color: #AAA;
-}
-
-.valamis-lrs .val-table tr,
-.valamis-lrs .val-table td,
 .valamis-lrs .val-table th {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-all;
-  vertical-align: middle;
-  border: 1px solid #CCCCCC;
+  padding: 8px 16px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: bold;
+  color: #555;
+  border-bottom: 2px solid #DEDEDE;
 }
 
-.valamis-lrs .val-table tr, .valamis-lrs .val-table li {
-  background-color: #FFF;
+.valamis-lrs .val-table.simple th, .valamis-lrs .val-table.simple td {
+  padding: 8px;
 }
 
-.valamis-lrs .val-table tr:nth-child(even) {
-  background-color: #FAFAFA;
+.valamis-lrs .val-table.simple th:first-child, .valamis-lrs .val-table.simple td:first-child {
+  padding-left: 0;
 }
 
-.valamis-lrs .val-table tr.selected {
-  border: 2px solid #598000;
-}
-
-.valamis-lrs .val-table.neutral tr {
-  background-color: #F2F2F2;
-}
-
-.valamis-lrs .val-table.simple {
-  border: none;
-}
-
-.valamis-lrs .val-table.simple tr {
-  border: none;
-  background-color: #FFF;
-}
-
-.valamis-lrs .val-table.simple tr td {
-  border-left: none;
-  border-right: none;
-}
-
-.valamis-lrs .val-table.simple tr:first-child td {
-  border-top: none;
-}
-
-.valamis-lrs .val-table.simple tr:last-child td {
-  border-bottom: none;
-}
-
-.valamis-lrs .list th {
-  border: none;
-  border-bottom: 1px solid #CCCCCC;
-  font-size: inherit;
-}
-
-.valamis-lrs .list td, .valamis-lrs .list tr {
-  border-right: none;
-  border-left: none;
-}
-
-.valamis-lrs .big td {
-  line-height: 34px;
-  padding: 12.13333px 9.1px;
-}
-
-.valamis-lrs .big td.buttons {
-  white-space: nowrap;
+.valamis-lrs .val-table.simple th:last-child, .valamis-lrs .val-table.simple td:last-child {
   padding-right: 0;
 }
 
-.valamis-lrs .medium td {
-  line-height: 30px;
-  padding: 9.1px;
+.valamis-lrs .val-table.simple th {
+  letter-spacing: 0.5px;
 }
 
-.valamis-lrs .small td {
-  line-height: 26px;
-  padding: 6.06667px;
-}
-
-.valamis-lrs .big td:first-child, .valamis-lrs .medium td:first-child, .valamis-lrs .small td:first-child {
-  padding-left: 18.2px;
-}
-
-.valamis-lrs .big td:last-child, .valamis-lrs .medium td:last-child, .valamis-lrs .small td:last-child {
-  padding-right: 18.2px;
-}
-
-.valamis-lrs .big td.buttons, .valamis-lrs .medium td.buttons, .valamis-lrs .small td.buttons {
-  padding-right: 9.1px;
+.valamis-lrs .val-table.simple td {
+  font-size: 13px;
 }
 
 .valamis-lrs .div-table {
@@ -996,7 +882,7 @@ th {
 }
 
 .valamis-lrs .val-info-table .div-row {
-  border-bottom: 1px solid #CCCCCC;
+  border-bottom: 1px solid #DEDEDE;
 }
 
 .valamis-lrs .val-info-table .div-row:last-child {
@@ -1017,6 +903,14 @@ th {
 
 .valamis-lrs .val-info-table .div-col > input:last-child {
   margin-bottom: 0 !important;
+}
+
+.valamis-lrs .val-info-table .div-row.grouped-row {
+  border-bottom: none;
+}
+
+.valamis-lrs .val-info-table .div-row.grouped-row .div-col {
+  padding-bottom: 0;
 }
 
 .valamis-lrs .val-info-table .name-col {
@@ -1049,37 +943,6 @@ th {
 .valamis-lrs .val-info-table.small-width .content-col {
   width: 75%;
   padding-right: 5%;
-}
-
-.valamis-lrs td.checkbox-col {
-  width: 16px;
-  padding-left: 0;
-  padding-right: 0;
-}
-
-.valamis-lrs td.checkbox-col label {
-  margin: 0;
-}
-
-.valamis-lrs td.checkbox-col label:before {
-  margin-right: 0;
-}
-
-.valamis-lrs td.thin {
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.valamis-lrs td.handle {
-  cursor: move;
-}
-
-.valamis-lrs .new-packages-list-table td:first-child {
-  width: 1%;
-}
-
-.valamis-lrs .new-packages-list-table .name-col {
-  padding-left: 0;
 }
 
 .valamis-lrs .div-table.no-content-table {

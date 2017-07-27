@@ -7,7 +7,9 @@ import com.arcusys.slick.migration._
 import com.arcusys.valamis.lrs.Lrs
 import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
 import com.arcusys.valamis.lrs.jdbc._
+import org.apache.commons.logging.Log
 
+import scala.language.postfixOps
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
 
@@ -16,7 +18,8 @@ import scala.slick.jdbc.JdbcBackend
   */
 class DbSchemaUpgrade @Inject() (val jdbcDriver: JdbcDriver,
                                  val database: JdbcBackend#Database,
-                                 val lrs: Lrs) extends BaseDbUpgrade {
+                                 val lrs: Lrs,
+                                 val logger: Log) extends BaseDbUpgrade {
 
   val lrsDataContext = lrs.asInstanceOf[JdbcLrs]
   val authDataContext  = new JdbcSecurityManager(jdbcDriver, database)
@@ -35,10 +38,13 @@ class DbSchemaUpgrade @Inject() (val jdbcDriver: JdbcDriver,
     }
   }
 
-  def hasNotTables = tables
-    .map { t => t.name.name }
-    .intersect { tablesInMigration }
-    .isEmpty
+  private def hasNotTables = {
+    jdbcDriver match {
+      case OracleDriver => !(tablesInMigration exists hasTableInOracle)
+      case _ =>
+        tables map { t => t.name.name } intersect tablesInMigration isEmpty
+    }
+  }
 
   def upgradeMigrations =
     applications.create.addColumns &

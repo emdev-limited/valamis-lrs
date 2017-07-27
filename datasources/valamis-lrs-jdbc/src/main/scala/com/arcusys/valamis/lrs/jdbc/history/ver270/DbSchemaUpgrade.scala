@@ -6,13 +6,14 @@ import com.arcusys.slick.drivers.OracleDriver
 import com.arcusys.slick.migration._
 import com.arcusys.slick.migration.table.TableMigration
 import com.arcusys.valamis.lrs.Lrs
-import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
 import com.arcusys.valamis.lrs.jdbc._
 import com.arcusys.valamis.lrs.jdbc.database.typemap.joda.SimpleJodaSupport
+import com.arcusys.valamis.lrs.jdbc.history.BaseDbUpgrade
+import org.apache.commons.logging.Log
 
 import scala.slick.driver.JdbcDriver
 import scala.slick.jdbc.JdbcBackend
-import scala.slick.jdbc.meta.{MIndexInfo, MQName}
+import scala.slick.jdbc.meta.{MIndexInfo, MQName, MTable}
 import scala.slick.lifted.AbstractTable
 
 
@@ -21,7 +22,8 @@ import scala.slick.lifted.AbstractTable
   */
 class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
                                 val database: JdbcBackend#Database,
-                                val lrs: Lrs) extends BaseDbUpgrade {
+                                val lrs: Lrs,
+                                val logger: Log) extends BaseDbUpgrade {
   val jodaSupport = new SimpleJodaSupport(jdbcDriver)
 
   val dataContext = lrs.asInstanceOf[JdbcLrs]
@@ -35,7 +37,17 @@ class DbSchemaUpgrade @Inject()(val jdbcDriver: JdbcDriver,
 
   import jdbcDriver.simple._
 
-  def getMQName(name: String): Option[MQName] = tables.find(_.name.name == name).map(_.name)
+  private lazy val allTables = tables
+
+  def getMQName(name: String)(implicit session: Session): Option[MQName] = {
+    jdbcDriver match {
+      case OracleDriver => MTable.getTables(cat = Some(""),
+        schemaPattern = None,//without schemaPattern = None Oracle doesn't find a table
+        namePattern = Some(name),
+        types = None).list.headOption.map(_.name)
+      case _ => allTables.find(_.name.name == name).map(_.name)
+    }
+  }
 
   private def addIndicesForSchema(tableMigration: TableMigration[_ <: AbstractTable[_]], table: TableQuery[_ <: AbstractTable[_]])(implicit session: Session) = {
     val schema = table.baseTableRow

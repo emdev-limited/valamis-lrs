@@ -7,10 +7,12 @@ import com.arcusys.valamis.lrs.jdbc.history.ver250.{DbSchemaUpgrade => Ver250}
 import com.arcusys.valamis.lrs.jdbc.history.ver270.{DbSchemaUpgrade => Ver270}
 import com.arcusys.valamis.lrs.jdbc.history.ver300.{DbSchemaUpgrade => Ver300}
 import com.arcusys.valamis.lrs.jdbc.history.ver310.{DbSchemaUpgrade => Ver310}
-import com.arcusys.valamis.lrs.jdbc.{JdbcValamisReporter, JdbcSecurityManager, JdbcLrs}
+import com.arcusys.valamis.lrs.jdbc.{JdbcLrs, JdbcSecurityManager, JdbcValamisReporter}
 import com.arcusys.valamis.lrs.test.config.DbInit
 import com.arcusys.valamis.lrs._
 import net.codingwell.scalaguice.ScalaModule
+import org.apache.commons.logging.Log
+import org.apache.commons.logging.impl.NoOpLog
 
 import scala.concurrent.ExecutionContext.Implicits._
 import scala.concurrent.ExecutionContextExecutor
@@ -30,13 +32,11 @@ abstract class BaseCoreModule(val dbInit: DbInit) extends ScalaModule {
     bind [DbInit              ] toInstance dbInit
 
     bind [ExecutionContextExecutor].toInstance(global)
+    bind[Log].toInstance(new NoOpLog)
 
     bind [Lrs             ].to[JdbcLrs                ]
     bind [SecurityManager ].to[JdbcSecurityManager    ]
     bind [ValamisReporter ].to[JdbcValamisReporter    ]
-    bind [SparkProcessor  ].to[EmptySparkProcessor    ]
-
-
 
     bind [BaseDbUpgrade          ].annotatedWithName("ver230").to[Ver230 ]
     bind [BaseDbUpgrade          ].annotatedWithName("ver240").to[Ver240 ]

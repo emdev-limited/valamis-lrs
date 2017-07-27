@@ -12,7 +12,7 @@ import com.arcusys.valamis.lrs.jdbc.history.ver250.{DbSchemaUpgrade => Ver250}
 import com.arcusys.valamis.lrs.jdbc.history.ver270.{DbSchemaUpgrade => Ver270}
 import com.arcusys.valamis.lrs.jdbc.history.ver300.{DbSchemaUpgrade => Ver300}
 import com.arcusys.valamis.lrs.jdbc.history.ver310.{DbSchemaUpgrade => Ver310}
-import com.arcusys.valamis.lrs.{DbInit, DbUpgrade, EmptySparkProcessor, Lrs, SecurityManager, ValamisReporter}
+import com.arcusys.valamis.lrs.{DbInit, DbUpgrade, Lrs, SecurityManager, ValamisReporter}
 import net.codingwell.scalaguice.ScalaModule
 
 import scala.slick.driver.{JdbcDriver, JdbcProfile}
