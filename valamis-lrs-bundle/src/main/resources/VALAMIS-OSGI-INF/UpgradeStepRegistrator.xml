@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+
+<component name="com.arcusys.valamis.lrs.bundle.LrsUpgradeStepRegistrator" immediate="true">
+    <implementation class="com.arcusys.valamis.lrs.bundle.LrsUpgradeStepRegistrator"/>
+    <service>
+        <provide interface="com.liferay.portal.upgrade.registry.UpgradeStepRegistrator"/>
+    </service>
+</component>

@@ -33,4 +33,18 @@
         <servlet-name>metrics</servlet-name>
         <url-pattern>/metrics/*</url-pattern>
     </servlet-mapping>
+
+    <!--JBoss fix: disable RESTeasy scan to avoid conflict with Jersey (spark)-->
+    <context-param>
+        <param-name>resteasy.scan</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>resteasy.scan.providers</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <param-name>resteasy.scan.resources</param-name>
+        <param-value>false</param-value>
+    </context-param>
 </web-app>

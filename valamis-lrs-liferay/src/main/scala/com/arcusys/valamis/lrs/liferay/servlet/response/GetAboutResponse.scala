@@ -9,4 +9,4 @@ case class ExtensionResponse(`http://id.tincanapi.com/extension/powered-by`: Con
 
 case class ContactResponse(name: String = "Valamis Tin Can Engine",
                            homePage: String = "http://www.valamislearning.com/",
-                           version: String = "3.0.1")
+                           version: String = "3.0.0")

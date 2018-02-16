@@ -16,7 +16,7 @@ trait StatementReferenceSchema extends SchemaUtil {
   class StatementReferenceTable(tag: Tag) extends LongKeyTable[StatementReferenceRow](tag, tblName("stmntRefs"), false) {
     override def * = (key, statementId) <>(StatementReferenceRow.tupled, StatementReferenceRow.unapply)
 
-    def statementId = column[StatementRow#Type]("statementId", O.NotNull, O.DBType(uuidKeyLength))
+    def statementId = column[StatementRow#Type]("statementId", O.DBType(uuidKeyLength))
 
     def statementObject = foreignKey(fkName("stmntRef2stmntObj"), key, TableQuery[StatementObjectsTable])(statement => statement.key)
 

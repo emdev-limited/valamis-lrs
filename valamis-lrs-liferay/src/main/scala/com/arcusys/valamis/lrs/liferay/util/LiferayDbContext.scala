@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.liferay.util
 
-import com.arcusys.learn.liferay.services.{CompanyHelper, ShardUtilHelper}
+import com.arcusys.learn.liferay.lrs.services.{CompanyHelper, ShardUtilHelper}
 
 class LiferayDbContext extends DbContext{
 
@@ -15,4 +15,12 @@ class LiferayDbContext extends DbContext{
   def setScope(companyId: Long): Unit = {
     ShardUtilHelper.initShardUtil(companyId)
   }
+}
+
+class DummyDbContext extends DbContext {
+  override def init(): Unit = ()
+
+  override def setScope(companyId: Long): Unit = ()
+
+  override def getScope: Long = 0L
 }

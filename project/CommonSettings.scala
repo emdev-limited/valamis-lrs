@@ -1,16 +1,28 @@
-import sbt._, Keys._
+import sbt._
+import Keys._
+
+import com.arcusys.sbt.tasks._
+
+import com.arcusys.sbt.keys.CommonKeys
+import com.arcusys.sbt.keys.OsgiCommonKeys
+import com.arcusys.sbt.keys.DeployKeys
 
 // === Common settings for all projects
 object Settings {
   val graphSettings = net.virtualvoid.sbt.graph.Plugin.graphSettings
 
+  val liferay = Liferay620
+
   val commonSettings = Seq(
+    CommonKeys.lfVersion := liferay.version,
+    DeployKeys.lf6Version := Liferay620.version,
+    OsgiCommonKeys.lf7Version := Liferay700.version,
     organization := "com.arcusys.valamis",
     version := Version.project,
     scalaVersion := Version.scala,
     parallelExecution in Test := false,
     resolvers ++= Seq(
-      DefaultMavenRepository,
+      ArcusysResolvers.mavenCentral,
       ArcusysResolvers.public,
       ArcusysResolvers.typesafeReleases,
       ArcusysResolvers.typesafeSnapshots,
@@ -18,14 +30,20 @@ object Settings {
     ),
     resolvers += Resolver.mavenLocal,
     libraryDependencies ++= Dependencies.common,
-    javacOptions        ++= Seq("-source", "1.6", "-target", "1.6"),
-    scalacOptions        += "-target:jvm-1.6"
+    javacOptions ++= Seq("-source", "1.6", "-target", "1.6"),
+    scalacOptions += "-target:jvm-1.6"
   ) ++ graphSettings
+
+  val publishToNexusSettings = Seq(
+    publishTo := {
+      Some(ArcusysResolvers.public)
+    }
+  )
 
   val disablePublishSettings = Seq(
     publish := {},
     publishLocal := {},
-    publishM2:= {}
+    publishM2 := {}
   )
 
   val lrsStorage = StorageType.jdbcType
@@ -34,12 +52,16 @@ object Settings {
     val jdbcType = "jdbc"
   }
 
-  val liferay = Liferay620
-
   object Liferay620 {
     val dependencies = Dependencies.liferay62
     val supportVersion = "6.2.*"
     val version = Version.liferayPortal62
+  }
+
+  object Liferay700 {
+    val dependencies = Dependencies.liferay70
+    val supportVersion = "7.0.0+"
+    val version = Version.liferayPortal70
   }
 
   val liferayPluginProperties = LiferayPluginProperties
@@ -48,11 +70,11 @@ object Settings {
     val longDescription = "Valamis LRS"
     val pageUrl = "http://valamis.arcusys.com/"
     val tags = "valamis,tincan,eLearning,xApi"
-    val author="Arcusys Oy."
+    val author = "Arcusys Oy."
     val version = Version.project
   }
 
-  val liferayPluginPropertiesPath =  "WEB-INF/liferay-plugin-package.properties"
+  val liferayPluginPropertiesPath = "WEB-INF/liferay-plugin-package.properties"
 
   def getLiferayPluginProperties(source: File): String = {
 

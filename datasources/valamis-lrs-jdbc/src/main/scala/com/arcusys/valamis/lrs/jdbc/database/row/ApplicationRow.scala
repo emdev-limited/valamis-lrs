@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 
 case class ApplicationRow(appId      :ApplicationRow#Key,
                           name       :String,
-                          description:String,
+                          description:Option[String],
                           appSecret  :String,
                           scope      :AuthorizationScope.ValueSet,
                           regDateTime:DateTime,

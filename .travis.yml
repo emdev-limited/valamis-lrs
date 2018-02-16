@@ -3,12 +3,10 @@ language: scala
 scala:
   - 2.11.8
 jdk:
-  - openjdk7
-  - openjdk6
   - oraclejdk7
   - oraclejdk8
 
-script: sbt clean compile
+script: sbt clean compile test
 
 # Workaround for https://github.com/travis-ci/travis-ci/issues/5227
 # Buffer overflow in Java_java_net_Inet4AddressImpl_getLocalHostName

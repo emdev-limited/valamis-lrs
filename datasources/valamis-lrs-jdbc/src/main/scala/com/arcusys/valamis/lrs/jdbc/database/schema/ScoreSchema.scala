@@ -17,10 +17,10 @@ trait ScoreSchema extends SchemaUtil {
 
     def * = (key.?, scaled, raw, min, max) <>(ScoreRow.tupled, ScoreRow.unapply)
 
-    def scaled = column[Option[Float]]("scaled", O.Nullable)
-    def raw    = column[Option[Float]]("raw"   , O.Nullable)
-    def min    = column[Option[Float]]("_min"  , O.Nullable)
-    def max    = column[Option[Float]]("_max"  , O.Nullable)
+    def scaled = column[Option[Float]]("scaled")
+    def raw    = column[Option[Float]]("raw"   )
+    def min    = column[Option[Float]]("_min"  )
+    def max    = column[Option[Float]]("_max"  )
   }
 
   lazy val scores = TableQuery[ScoresTable]

@@ -2,10 +2,10 @@ package com.arcusys.valamis.lrs.liferay.servlet.oauth
 
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import com.arcusys.learn.liferay.services.UserLocalServiceHelper
+import com.arcusys.learn.liferay.lrs.services.UserLocalServiceHelper
 import com.arcusys.valamis.lrs.liferay._
 import com.google.inject.{Inject, Injector, Singleton}
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 import net.oauth.{OAuth, OAuthAccessor}
 
 import scala.util._

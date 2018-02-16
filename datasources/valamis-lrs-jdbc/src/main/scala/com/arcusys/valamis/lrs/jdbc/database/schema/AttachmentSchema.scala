@@ -18,16 +18,16 @@ trait AttachmentSchema extends SchemaUtil {
 
   class AttachmentsTable(tag: Tag) extends LongKeyTable[AttachmentRow](tag: Tag, tblName("attachments")) {
 
-    override def * = (key.?, statementKey, usageType, display, description.?, content, length, sha2, fileUrl.?) <>(AttachmentRow.tupled, AttachmentRow.unapply)
+    override def * = (key.?, statementKey, usageType, display, description, content, length, sha2, fileUrl) <>(AttachmentRow.tupled, AttachmentRow.unapply)
 
-    def statementKey = column[StatementRow#Type]("statementId", O.NotNull, O.DBType(uuidKeyLength))
+    def statementKey = column[StatementRow#Type]("statementId", O.DBType(uuidKeyLength))
     def usageType    = column[String]("usageType", O.DBType(varCharMax))
     def display      = column[LanguageMap]("display", O.DBType(varCharMax))
-    def description  = column[LanguageMap]("description", O.DBType(varCharMax), O.Nullable)
+    def description  = column[?[LanguageMap]]("description", O.DBType(varCharMax))
     def content      = column[String]("content", O.DBType(varCharMax))
     def length       = column[Int]("length")
     def sha2         = column[String]("sha2", O.DBType(varCharMax))
-    def fileUrl      = column[String]("fileUrl", O.Nullable, O.DBType(varCharMax))
+    def fileUrl      = column[?[String]]("fileUrl", O.DBType(varCharMax))
 
     def statement = foreignKey(fkName("atchmnt2stmnt"), statementKey, TableQuery[StatementsTable])(statement => statement.key)
   }

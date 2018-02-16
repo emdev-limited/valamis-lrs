@@ -16,11 +16,11 @@ trait StateProfileSchema extends SchemaUtil {
   class StateProfilesTable(tag: Tag) extends Table[StateProfileRow](tag, tblName("stateProfiles")) {
     override def * = (stateId, agentKey, activityKey, registration, documentKey) <> (StateProfileRow.tupled, StateProfileRow.unapply)
 
-    def agentKey = column[AgentRow#Type]("agentKey", O.NotNull)
-    def activityKey = column[ActivityRow#Type]("activityKey", O.NotNull)
-    def stateId = column[String]("stateId", O.NotNull, O.DBType(varCharPk))
-    def registration = column[Option[String]]("registration", O.Nullable, O.DBType(varCharPk))
-    def documentKey = column[DocumentRow#Type]("documentKey", O.NotNull , O.DBType(uuidKeyLength))
+    def agentKey = column[AgentRow#Type]("agentKey")
+    def activityKey = column[ActivityRow#Type]("activityKey")
+    def stateId = column[String]("stateId", O.DBType(varCharPk))
+    def registration = column[Option[String]]("registration", O.DBType(varCharPk))
+    def documentKey = column[DocumentRow#Type]("documentKey" , O.DBType(uuidKeyLength))
 
     def activity = foreignKey(fkName("stateProfile2activity"), activityKey, TableQuery[ActivitiesTable])(x => x.key, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)
     def document = foreignKey(fkName("stateProfiles2document"), documentKey, TableQuery[DocumentsTable])(x => x.key, onUpdate = ForeignKeyAction.Restrict, onDelete = ForeignKeyAction.Cascade)

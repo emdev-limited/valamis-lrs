@@ -15,7 +15,7 @@ trait StatementObjectSchema extends SchemaUtil {
 
   class StatementObjectsTable(tag: Tag) extends LongKeyTable[StatementObjectRow](tag, tblName("statementObjects")) {
 
-    def objectType = column[ObjType]("objectType", O.NotNull, O.DBType(varCharMax))
+    def objectType = column[ObjType]("objectType", O.DBType(varCharMax))
 
     def * = (key.?, objectType) <> (StatementObjectRow.tupled, StatementObjectRow.unapply)
   }

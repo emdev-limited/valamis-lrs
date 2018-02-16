@@ -19,9 +19,9 @@ trait ContextActivitySchema extends SchemaUtil {
   class ContextActivitiesTable(tag: Tag) extends Table[ContextActivityRow](tag: Tag, tblName("contextActivities")) {
     override def * = (contextKey, activityKey, contextActivityType) <>(ContextActivityRow.tupled, ContextActivityRow.unapply)
 
-    def contextKey = column[ContextRow#Type]("contextKey", O.NotNull,O.DBType(uuidKeyLength))
-    def activityKey = column[ActivityRow#Type]("activityKey", O.NotNull)
-    def contextActivityType = column[ContextActivityType.Type]("type", O.NotNull, O.DBType(varCharPk))
+    def contextKey = column[ContextRow#Type]("contextKey",O.DBType(uuidKeyLength))
+    def activityKey = column[ActivityRow#Type]("activityKey")
+    def contextActivityType = column[ContextActivityType.Type]("type", O.DBType(varCharPk))
 
     def pk = primaryKey(pkName("contextActivities"), (contextKey, activityKey, contextActivityType))
 

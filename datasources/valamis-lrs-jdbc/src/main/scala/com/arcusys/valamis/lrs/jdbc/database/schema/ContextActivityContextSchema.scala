@@ -13,9 +13,9 @@ trait ContextActivityContextSchema extends SchemaUtil {
   class ContextActivitiesContextTable(tag: Tag) extends LongKeyTable[ContextActivityContextRow](tag: Tag, tblName("contextActivitiesContext")) {
     override def * = (key.?, contextKey, activityKey) <>(ContextActivityContextRow.tupled, ContextActivityContextRow.unapply)
 
-    def contextKey = column[ContextRow#Type]("contextKey", O.NotNull,O.DBType(uuidKeyLength))
+    def contextKey = column[ContextRow#Type]("contextKey",O.DBType(uuidKeyLength))
 
-    def activityKey = column[ContextActivityActivityRow#Type]("activityKey", O.NotNull)
+    def activityKey = column[ContextActivityActivityRow#Type]("activityKey")
 
     def context = foreignKey(fkName("cntxtActvt2cntxtCntxt"), contextKey, TableQuery[ContextsTable])(x => x.key)
 

@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.validator
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.tincan.{Actor, Constants}
 import org.apache.commons.validator.routines.{EmailValidator, UrlValidator}
 import org.json4s.JsonAST.JValue

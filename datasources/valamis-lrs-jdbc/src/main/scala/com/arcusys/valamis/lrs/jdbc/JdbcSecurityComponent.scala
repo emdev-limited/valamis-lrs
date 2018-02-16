@@ -3,6 +3,7 @@ package com.arcusys.valamis.lrs.jdbc
 import java.util.UUID
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.database.SecurityDataContext
 import com.arcusys.valamis.lrs.jdbc.database.row.{TokenRow, ApplicationRow}
 import com.arcusys.valamis.lrs.security.{Application, Token, AuthenticationStatus, AuthenticationType}
@@ -53,7 +54,7 @@ trait JdbcSecurityComponent extends SecurityComponent with SecurityDataContext {
       val app = ApplicationRow(
         appId = UUID.randomUUID.toString,
         name = appName,
-        description = appDescription.orNull,
+        description = appDescription,
         appSecret = UUID.randomUUID.toString,
         scope = scope,
         regDateTime = DateTime.now,
@@ -94,7 +95,7 @@ trait JdbcSecurityComponent extends SecurityComponent with SecurityDataContext {
       }
 
       db withSession { implicit s =>
-        query update(name, scope, desc.orNull, authType) match {
+        query update(name, scope, desc, authType) match {
           case e if e >= 0 =>
             log.debug(s"Update application success: App Id = $appId, Name = $name, Desc = $desc, Scope = $scope")
 

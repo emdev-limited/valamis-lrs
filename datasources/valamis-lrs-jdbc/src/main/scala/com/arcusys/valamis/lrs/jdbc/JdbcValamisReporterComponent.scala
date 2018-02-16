@@ -3,6 +3,7 @@ package com.arcusys.valamis.lrs.jdbc
 import java.net.URI
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api._
 import com.arcusys.valamis.lrs.jdbc.database.api.query.TypeAliases

@@ -7,11 +7,13 @@ import javax.xml.bind.DatatypeConverter
 
 import com.arcusys.valamis.lrs.liferay._
 import com.arcusys.valamis.lrs.liferay.exception._
-import com.arcusys.valamis.lrs.security.AuthenticationStatus
+import com.arcusys.valamis.lrs.security.{AuthenticationStatus, ThreadedApplication}
 import com.arcusys.valamis.lrs.tincan.AuthorizationScope
-import com.arcusys.valamis.lrs.{ApplicationIdThreadLocal, SecurityManager}
+import com.arcusys.valamis.lrs.SecurityManager
+
 import com.google.inject._
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
+
 import net.oauth._
 import net.oauth.server.OAuthServlet
 
@@ -86,7 +88,7 @@ class AuthenticationFilter @Inject()(injector: Injector) extends Filter with Log
 
     securityManager.checkByBasic(login, password, scope) match {
       case AuthenticationStatus.Allowed =>
-        ApplicationIdThreadLocal.setApplicationId(login)
+        cacheApplication(login)
         AuthenticationStatus.Allowed
       case e => e
     }
@@ -100,13 +102,13 @@ class AuthenticationFilter @Inject()(injector: Injector) extends Filter with Log
     validator.validateMessage(requestMessage, accessor)
 
     if (accessor.accessToken == null || accessor.accessToken.isEmpty) {
-      ApplicationIdThreadLocal.setApplicationId(accessor.consumer.consumerKey)
+      cacheApplication(accessor.consumer.consumerKey)
       AuthenticationStatus.Allowed
     }
     else {
       securityManager.checkByToken(accessor.consumer.consumerKey, accessor.accessToken, scope) match {
         case AuthenticationStatus.Allowed =>
-          ApplicationIdThreadLocal.setApplicationId(accessor.consumer.consumerKey)
+          cacheApplication(accessor.consumer.consumerKey)
           AuthenticationStatus.Allowed
         case e => e
       }
@@ -182,5 +184,9 @@ class AuthenticationFilter @Inject()(injector: Injector) extends Filter with Log
 
     case path if req.getMethod.equalsIgnoreCase(Get) => AuthorizationScope.AllRead
     case _ => AuthorizationScope.All
+  }
+
+  private def cacheApplication(id: String) = {
+    ThreadedApplication.setApplication(securityManager.getApplication(id))
   }
 }

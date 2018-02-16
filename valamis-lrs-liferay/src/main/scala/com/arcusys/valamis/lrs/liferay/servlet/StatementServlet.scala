@@ -4,11 +4,11 @@ import java.util.UUID
 import javax.servlet.annotation.MultipartConfig
 import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.StatementQuery
 import com.arcusys.valamis.lrs.liferay.exception.NotFoundException
 import com.arcusys.valamis.lrs.liferay.servlet.request.TincanStatementRequest
-import com.arcusys.valamis.lrs.tincan.StatementResult
+import com.arcusys.valamis.lrs.tincan.{Statement, StatementResult}
 import com.google.inject.{Inject, Injector, Singleton}
 
 @Singleton
@@ -45,8 +45,8 @@ class StatementServlet @Inject()(inj: Injector) extends BaseLrsServlet(inj) {
 
     if(model.isRequestingSingleStatement) statements.seq.headOption
     else {
-      val more = getMore(statements.isFull, model)
-      StatementResult(statements.seq, more)
+      val more = getMore(statements.isEmpty, model)
+      StatementResult(statements, more)
     }
 
   }, request, response)

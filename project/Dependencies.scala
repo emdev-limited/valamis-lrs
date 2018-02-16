@@ -1,12 +1,19 @@
-
 import sbt._
 
 object Version {
-  val project              = "3.0.1"
+  val project              = "3.4.1"
+
+  //versions of modules developed/forked by Arcusys
+  val arcusysUtils         = "2.6.4"
+  val arcusysJson4s        = "2.6.4"
+
+  val slickMigrations      = "2.1.4"
+  val slickDrivers         = "2.1.3"
+
+  //third party libraries versions
   val scala                = "2.11.8"
   val scalaAsync           = "0.9.4"
   val slick                = "2.1.0"
-  val slickDrivers         = "2.1.2"
   val config               = "1.2.1"
   val json4s               = "3.2.11"
   val scalatest            = "2.2.3"
@@ -20,12 +27,13 @@ object Version {
   val liferayPortal62      = "6.2.5"
   val liferayPortal70      = "7.0.0"
   val liferayPlugins700    = "2.3.0"
+  val lfPortalUpgrade700   = "2.0.1"
 
   val akka                 = "2.3.9"
   val websocket            = "1.1"
 
-  val jodaConvert          = "1.7"
-  val jodaTime             = "2.8.1"
+  val jodaConvert          = "1.8.1"
+  val jodaTime             = "2.9.7"
   val scalaGuice           = "4.0.0"
   val guice                = "4.0"
   val mockito              = "1.10.17"
@@ -34,10 +42,9 @@ object Version {
   val servletApi           = "3.0.1"
   val commonsValidator     = "1.4.1"
   val commonsLang          = "2.6"
+  val commonsLogging       = "1.1.3"
   val oauth                = "20100527"
   val fileUpload           = "1.3.1"
-  val valamisUtils         = "2.6.4"
-  val slickMigrations      = "2.1.4"
   val commonsIO            = "2.2"
 
   // Db
@@ -52,6 +59,13 @@ object Version {
 
   val metricsScala         = "3.5.1_a2.3"
   val metrics              = "3.1.2"
+
+  //Additional OSGi dependencies
+  val javaxInject = "1"
+  val fastUtil = "6.3"
+  val scalaArm = "1.4"
+  val hdrHistogram = "1.1.0"
+  val guava = "15.0"
 }
 
 object Libraries {
@@ -75,6 +89,7 @@ object Libraries {
   val jodaConvert           = "org.joda"                      %   "joda-convert"                          % Version.jodaConvert
   val commonsValidator      = "commons-validator"             %   "commons-validator"                     % Version.commonsValidator
   val commonsLang           = "commons-lang"                  %   "commons-lang"                          % Version.commonsLang
+  val commonsLogging        = "commons-logging"               %   "commons-logging"                       % Version.commonsLogging
 
   // Web
   val httpClient            = "org.apache.httpcomponents"     %   "httpclient"                            % Version.httpClient
@@ -93,6 +108,8 @@ object Libraries {
   // liferay 7.0
   val lfPortalService700    = "com.liferay.portal"            %   "com.liferay.portal.kernel"             % Version.liferayPlugins700
   val lfPortalImpl700       = "com.liferay.portal"            %   "com.liferay.portal.impl"               % Version.liferayPlugins700
+  val lfPortalUpgrade700    = "com.liferay"                   %   "com.liferay.portal.upgrade"            % Version.lfPortalUpgrade700
+
 
   //OAuth 1.0 Provider & Consumer Library
   val oauthCore             = "net.oauth.core"                %   "oauth"                                 % Version.oauth
@@ -106,8 +123,8 @@ object Libraries {
   val postgres              = "org.postgresql"                %   "postgresql"                            % Version.postgres
 
   // Valamis
-  val valamisUtils          = "com.arcusys.valamis"           %%  "arcusys-util"                          % Version.valamisUtils
-  val arcusysJson4s         = "com.arcusys.valamis"           %%  "arcusys-json4s"                        % Version.valamisUtils
+  val arcusysUtils          = "com.arcusys.valamis"           %%  "arcusys-util"                          % Version.arcusysUtils
+  val arcusysJson4s         = "com.arcusys.valamis"           %%  "arcusys-json4s"                        % Version.arcusysJson4s
   val slickMigration        = "com.arcusys.slick"             %%  "slick-migration"                       % Version.slickMigrations
 
   val kafka                 = "org.apache.kafka"              %% "kafka"                                  % Version.kafka
@@ -117,6 +134,21 @@ object Libraries {
   val metrics               = "nl.grons"                      %% "metrics-scala"                          % Version.metricsScala
   val metricsServlet        = "io.dropwizard.metrics"         % "metrics-servlets"                        % Version.metrics
 
+  //OSGi
+  val osgiAnnotation = "org.osgi" % "org.osgi.annotation" % "6.0.0"
+  val osgiCompendium = "org.osgi" % "org.osgi.compendium" % "5.0.0"
+  val osgiCore = "org.osgi" % "org.osgi.core" % "5.0.0"
+  val osgiWhiteboard = "org.osgi" % "org.osgi.service.http.whiteboard" % "1.0.0"
+
+  val osgiHttp ="org.osgi" % "org.osgi.service.http" % "1.2.1"
+
+  //Additional OSGi dependencies that are not needed in compile time, but has to be deployed to OSGi framework
+  //without adding them here they are not collected by collectDependencies task
+  val javaxInject  = "javax.inject" % "javax.inject" % Version.javaxInject
+  val fastUtil     = "it.unimi.dsi" % "fastutil"     % Version.fastUtil
+  val scalaARM     = "com.jsuereth" %% "scala-arm"   % Version.scalaArm
+  val hdrHistogram = "org.mpierce.metrics.reservoir" % "hdrhistogram-metrics-reservoir" % Version.hdrHistogram
+  val guava        = "com.google.guava"              % "guava"                          % Version.guava
 }
 
 
@@ -174,7 +206,8 @@ object Dependencies {
   val common = Seq(
     scalaAsync,
     logback,
-    slf4j
+    slf4j,
+    commonsLogging
   ) ++ testSet ++ joda
 
   val guice = Seq(
@@ -191,10 +224,10 @@ object Dependencies {
   val tincan = Seq(
     reducedCommonsValidator,
     commonsLang,
-    valamisUtils % Test
+    arcusysUtils % Test
   ) ++ jsonSet ++ testDbSet
 
-  val util = guice :+ valamisUtils
+  val util = guice :+ arcusysUtils
 
   val database = slickSet ++ jsonSet ++ testDbSet ++ util :+ reducedCommonsValidator
 
@@ -215,8 +248,11 @@ object Dependencies {
 
   val api = testWeb ++ Seq(httpMime, httpClient)
 
-
   val liferay62 = Seq(portletApi, servletApi, liferayPortal62, liferayPortalImpl62).map( _ % Provided)
-  val liferay70 = Seq(portletApi, servletApi, lfPortalService700, lfPortalImpl700).map( _ % Provided)
+  val liferay70 = Seq(portletApi, servletApi, lfPortalService700, lfPortalImpl700, lfPortalUpgrade700).map( _ % Provided)
+
+  val osgi = Seq(osgiAnnotation, osgiCompendium, osgiCore, osgiWhiteboard, osgiHttp) map (_ % Provided)
+
+  val lrsOSGiDependencies  = Seq(javaxInject, fastUtil, scalaARM, hdrHistogram, guava)
 
 }

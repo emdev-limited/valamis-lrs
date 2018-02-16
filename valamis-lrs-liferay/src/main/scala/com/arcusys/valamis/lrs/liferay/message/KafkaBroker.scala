@@ -2,7 +2,7 @@ package com.arcusys.valamis.lrs.liferay.message
 
 import java.util.Properties
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import org.apache.kafka.clients.producer._
 
 /**

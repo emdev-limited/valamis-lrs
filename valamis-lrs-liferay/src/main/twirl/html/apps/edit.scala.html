@@ -6,18 +6,18 @@
 <form action="@model.actionUrl" method="post">
     <input type="hidden" name="@model.getTagName(Action.Name)" value="@model.action"/>
     <input type="hidden" name="@model.getTagName("appId")" value="@model.selectedApp.map(_.appId)"/>
-    <div class="form-group">
+    <div>
         <label>Application Title</label>
-        <input type="text" class="form-control span12" name="@model.getTagName("appName")" value="@model.selectedApp.map(x => x.name)" placeholder="Enter your application title..." required>
+        <input type="text" name="@model.getTagName("appName")" value="@model.selectedApp.map(x => x.name)" placeholder="Enter your application title..." required>
     </div>
-    <div class="form-group">
+    <div>
         <label>Application Description</label>
-        <input type="text" class="form-control span12" name="@model.getTagName("appDesc")" value="@model.selectedApp.map(x => x.description)" placeholder="Enter your application description...">
+        <input type="text" name="@model.getTagName("appDesc")" value="@model.selectedApp.map(x => x.description)" placeholder="Enter your application description...">
     </div>
-    <div class="form-group">
+    <div>
         <label>Authorization Scope</label>
         @for(value <- AuthorizationScope.values) {
-            <label class="checkbox" class="form-control span12">
+            <label class="checkbox">
                 <input type="checkbox"
                     name="@model.getTagName("scope")"
                     @model.isSelectedScope(value)
@@ -25,16 +25,16 @@
             </label>
         }
     </div>
-    <div class="form-group">
+    <div>
         <label>Authentication Type</label>
-        <select class="form-control span12" name="@model.getTagName("authType")">
+        <select name="@model.getTagName("authType")">
         @for(value <- AuthenticationType.values) {
             <option @model.isSelectedAuthType(value) value="@value">@value</option>
         }
         </select>
     </div>
-    <div class="form-group">
-        <button type="submit" class="button valamis medium green">Save</button>
-        <button class="button valamis medium grey" href="@model.response.createRenderURL()">Cancel</button>
+    <div>
+        <button type="submit" class="button medium primary">Save</button>
+        <button class="button medium neutral" href="@model.response.createRenderURL()">Cancel</button>
     </div>
 </form>

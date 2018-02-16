@@ -1,6 +1,7 @@
 package com.arcusys.valamis.lrs.liferay.servlet
 
-import javax.servlet.http.{HttpServletResponse, HttpServletRequest}
+import java.nio.charset.StandardCharsets
+import javax.servlet.http.{HttpServletRequest, HttpServletResponse}
 
 import com.arcusys.json.{JsonDeserializeException, JsonHelper}
 import com.arcusys.valamis.lrs.exception._
@@ -25,7 +26,7 @@ trait JsonServlet {
   def jsonAction[T <: BaseLrsRequest](action: (T) => Any,
                                       request: HttpServletRequest,
                                       response: HttpServletResponse)(implicit manifest: Manifest[T]): Unit = {
-    val time = requestsTimer time
+    val time = requestsTimer.map(_.time)
 
     try {
       val r = manifest.runtimeClass
@@ -46,6 +47,7 @@ trait JsonServlet {
           case result: String =>
             response.setStatus(HttpServletResponse.SC_OK)
             response.setHeader("Content-Type", "text/html; charset=UTF-8")
+            response.setHeader(ContentLength, result.bytesSize.toString)
             response.getWriter.write(result)
             response.getWriter.flush()
             response.getWriter.close()
@@ -54,6 +56,7 @@ trait JsonServlet {
           case result: AnyRef =>
             val json = JsonHelper.toJson(result, serializers: _*)
             response.setStatus(HttpServletResponse.SC_OK)
+            response.setHeader(ContentLength, json.bytesSize.toString)
             response.getWriter.write(json)
             response.getWriter.flush()
             response.getWriter.close()
@@ -61,7 +64,7 @@ trait JsonServlet {
         }
       }, request, response)
 
-    } finally { time stop }
+    } finally { time.foreach(_.stop) }
 
   }
 
@@ -82,6 +85,7 @@ trait JsonServlet {
         case result: String =>
           response.setStatus(HttpServletResponse.SC_OK)
           response.setHeader(ContentType, "text/html; charset=UTF-8")
+          response.setHeader(ContentLength, result.bytesSize.toString)
           response.getWriter.write(result)
           response.getWriter.flush()
           response.getWriter.close()
@@ -90,6 +94,7 @@ trait JsonServlet {
         case result: AnyRef =>
           val json = JsonHelper.toJson(result, serializers: _*)
           response.setStatus(HttpServletResponse.SC_OK)
+          response.setHeader(ContentLength, json.bytesSize.toString)
           response.getWriter.write(json)
           response.getWriter.flush()
           response.getWriter.close()
@@ -160,6 +165,10 @@ trait JsonServlet {
       writer.flush()
       writer.close()
     }
+  }
+
+  implicit class StringExtension(str: String) {
+    def bytesSize: Long = str.getBytes(StandardCharsets.UTF_8).length
   }
 
 }

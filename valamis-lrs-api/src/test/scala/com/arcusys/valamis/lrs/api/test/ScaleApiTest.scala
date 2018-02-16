@@ -3,7 +3,7 @@ package com.arcusys.valamis.lrs.api.test
 import java.net.URI
 
 import com.arcusys.json.JsonHelper
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.api.valamis.ScaleApi
 import com.arcusys.valamis.lrs.serializer.AgentSerializer
 import com.arcusys.valamis.lrs.tincan.Agent

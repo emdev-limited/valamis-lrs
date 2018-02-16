@@ -1,6 +1,6 @@
 package com.arcusys.valamis.lrs.jdbc.database.api
 
-import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.database.converter._
 import com.arcusys.valamis.lrs.jdbc.database.row.SubStatementRow
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
@@ -98,11 +98,15 @@ trait SubStatementApi extends SubStatementQueries {
         q += r
       }
 
-    def keyForQ (actor: Actor) =
+    def keyForQ (actor: Actor) = {
+      val actorKeyQuery = actors keyForQ actor
+
       q filter { it =>
-        it.actorKey in { actors keyForQ actor }
+        (it.actorKey in actorKeyQuery) ||
+          (it.statementObjectKey in actorKeyQuery)
       } map {
         x => x.key
       }
+    }
   }
 }

@@ -2,13 +2,13 @@ package com.arcusys.valamis.lrs.jdbc.database.api
 
 import java.net.URI
 
-import com.arcusys.valamis.lrs.{ApplicationIdThreadLocal, _}
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.JdbcSecurityManager
 import com.arcusys.valamis.lrs.jdbc.database.LrsDataContext
 import com.arcusys.valamis.lrs.jdbc.database.api.query._
 import com.arcusys.valamis.lrs.jdbc.database.row.ActivityRow
+import com.arcusys.valamis.lrs.security.ThreadedApplication
 import com.arcusys.valamis.lrs.tincan._
-import com.arcusys.valamis.lrs.ApplicationIdThreadLocal
 
 /**
  * LRS component for a Tincan [[Activity]]
@@ -166,36 +166,49 @@ trait ActivityApi extends ActivityQueries with TypeAliases{
      * @param session
      * @return Identity key in the storage
      */
-    def addOrUpdate(activity: Activity)
-                 (implicit session: Session): ActivityRow#Type = {
+    def addOrUpdate(activity: Activity)(implicit session: Session): ActivityRow#Type = {
       val key = q keyFor activity
 
       key match {
-        case Some(k) => {
-
-          lazy val application = securityManager.getApplication(ApplicationIdThreadLocal.getApplicationId)
-
-          if (application.isDefined && application.get.scope.contains(AuthorizationScope.Define)) {
-            val newActivity = new ActivityRow(
-              key = k,
-              id = activity.id,
-              name = activity.name,
-              description = activity.description,
-              theType = activity.theType,
-              moreInfo = activity.moreInfo,
-              interactionType = activity.interactionType,
-              correctResponsesPattern = activity.correctResponsesPattern,
-              choices = activity.choices,
-              source = activity.source,
-              target = activity.target,
-              steps = activity.steps,
-              extensions = activity.extensions)
-
-            q.filter(x => x.key === k).update(newActivity)
-          }
+        case Some(k) =>
+          updateActivity(activity, k)
           k
+        case _ => try {
+          q add activity
+        } catch {
+          case _: Throwable =>
+            val k = q keyFor activity
+            k map { kk =>
+              updateActivity(activity, kk)
+              kk
+            } getOrElse {
+              q add activity
+            }
         }
-        case _ => q add activity
+      }
+    }
+
+    def updateActivity(activity: Activity, activityKey: ActivityRow#Type)(implicit s: Session): Unit = {
+      lazy val application = ThreadedApplication.getApplication
+
+      if (application.isDefined && application.get.scope.contains(AuthorizationScope.Define)) {
+        val newActivity = ActivityRow(
+          key = activityKey,
+          id = activity.id,
+          name = activity.name,
+          description = activity.description,
+          theType = activity.theType,
+          moreInfo = activity.moreInfo,
+          interactionType = activity.interactionType,
+          correctResponsesPattern = activity.correctResponsesPattern,
+          choices = activity.choices,
+          source = activity.source,
+          target = activity.target,
+          steps = activity.steps,
+          extensions = activity.extensions
+        )
+
+        q.filter(x => x.key === activityKey).update(newActivity)
       }
     }
   }

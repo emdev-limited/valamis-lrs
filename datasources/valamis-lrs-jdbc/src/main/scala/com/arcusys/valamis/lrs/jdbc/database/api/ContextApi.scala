@@ -1,6 +1,7 @@
 package com.arcusys.valamis.lrs.jdbc.database.api
 
 import com.arcusys.valamis.lrs._
+import com.arcusys.valamis.lrs.utils._
 import com.arcusys.valamis.lrs.jdbc.database.converter._
 import com.arcusys.valamis.lrs.jdbc.database.api.query._
 import com.arcusys.valamis.lrs.jdbc.database.row._
@@ -195,8 +196,9 @@ trait ContextApi extends ContextActivityQueries {
 
     def keyForQ (actor: Actor) =
       q filter { it =>
-        it.instructor in { actors keyForQ actor }
-
+        val actorKeyQuery = actors keyForQ actor
+        (it.instructor in actorKeyQuery) ||
+          (it.team in actorKeyQuery)
       } map {
         x => x.key
       }

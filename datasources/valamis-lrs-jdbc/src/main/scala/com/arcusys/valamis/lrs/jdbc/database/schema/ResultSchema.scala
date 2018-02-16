@@ -14,14 +14,14 @@ trait ResultSchema extends SchemaUtil {
   import driver.simple._
 
   class ResultsTable(tag: Tag) extends LongKeyTable[ResultRow](tag, tblName("results")) {
-    def * = (key.?, scoreKey, success.?, completion.?, response.?, duration.?, extensions.?) <>(ResultRow.tupled, ResultRow.unapply)
+    def * = (key.?, scoreKey, success, completion, response, duration, extensions) <>(ResultRow.tupled, ResultRow.unapply)
 
-    def scoreKey   = column[ScoreRow#KeyType]("scoreKey", O.Nullable)
-    def success    = column[Boolean]("success", O.Nullable)
-    def completion = column[Boolean]("completion", O.Nullable)
-    def response   = column[String]("response", O.Nullable, O.DBType(varCharMax))
-    def duration   = column[String]("duration", O.Nullable, O.DBType(varCharMax))
-    def extensions = column[Map[String, String]]("extensions", O.Nullable, O.DBType(varCharMax))
+    def scoreKey   = column[ScoreRow#KeyType]("scoreKey")
+    def success    = column[?[Boolean]]("success")
+    def completion = column[?[Boolean]]("completion")
+    def response   = column[?[String]]("response", O.DBType(varCharMax))
+    def duration   = column[?[String]]("duration", O.DBType(varCharMax))
+    def extensions = column[?[Map[String, String]]]("extensions", O.DBType(varCharMax))
 
     def score = foreignKey(fkName("result2score"), scoreKey, TableQuery[ScoresTable])(score => score.key)
   }

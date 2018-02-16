@@ -4,8 +4,8 @@ import javax.servlet.ServletConfig
 import javax.servlet.http._
 
 import com.arcusys.json.JsonHelper
-import com.arcusys.learn.liferay.LiferayClasses.LUser
-import com.arcusys.learn.liferay.services.{CompanyHelper, PermissionHelper, PrincipalHelper, UserLocalServiceHelper}
+import com.arcusys.learn.liferay.lrs.LiferayClasses.LUser
+import com.arcusys.learn.liferay.lrs.services.{CompanyHelper, PermissionHelper, PrincipalHelper, UserLocalServiceHelper}
 import com.arcusys.valamis.lrs.liferay._
 import com.arcusys.valamis.lrs.liferay.util._
 import com.arcusys.valamis.lrs.liferay.message.Broker
@@ -16,7 +16,7 @@ import com.arcusys.valamis.lrs._
 import com.codahale.metrics.servlets.MetricsServlet
 import com.codahale.metrics.{MetricRegistry, Timer}
 import com.google.inject.{Injector, Key}
-import com.arcusys.learn.liferay.util.PortalUtilHelper
+import com.arcusys.learn.liferay.lrs.util.PortalUtilHelper
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
 
@@ -24,7 +24,6 @@ abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with Loggable w
 
   protected lazy val broker   = inj.getInstance(classOf[Broker])
   protected lazy val lrs = inj getInstance Key.get(classOf[Lrs])
-
   protected lazy val reporter = inj getInstance Key.get(classOf[ValamisReporter])
 
   protected lazy val securityManager = inj getInstance Key.get(classOf[SecurityManager])
@@ -33,8 +32,7 @@ abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with Loggable w
   private val MessageHead = "Valamis LRS"
   val ServletName: String
 
-  protected var requestsTimer: Timer = _
-  protected var registry: MetricRegistry = _
+  protected var requestsTimer: Option[Timer] = None
 
   override def setHeaders(response: HttpServletResponse): Unit = {
     response.addHeader(XExperienceAPIConsistentThrough, new DateTime().toString(ISODateTimeFormat.dateTime()))
@@ -42,15 +40,15 @@ abstract class BaseLrsServlet(inj: Injector) extends BaseServlet with Loggable w
   }
 
   override def init(config: ServletConfig): Unit = {
-    getRegistry(config)
-    requestsTimer = registry timer ServletName
+    initMetrics(config)
   }
 
-  def getRegistry(config: ServletConfig) {
-    val context = config.getServletContext()
-    this.registry = context
-      .getAttribute(MetricsServlet.METRICS_REGISTRY)
-      .asInstanceOf[MetricRegistry]
+  def initMetrics(config: ServletConfig) {
+    val context = Option(config.getServletContext)
+    val registry = context.flatMap { ctx =>
+      Option(ctx.getAttribute(MetricsServlet.METRICS_REGISTRY)).map(_.asInstanceOf[MetricRegistry])
+    }
+    requestsTimer = registry.map(_.timer(ServletName))
   }
 
   protected def noContent = throw new NoSuchElementException
